@@ -1,0 +1,28 @@
+# Dependencias y resultados de compilación
+node_modules/
+dist/
+build/
+coverage/
+*.tsbuildinfo
+
+# Configuración local y secretos
+.env
+.env.*
+!.env.example
+
+# Bases de datos locales
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite3
+
+# Registros y archivos del sistema
+*.log
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Configuración personal de IDE
+.idea/
+.vscode/

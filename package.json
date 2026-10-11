@@ -1,0 +1,26 @@
+{
+  "name": "sprinters-e5",
+  "version": "0.1.0",
+  "private": true,
+  "workspaces": [
+    "web",
+    "api"
+  ],
+  "engines": {
+    "node": ">=24 <25"
+  },
+  "scripts": {
+    "dev": "concurrently --kill-others --names API,WEB \"npm run dev --workspace @sprinters/api\" \"npm run dev --workspace @sprinters/web\"",
+    "dev:web": "npm run dev --workspace @sprinters/web",
+    "dev:api": "npm run dev --workspace @sprinters/api",
+    "typecheck": "npm run typecheck --workspaces",
+    "test": "npm test --workspace @sprinters/api",
+    "build": "npm run build --workspaces",
+    "check": "npm run typecheck && npm test && npm run build",
+    "start": "npm start --workspace @sprinters/api"
+  },
+  "devDependencies": {
+    "concurrently": "^10.0.6",
+    "typescript": "^7.0.2"
+  }
+}

@@ -3,84 +3,210 @@
     "id": "sentadilla",
     "name": "Sentadilla",
     "muscleGroup": "Piernas",
-    "equipment": "Peso corporal"
+    "equipment": "Peso corporal",
+    "description": "Ejercicio compuesto básico del tren inferior. Trabaja cuádriceps, glúteos y core, y es la base de la mayoría de rutinas de fuerza.",
+    "instructions": [
+      "Colócate de pie con los pies a la anchura de los hombros y las puntas ligeramente hacia fuera.",
+      "Baja controlando el movimiento, manteniendo la espalda recta y el pecho arriba.",
+      "Desciende hasta que los muslos queden paralelos al suelo o ligeramente por debajo.",
+      "Sube empujando con los talones y aprieta los glúteos al final del recorrido."
+    ],
+    "secondaryMuscles": ["Glúteos", "Core", "Isquiotibiales"],
+    "difficulty": "Intermedio"
   },
   {
     "id": "remo-mancuerna",
     "name": "Remo con mancuerna",
     "muscleGroup": "Espalda",
-    "equipment": "Mancuerna"
+    "equipment": "Mancuerna",
+    "description": "Ejercicio unilateral de tracción horizontal que trabaja principalmente la espalda y el bíceps, mejorando la postura y la fuerza de agarre.",
+    "instructions": [
+      "Apoya una rodilla y una mano en un banco, con la espalda paralela al suelo.",
+      "Sujeta la mancuerna con la mano libre y déjala colgar con el brazo extendido.",
+      "Tira de la mancuerna hacia la cadera llevando el codo pegado al cuerpo.",
+      "Baja de forma controlada sin perder la posición de la espalda."
+    ],
+    "secondaryMuscles": ["Bíceps", "Antebrazo", "Core"],
+    "difficulty": "Principiante"
   },
   {
     "id": "press-banca",
     "name": "Press de banca",
     "muscleGroup": "Pecho",
-    "equipment": "Barra y banco"
+    "equipment": "Barra y banco",
+    "description": "Ejercicio básico de empuje horizontal para el tren superior. Desarrolla fuerza y masa en pectoral, hombro anterior y tríceps.",
+    "instructions": [
+      "Túmbate en el banco con los pies apoyados y la espalda ligeramente arqueada.",
+      "Agarra la barra con las manos algo más anchas que los hombros.",
+      "Baja la barra de forma controlada hasta tocar el esternón.",
+      "Empuja la barra hacia arriba hasta extender los codos sin bloquear de golpe."
+    ],
+    "secondaryMuscles": ["Tríceps", "Hombro anterior"],
+    "difficulty": "Intermedio"
   },
   {
     "id": "plancha",
     "name": "Plancha",
     "muscleGroup": "Core",
-    "equipment": "Esterilla"
+    "equipment": "Esterilla",
+    "description": "Ejercicio isométrico que refuerza el core completo y mejora la estabilidad de la columna. Ideal como base para cualquier rutina.",
+    "instructions": [
+      "Colócate boca abajo apoyando antebrazos y puntas de los pies.",
+      "Mantén el cuerpo alineado desde la cabeza hasta los talones.",
+      "Aprieta glúteos y abdomen sin hundir la cadera.",
+      "Respira con normalidad y mantén la posición el tiempo indicado."
+    ],
+    "secondaryMuscles": ["Hombros", "Glúteos", "Espalda baja"],
+    "difficulty": "Principiante"
   },
   {
     "id": "peso-muerto",
     "name": "Peso muerto",
     "muscleGroup": "Piernas y Espalda",
-    "equipment": "Barra"
+    "equipment": "Barra",
+    "description": "Ejercicio compuesto de cadena posterior. Trabaja isquiotibiales, glúteos, espalda baja y trapecios. Requiere buena técnica para evitar lesiones.",
+    "instructions": [
+      "Coloca la barra sobre el suelo a la altura de los pies.",
+      "Agáchate con la espalda recta y agarra la barra con las manos a la anchura de los hombros.",
+      "Empuja con los talones y extiende caderas y rodillas a la vez.",
+      "De pie, bloquea la cadera y baja controlando el movimiento."
+    ],
+    "secondaryMuscles": ["Glúteos", "Isquiotibiales", "Trapecio", "Antebrazo"],
+    "difficulty": "Avanzado"
   },
   {
     "id": "dominadas",
     "name": "Dominadas",
     "muscleGroup": "Espalda",
-    "equipment": "Barra de dominadas"
+    "equipment": "Barra de dominadas",
+    "description": "Ejercicio de tracción vertical con peso corporal. Excelente para desarrollar dorsal ancho y fuerza de agarre.",
+    "instructions": [
+      "Cuélgate de la barra con las palmas mirando hacia fuera.",
+      "Tira del cuerpo hacia arriba llevando el pecho hacia la barra.",
+      "Sube hasta que la barbilla supere la barra.",
+      "Baja de forma controlada sin balancearte."
+    ],
+    "secondaryMuscles": ["Bíceps", "Antebrazo", "Core"],
+    "difficulty": "Avanzado"
   },
   {
     "id": "zancadas",
     "name": "Zancadas",
     "muscleGroup": "Piernas",
-    "equipment": "Peso corporal"
+    "equipment": "Peso corporal",
+    "description": "Ejercicio unilateral que mejora el equilibrio y trabaja glúteos, cuádriceps e isquiotibiales de forma independiente.",
+    "instructions": [
+      "De pie, con los pies a la anchura de las caderas.",
+      "Da un paso al frente y baja flexionando ambas rodillas.",
+      "La rodilla trasera debe quedar cerca del suelo, sin tocarlo.",
+      "Empuja con el pie delantero para volver a la posición inicial."
+    ],
+    "secondaryMuscles": ["Glúteos", "Isquiotibiales", "Core"],
+    "difficulty": "Principiante"
   },
   {
     "id": "press-militar",
     "name": "Press militar",
     "muscleGroup": "Hombros",
-    "equipment": "Mancuernas"
+    "equipment": "Mancuernas",
+    "description": "Ejercicio de empuje vertical que desarrolla fuerza y masa en el deltoides, especialmente en la porción anterior y media.",
+    "instructions": [
+      "De pie o sentado, sujeta las mancuernas a la altura de los hombros.",
+      "Empuja hacia arriba hasta extender los codos.",
+      "Mantén el core activo y evita arquear la espalda.",
+      "Baja de forma controlada hasta la posición inicial."
+    ],
+    "secondaryMuscles": ["Tríceps", "Trapecio", "Core"],
+    "difficulty": "Intermedio"
   },
   {
     "id": "curl-biceps",
     "name": "Curl de bíceps",
     "muscleGroup": "Brazos",
-    "equipment": "Mancuernas"
+    "equipment": "Mancuernas",
+    "description": "Ejercicio de aislamiento para el bíceps braquial y el braquial anterior. Sencillo y efectivo para ganar volumen en el brazo.",
+    "instructions": [
+      "De pie, con una mancuerna en cada mano y los brazos extendidos.",
+      "Flexiona los codos llevando las mancuernas hacia los hombros.",
+      "Mantén los codos pegados al torso durante todo el recorrido.",
+      "Baja de forma controlada sin balancear el cuerpo."
+    ],
+    "secondaryMuscles": ["Antebrazo"],
+    "difficulty": "Principiante"
   },
   {
     "id": "extension-triceps",
     "name": "Extensión de tríceps",
     "muscleGroup": "Brazos",
-    "equipment": "Polea o mancuerna"
+    "equipment": "Polea o mancuerna",
+    "description": "Ejercicio de aislamiento para el tríceps. Se puede realizar en polea alta o con mancuerna por encima de la cabeza.",
+    "instructions": [
+      "Colócate frente a la polea con los codos pegados al torso.",
+      "Extiende los codos empujando la cuerda hacia abajo.",
+      "Aprieta el tríceps al final del recorrido.",
+      "Vuelve a la posición inicial controlando el movimiento."
+    ],
+    "secondaryMuscles": ["Antebrazo", "Hombro posterior"],
+    "difficulty": "Principiante"
   },
   {
     "id": "hip-thrust",
     "name": "Hip thrust",
     "muscleGroup": "Glúteos",
-    "equipment": "Barra y banco"
+    "equipment": "Barra y banco",
+    "description": "Ejercicio de extensión de cadera que activa especialmente el glúteo mayor. Muy popular en rutinas de fuerza y estética.",
+    "instructions": [
+      "Apoya la espalda alta en un banco y coloca la barra sobre la cadera.",
+      "Con los pies apoyados, empuja la cadera hacia arriba.",
+      "Aprieta los glúteos arriba y mantén un segundo la posición.",
+      "Baja de forma controlada sin apoyar del todo la cadera."
+    ],
+    "secondaryMuscles": ["Isquiotibiales", "Core", "Cuádriceps"],
+    "difficulty": "Intermedio"
   },
   {
     "id": "elevaciones-laterales",
     "name": "Elevaciones laterales",
     "muscleGroup": "Hombros",
-    "equipment": "Mancuernas"
+    "equipment": "Mancuernas",
+    "description": "Ejercicio de aislamiento para el deltoides medio. Fundamental para dar anchura y forma redondeada a los hombros.",
+    "instructions": [
+      "De pie, con una mancuerna en cada mano a los lados del cuerpo.",
+      "Eleva los brazos lateralmente hasta la altura de los hombros.",
+      "Mantén una ligera flexión en los codos.",
+      "Baja de forma controlada sin dejar caer las mancuernas."
+    ],
+    "secondaryMuscles": ["Trapecio", "Deltoides anterior"],
+    "difficulty": "Principiante"
   },
   {
     "id": "crunch-abdominal",
     "name": "Crunch abdominal",
     "muscleGroup": "Core",
-    "equipment": "Esterilla"
+    "equipment": "Esterilla",
+    "description": "Ejercicio clásico de flexión de tronco que trabaja la porción superior del recto abdominal.",
+    "instructions": [
+      "Túmbate boca arriba con las rodillas flexionadas y los pies apoyados.",
+      "Coloca las manos detrás de la cabeza sin tirar del cuello.",
+      "Eleva los hombros del suelo contrayendo el abdomen.",
+      "Baja de forma controlada sin apoyar completamente la espalda."
+    ],
+    "secondaryMuscles": ["Oblicuos"],
+    "difficulty": "Principiante"
   },
   {
     "id": "fondos-paralelas",
     "name": "Fondos en paralelas",
     "muscleGroup": "Pecho y Tríceps",
-    "equipment": "Barras paralelas"
+    "equipment": "Barras paralelas",
+    "description": "Ejercicio de empuje con peso corporal que trabaja pecho inferior, tríceps y hombro anterior.",
+    "instructions": [
+      "Sujétate en las barras paralelas con los brazos extendidos.",
+      "Baja flexionando los codos hasta que los hombros queden por debajo de los codos.",
+      "Empuja hacia arriba hasta extender los codos.",
+      "Mantén el core activo y evita balancearte."
+    ],
+    "secondaryMuscles": ["Hombro anterior", "Core"],
+    "difficulty": "Avanzado"
   }
 ]

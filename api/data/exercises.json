@@ -3,84 +3,99 @@
     "id": "sentadilla",
     "name": "Sentadilla",
     "muscleGroup": "Piernas",
-    "equipment": "Peso corporal"
+    "equipment": "Peso corporal",
+    "imageUrl": "https://i.blogs.es/76cc7d/1366_2000/450_1000.jpeg"
   },
   {
     "id": "remo-mancuerna",
     "name": "Remo con mancuerna",
     "muscleGroup": "Espalda",
-    "equipment": "Mancuerna"
+    "equipment": "Mancuerna",
+    "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRODYTzm9M11XgvfPueX5p_O8zDLuHMe6_mBzql-I6y5Cm8cxPELcDuws4&s=10"
   },
   {
     "id": "press-banca",
     "name": "Press de banca",
     "muscleGroup": "Pecho",
-    "equipment": "Barra y banco"
+    "equipment": "Barra y banco",
+    "imageUrl": "https://i.blogs.es/a13680/1366_2000/840_560.jpeg"
   },
   {
     "id": "plancha",
     "name": "Plancha",
     "muscleGroup": "Core",
-    "equipment": "Esterilla"
+    "equipment": "Esterilla",
+    "imageUrl": "https://media.revistagq.com/photos/672355aaf69e7e75196369db/16:9/w_2560%2Cc_limit/590575189"
   },
   {
     "id": "peso-muerto",
     "name": "Peso muerto",
     "muscleGroup": "Piernas y Espalda",
-    "equipment": "Barra"
+    "equipment": "Barra",
+    "imageUrl": "https://allfreeweight.com/wp-content/uploads/2022/09/imagen1.jpg"
   },
   {
     "id": "dominadas",
     "name": "Dominadas",
     "muscleGroup": "Espalda",
-    "equipment": "Barra de dominadas"
+    "equipment": "Barra de dominadas",
+    "imageUrl": "https://cdn.sanity.io/images/aa8d3hr0/production/7c343a871c05e5b2456c6c528d7a21a1b13d20cd-1920x1080.jpg?rect=531,0,1080,1080&w=1920&h=1920&q=100"
   },
   {
     "id": "zancadas",
     "name": "Zancadas",
     "muscleGroup": "Piernas",
-    "equipment": "Peso corporal"
+    "equipment": "Peso corporal",
+    "imageUrl": "https://i.blogs.es/5917ff/650_1000_zancada/650_1200.jpg"
+
   },
   {
     "id": "press-militar",
     "name": "Press militar",
     "muscleGroup": "Hombros",
-    "equipment": "Mancuernas"
+    "equipment": "Mancuernas",
+    "imageUrl": "https://www.zonawod.com/wp-content/uploads/Press-militar-con-mancuerna-press-hombro-con-mancuernas.jpg"
   },
   {
     "id": "curl-biceps",
     "name": "Curl de bíceps",
     "muscleGroup": "Brazos",
-    "equipment": "Mancuernas"
+    "equipment": "Mancuernas",
+    "imageUrl": "https://hips.hearstapps.com/hmg-prod/images/muscle-and-fitness-royalty-free-image-1575304404.jpg?resize=640:*"
   },
   {
     "id": "extension-triceps",
     "name": "Extensión de tríceps",
     "muscleGroup": "Brazos",
-    "equipment": "Polea o mancuerna"
+    "equipment": "Polea o mancuerna",
+    "imageUrl": "https://hips.hearstapps.com/hmg-prod/images/triceps-extension-exercise-royalty-free-image-1575974873.jpg?resize=640:*"
   },
   {
     "id": "hip-thrust",
     "name": "Hip thrust",
     "muscleGroup": "Glúteos",
-    "equipment": "Barra y banco"
+    "equipment": "Barra y banco",
+    "imageUrl": "https://i.blogs.es/c30741/como-hacer-hip-thrust/1366_2000.jpeg"
   },
   {
     "id": "elevaciones-laterales",
     "name": "Elevaciones laterales",
     "muscleGroup": "Hombros",
-    "equipment": "Mancuernas"
+    "equipment": "Mancuernas",
+    "imageUrl": "https://i.blogs.es/4fe63b/istock-1443576746/1366_2000.jpeg"
   },
   {
     "id": "crunch-abdominal",
     "name": "Crunch abdominal",
     "muscleGroup": "Core",
-    "equipment": "Esterilla"
+    "equipment": "Esterilla",
+    "imageUrl": "https://fivestarsfitness.com/wp-content/uploads/2025/06/crunch-abdominal.jpeg"
   },
   {
     "id": "fondos-paralelas",
     "name": "Fondos en paralelas",
     "muscleGroup": "Pecho y Tríceps",
-    "equipment": "Barras paralelas"
+    "equipment": "Barras paralelas",
+    "imageUrl": "https://fivestarsfitness.com/wp-content/uploads/2025/06/fondos-en-paralelas.jpeg"
   }
 ]

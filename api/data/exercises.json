@@ -1,0 +1,26 @@
+[
+  {
+    "id": "sentadilla",
+    "name": "Sentadilla",
+    "muscleGroup": "Piernas",
+    "equipment": "Peso corporal"
+  },
+  {
+    "id": "remo-mancuerna",
+    "name": "Remo con mancuerna",
+    "muscleGroup": "Espalda",
+    "equipment": "Mancuerna"
+  },
+  {
+    "id": "press-banca",
+    "name": "Press de banca",
+    "muscleGroup": "Pecho",
+    "equipment": "Barra y banco"
+  },
+  {
+    "id": "plancha",
+    "name": "Plancha",
+    "muscleGroup": "Core",
+    "equipment": "Esterilla"
+  }
+]

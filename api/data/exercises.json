@@ -22,5 +22,65 @@
     "name": "Plancha",
     "muscleGroup": "Core",
     "equipment": "Esterilla"
+  },
+  {
+    "id": "peso-muerto",
+    "name": "Peso muerto",
+    "muscleGroup": "Piernas y Espalda",
+    "equipment": "Barra"
+  },
+  {
+    "id": "dominadas",
+    "name": "Dominadas",
+    "muscleGroup": "Espalda",
+    "equipment": "Barra de dominadas"
+  },
+  {
+    "id": "zancadas",
+    "name": "Zancadas",
+    "muscleGroup": "Piernas",
+    "equipment": "Peso corporal"
+  },
+  {
+    "id": "press-militar",
+    "name": "Press militar",
+    "muscleGroup": "Hombros",
+    "equipment": "Mancuernas"
+  },
+  {
+    "id": "curl-biceps",
+    "name": "Curl de bíceps",
+    "muscleGroup": "Brazos",
+    "equipment": "Mancuernas"
+  },
+  {
+    "id": "extension-triceps",
+    "name": "Extensión de tríceps",
+    "muscleGroup": "Brazos",
+    "equipment": "Polea o mancuerna"
+  },
+  {
+    "id": "hip-thrust",
+    "name": "Hip thrust",
+    "muscleGroup": "Glúteos",
+    "equipment": "Barra y banco"
+  },
+  {
+    "id": "elevaciones-laterales",
+    "name": "Elevaciones laterales",
+    "muscleGroup": "Hombros",
+    "equipment": "Mancuernas"
+  },
+  {
+    "id": "crunch-abdominal",
+    "name": "Crunch abdominal",
+    "muscleGroup": "Core",
+    "equipment": "Esterilla"
+  },
+  {
+    "id": "fondos-paralelas",
+    "name": "Fondos en paralelas",
+    "muscleGroup": "Pecho y Tríceps",
+    "equipment": "Barras paralelas"
   }
 ]

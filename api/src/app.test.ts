@@ -57,3 +57,33 @@ test("datos mal formados producen un error controlado sin exponer detalles", asy
   assert.equal(response.status, 500);
   assert.deepEqual(await response.json(), { error: "No se pudo cargar el catálogo." });
 });
+
+test("archivo inexistente da 500 controlado", async (t) => {
+  const origin = await serve(t, pathToFileURL("/ruta/que/no/existe.json"));
+  const response = await fetch(origin + "/exercises");
+  assert.equal(response.status, 500);
+  assert.deepEqual(await response.json(), { error: "No se pudo cargar el catálogo." });
+});
+
+test("JSON inválido da 500 controlado", async (t) => {
+  const origin = await serve(t, await fixture(t, "{no es json}"));
+  const response = await fetch(origin + "/exercises");
+  assert.equal(response.status, 500);
+  assert.deepEqual(await response.json(), { error: "No se pudo cargar el catálogo." });
+});
+
+test("catálogo que no es array da 500 controlado", async (t) => {
+  const origin = await serve(t, await fixture(t, '{"id":"1"}'));
+  const response = await fetch(origin + "/exercises");
+  assert.equal(response.status, 500);
+  assert.deepEqual(await response.json(), { error: "No se pudo cargar el catálogo." });
+});
+
+test("ejercicio con nombre vacío da 500 controlado", async (t) => {
+  const origin = await serve(t, await fixture(t,
+    '[{"id":"1","name":"","muscleGroup":"pecho","equipment":"barra"}]'
+  ));
+  const response = await fetch(origin + "/exercises");
+  assert.equal(response.status, 500);
+  assert.deepEqual(await response.json(), { error: "No se pudo cargar el catálogo." });
+});

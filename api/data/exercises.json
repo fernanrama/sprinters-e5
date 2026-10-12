@@ -1,5 +1,13 @@
 [
   {
+    "id": "hip-thrust",
+    "name": "Hip thrust",
+    "muscleGroup": "Glúteos",
+    "equipment": "Barra y banco",
+    "imageUrl": "https://i.blogs.es/c30741/como-hacer-hip-thrust/1366_2000.jpeg",
+    "instructions": "Siéntate en el suelo con la espalda alta apoyada en un banco y la barra sobre las caderas (usa una almohadilla). Con los pies a la anchura de las caderas, empuja con los talones y extiende las caderas hasta que el torso y los muslos queden alineados. Aprieta los glúteos arriba y baja de forma controlada."
+  },
+  {
     "id": "sentadilla",
     "name": "Sentadilla",
     "muscleGroup": "Piernas",
@@ -32,6 +40,14 @@
     "instructions": "Apoya los antebrazos y las puntas de los pies en el suelo, con los codos alineados bajo los hombros. Mantén el cuerpo en línea recta desde la cabeza hasta los talones, activando abdomen y glúteos. Evita que la cadera suba o caiga y respira de forma constante durante el tiempo de trabajo."
   },
   {
+    "id": "zancadas",
+    "name": "Zancadas",
+    "muscleGroup": "Piernas",
+    "equipment": "Peso corporal",
+    "imageUrl": "https://i.blogs.es/5917ff/650_1000_zancada/650_1200.jpg",
+    "instructions": "De pie con los pies a la anchura de las caderas y las manos en la cintura. Da un paso al frente y baja flexionando ambas rodillas hasta que la de atrás casi toque el suelo y la de delante forme un ángulo de 90 grados. Empuja con el pie delantero para volver a la posición inicial y alterna con la otra pierna."
+  },
+  {
     "id": "peso-muerto",
     "name": "Peso muerto",
     "muscleGroup": "Piernas y Espalda",
@@ -48,12 +64,12 @@
     "instructions": "Cuélgate de la barra con las manos algo más anchas que los hombros y las palmas mirando hacia delante. Tira de los codos hacia abajo y hacia los costados para elevar el cuerpo hasta que la barbilla supere la barra. Baja de forma controlada hasta extender completamente los brazos, evitando balanceos."
   },
   {
-    "id": "zancadas",
-    "name": "Zancadas",
-    "muscleGroup": "Piernas",
-    "equipment": "Peso corporal",
-    "imageUrl": "https://i.blogs.es/5917ff/650_1000_zancada/650_1200.jpg",
-    "instructions": "De pie con los pies a la anchura de las caderas y las manos en la cintura. Da un paso al frente y baja flexionando ambas rodillas hasta que la de atrás casi toque el suelo y la de delante forme un ángulo de 90 grados. Empuja con el pie delantero para volver a la posición inicial y alterna con la otra pierna."
+    "id": "crunch-abdominal",
+    "name": "Crunch abdominal",
+    "muscleGroup": "Core",
+    "equipment": "Esterilla",
+    "imageUrl": "https://fivestarsfitness.com/wp-content/uploads/2025/06/crunch-abdominal.jpeg",
+    "instructions": "Túmbate boca arriba con las rodillas flexionadas y los pies apoyados en el suelo. Coloca las manos detrás de la cabeza sin tirar del cuello y eleva el torso contrayendo el abdomen hasta despegar la parte alta de la espalda del suelo. Baja de forma controlada sin relajar por completo el abdomen."
   },
   {
     "id": "press-militar",
@@ -80,28 +96,12 @@
     "instructions": "Colócate frente a la polea con los codos pegados al torso y las manos agarrando el maneral. Extiende los codos hacia abajo hasta que los brazos queden completamente rectos, apretando el tríceps al final. Vuelve de forma controlada a la posición inicial sin separar los codos del cuerpo."
   },
   {
-    "id": "hip-thrust",
-    "name": "Hip thrust",
-    "muscleGroup": "Glúteos",
-    "equipment": "Barra y banco",
-    "imageUrl": "https://i.blogs.es/c30741/como-hacer-hip-thrust/1366_2000.jpeg",
-    "instructions": "Siéntate en el suelo con la espalda alta apoyada en un banco y la barra sobre las caderas (usa una almohadilla). Con los pies a la anchura de las caderas, empuja con los talones y extiende las caderas hasta que el torso y los muslos queden alineados. Aprieta los glúteos arriba y baja de forma controlada."
-  },
-  {
     "id": "elevaciones-laterales",
     "name": "Elevaciones laterales",
     "muscleGroup": "Hombros",
     "equipment": "Mancuernas",
     "imageUrl": "https://i.blogs.es/4fe63b/istock-1443576746/1366_2000.jpeg",
     "instructions": "De pie con una mancuerna en cada mano a los lados del cuerpo y los codos ligeramente flexionados. Eleva los brazos hacia los lados hasta que queden paralelos al suelo, sin subir los hombros ni balancear el torso. Baja de forma controlada hasta la posición inicial."
-  },
-  {
-    "id": "crunch-abdominal",
-    "name": "Crunch abdominal",
-    "muscleGroup": "Core",
-    "equipment": "Esterilla",
-    "imageUrl": "https://fivestarsfitness.com/wp-content/uploads/2025/06/crunch-abdominal.jpeg",
-    "instructions": "Túmbate boca arriba con las rodillas flexionadas y los pies apoyados en el suelo. Coloca las manos detrás de la cabeza sin tirar del cuello y eleva el torso contrayendo el abdomen hasta despegar la parte alta de la espalda del suelo. Baja de forma controlada sin relajar por completo el abdomen."
   },
   {
     "id": "fondos-paralelas",

@@ -27,7 +27,27 @@ Desktop.ini
 .idea/
 .vscode/
 
+# Dependencias
+node_modules/
+
+# Builds
+dist/
+web/dist/
+api/dist/
+
 # SQLite
 api/data/*.db
 api/data/*.db-shm
 api/data/*.db-wal
+
+# Vite
+.vite/
+.vite-temp/
+
+# Entorno
+.env
+.env.local
+
+# Sistema
+.DS_Store
+Thumbs.db

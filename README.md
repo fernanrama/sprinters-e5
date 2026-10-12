@@ -1,141 +1,298 @@
 # Sprinters · Equipo 5
 
-Motor de planes y rutinas de entrenamiento de Healthy Life, para Procesos de Software de la Universidad Rey Juan Carlos.
+Motor de planes y rutinas de entrenamiento de **Healthy Life**, desarrollado para la asignatura **Procesos de Software de la Universidad Rey Juan Carlos**.
 
-Ayudamos a una persona que entrena a preparar una rutina clara, realizar cada sesión y conservar sus resultados para ajustar su entrenamiento con el tiempo.
+> Ayudamos a una persona que entrena a preparar una rutina clara, realizar cada sesión y conservar sus resultados para ajustar su entrenamiento con el tiempo.
 
-## Qué está preparado
+## Estado actual
 
-- Dos paquetes: `web/` y `api/`.
-- React + TypeScript + Vite para la interfaz.
-- Node.js + TypeScript + Express para la API.
-- Cuatro ejercicios de ejemplo en `api/data/exercises.json`.
-- La interfaz consulta la API y muestra un catálogo básico, con estados de carga, catálogo vacío y error con reintento.
-- Comprobaciones de tipos, pruebas HTTP y compilación.
+La rama `main` incluye:
 
-Este cambio corresponde a **SCRUM-81: preparar el repositorio**. Es una base para HU01 (catálogo) y HU04 (ficha); su existencia no supone aceptación por la PO. La ficha detallada todavía no está implementada. SQLite se añadirá cuando una historia requiera persistencia. Los contratos con E1 y E2 siguen pendientes de acuerdo.
+- Catálogo de 14 ejercicios obtenido desde la API.
+- Información de nombre, grupo muscular, equipamiento e imagen.
+- Apertura de una ficha desde cada tarjeta.
+- Estados de carga, catálogo vacío y error con reintento.
+- Comprobación de tipos, pruebas HTTP y compilación.
+
+### Pendientes conocidos
+
+- Incorporar instrucciones específicas para cada ejercicio: la ficha actual utiliza un texto genérico.
+- Incorporar la consulta individual `GET /exercises/:id`.
+- Corregir la ruta del logo URJC.
+- Mejorar la navegación mediante teclado y la accesibilidad del modal.
+
+La creación de rutinas, SQLite, la autenticación y las consultas entre equipos todavía no están integradas en `main`.
+
+El estado de una historia se determina mediante sus criterios de aceptación y la Definition of Done; la existencia de código en una rama no implica que esté entregada.
+
+## Stack
+
+| Capa | Tecnología |
+| --- | --- |
+| Interfaz | React + TypeScript + Vite |
+| API | Node.js + TypeScript + Express |
+| Catálogo actual | Archivo JSON leído por la API |
+| Persistencia prevista | SQLite |
+| Gestión de dependencias | npm workspaces |
 
 ## Requisitos
 
-- **Node.js 24.x**, con npm incluido. Comprobar con `node --version` y `npm --version`.
+- **Node.js 24.x**, con npm incluido.
 - Git.
-- Acceso al repositorio privado de GitHub. El propietario debe invitar al equipo.
+- Acceso al repositorio privado de GitHub.
 
-Descargas oficiales: [Node.js](https://nodejs.org/) y [Git](https://git-scm.com/).
-El archivo `.nvmrc` indica la versión principal de Node.
-
-## Clonar y arrancar desde cero
-
-Mientras el PR de preparación esté abierto, clonar su rama:
+Comprobar las versiones:
 
 ```sh
-git clone --branch chore/SCRUM-81-preparar-repositorio https://github.com/fernanrama/sprinters-e5.git
+node --version
+npm --version
+git --version
+```
+
+El archivo `.nvmrc` indica la versión principal de Node.js.
+
+## Instalación y arranque
+
+Ejecutar desde una terminal:
+
+```sh
+git clone --branch main https://github.com/fernanrama/sprinters-e5.git
 cd sprinters-e5
 npm ci
 npm run dev
 ```
 
-Cuando se integre el PR en `main`, se puede clonar sin `--branch`.
-Para una copia ya existente: `git fetch origin` y `git switch chore/SCRUM-81-preparar-repositorio`.
+Abrir:
 
-Abrir **http://127.0.0.1:5173**. Deben aparecer los cuatro ejercicios.
-El comando arranca la web y la API en la misma terminal; detenerlas con **Ctrl+C**.
+- **Aplicación:** http://127.0.0.1:5173
+- **Estado de la API:** http://127.0.0.1:3001/health
+- **Catálogo JSON:** http://127.0.0.1:3001/exercises
 
-En Windows, si PowerShell bloquea `npm.ps1`, usar `npm.cmd` en lugar de `npm`.
-No es necesario modificar la política de seguridad.
+`npm run dev` arranca la web y la API en la misma terminal. Para detenerlas, pulsar **Ctrl+C**.
+
+### Windows y PowerShell
+
+Si PowerShell bloquea `npm.ps1`, sustituir `npm` por `npm.cmd`:
+
+```powershell
+npm.cmd ci
+npm.cmd run dev
+```
+
+No es necesario cambiar la política de ejecución de PowerShell.
+
+### Actualizar una copia existente
+
+Con los cambios propios guardados o confirmados, ejecutar:
+
+```sh
+git switch main
+git pull --ff-only origin main
+npm ci
+npm run dev
+```
+
+Si Git avisa de cambios locales o de una divergencia, detenerse y resolverla antes de continuar. No utilizar comandos de borrado o reinicio para descartar trabajo de compañeros.
 
 ## Comandos
 
-Ejecutar desde la carpeta raíz del repositorio:
+Ejecutar desde la raíz del repositorio:
 
-| Comando | Para qué sirve |
+| Comando | Función |
 | --- | --- |
-| `npm ci` | Instalar exactamente las dependencias del archivo de bloqueo. |
-| `npm run dev` | Arrancar API (3001) y web (5173) en desarrollo. |
-| `npm run dev:api` | Arrancar solo la API. |
-| `npm run dev:web` | Arrancar solo la web; necesita la API para cargar datos. |
+| `npm ci` | Instalar las dependencias según `package-lock.json`. |
+| `npm run dev` | Arrancar API y web en desarrollo. |
+| `npm run dev:api` | Arrancar únicamente la API. |
+| `npm run dev:web` | Arrancar únicamente la web. |
 | `npm run typecheck` | Comprobar los tipos de TypeScript. |
-| `npm test` | Probar las respuestas HTTP del catálogo. |
+| `npm test` | Ejecutar las pruebas HTTP. |
 | `npm run build` | Compilar la web y la API. |
 | `npm run check` | Comprobar tipos, ejecutar pruebas y compilar. |
-| `npm start` | Arrancar la API compilada y servir la web compilada en el puerto 3001. |
+| `npm start` | Servir la aplicación compilada desde la API. |
 
-Para comprobar el resultado compilado:
+La web necesita la API para cargar el catálogo.
+
+### Comprobar la versión compilada
 
 ```sh
 npm run build
 npm start
 ```
 
-Abrir **http://127.0.0.1:3001**. Este modo requiere haber compilado primero.
-Es una comprobación local; no configura un despliegue en Internet.
+Abrir **http://127.0.0.1:3001**.
 
-## Cómo comprobar que ambas partes funcionan
+Este procedimiento permite ejecutar la aplicación compilada en el ordenador local; no configura un despliegue en Internet.
 
-1. Ejecutar `npm run check`. Debe terminar sin errores.
-2. Ejecutar `npm run dev` y abrir la web en el puerto 5173.
-3. Verificar que aparecen Sentadilla, Remo con mancuerna, Press de banca y Plancha.
-4. Abrir **http://127.0.0.1:3001/health**. Debe mostrar `"status": "ok"`.
-5. Abrir **http://127.0.0.1:3001/exercises**. Debe devolver el catálogo JSON.
-6. Para comprobar el catálogo vacío, cambiar temporalmente el archivo de datos por `[]` y recargar la web. Restaurarlo después.
-7. Para comprobar el error de conexión, arrancar solo la web, manteniendo la API detenida. Debe mostrar el error y permitir reintentar.
+## Comprobación del funcionamiento
 
-La API lee el archivo en cada petición: cambiar el JSON y recargar basta para comprobar que la interfaz recibe datos de la API.
+Antes de abrir un pull request:
 
-## API inicial
+1. Ejecutar `npm run check` y comprobar que termina sin errores.
+2. Arrancar la aplicación con `npm run dev`.
+3. Comprobar que aparecen los 14 ejercicios del catálogo.
+4. Abrir varias fichas y verificar los datos de cada ejercicio.
+5. Comprobar que `/health` devuelve `"status": "ok"`.
+6. Comprobar que `/exercises` devuelve una lista JSON.
 
-| Método y ruta | Respuesta |
-| --- | --- |
-| `GET /health` | Estado de servicio, sin comprobar el contenido del catálogo. |
-| `GET /exercises` | Lista de ejercicios; `[]` si el catálogo está vacío. |
+Las pruebas automatizadas cubren las respuestas del catálogo, incluido el catálogo vacío y distintos errores de los datos. No sustituyen la comprobación visual ni la validación de los criterios de aceptación.
 
-Ejemplo de un elemento:
+### Comprobar el estado de error
+
+1. Detener la aplicación.
+2. Ejecutar solo `npm run dev:web`, manteniendo la API detenida.
+3. Abrir la web y comprobar el mensaje de error.
+4. Arrancar la API en otra terminal con `npm run dev:api`.
+5. Pulsar el botón de reintento y comprobar que se carga el catálogo.
+
+### Comprobar el catálogo vacío
+
+En una copia local de prueba:
+
+1. Guardar una copia del contenido de `api/data/exercises.json`.
+2. Sustituir temporalmente su contenido por `[]`.
+3. Recargar la web y comprobar el mensaje de catálogo vacío.
+4. Restaurar inmediatamente el contenido original.
+
+La API lee el archivo en cada petición. No subir al repositorio las modificaciones temporales utilizadas para estas comprobaciones.
+
+## API disponible
+
+| Método | Ruta | Respuesta |
+| --- | --- | --- |
+| GET | `/health` | Estado del servicio. |
+| GET | `/exercises` | Lista de ejercicios; `[]` si está vacía. |
+
+Estas rutas también están disponibles bajo el prefijo `/api`.
+
+Ejemplo de un ejercicio:
 
 ```json
 {
   "id": "sentadilla",
   "name": "Sentadilla",
   "muscleGroup": "Piernas",
-  "equipment": "Peso corporal"
+  "equipment": "Peso corporal",
+  "imageUrl": "https://i.blogs.es/76cc7d/1366_2000/450_1000.jpeg"
 }
 ```
 
-Los cuatro campos son cadenas no vacías. Si el JSON no se puede leer o su estructura es inválida, la API devuelve HTTP 500 con `{"error":"No se pudo cargar el catálogo."}`.
+La API comprueba que `id`, `name`, `muscleGroup` y `equipment` sean cadenas no vacías. Actualmente no valida `imageUrl`.
 
-Durante el desarrollo, Vite envía las llamadas de la web a `/api/exercises` a la API local, sin necesidad de configurar CORS. La API también expone el prefijo `/api` para servir la web compilada. Este contrato interno de E5 no sustituye los acuerdos con los otros equipos.
+Si el archivo no se puede leer o los datos son inválidos, devuelve HTTP 500:
 
-## Estructura
+```json
+{
+  "error": "No se pudo cargar el catálogo."
+}
+```
+
+Las rutas inexistentes devuelven HTTP 404:
+
+```json
+{
+  "error": "Recurso no encontrado."
+}
+```
+
+En desarrollo, Vite redirige las peticiones de la web a `/api` hacia la API local. No hace falta configurar CORS para este arranque.
+
+## Acuerdos con otros equipos
+
+Los contratos compartidos se registran en el Miro común y se siguen mediante **SCRUM-82**.
+
+### Equipo 1 · Identidad
+
+- El identificador proporcionado por el login se llama `id_user`.
+- E1 ha confirmado que es único.
+- El login actual no proporciona un token.
+- E5 utilizará ese identificador sin generar otro para el mismo usuario.
+
+Este acuerdo describe el prototipo actual. La comprobación de permisos deberá concretarse antes de integrar datos personales reales.
+
+### Equipo 2 · Hábitos
+
+Se ha propuesto la consulta:
+
+```http
+GET /users/{id_user}/routines
+```
+
+Su respuesta contendrá las rutinas planificadas del usuario, con:
+
+- Identificador y nombre de la rutina.
+- Ejercicios con identificador, nombre, series y repeticiones.
+- Fechas concretas en formato `AAAA-MM-DD`.
+- Una lista vacía cuando el usuario no tenga rutinas.
+
+E2 ha confirmado que para Sprint 1 no necesita la consulta implementada. El acuerdo y el ejemplo JSON quedan documentados en Miro; cualquier ajuste del formato se registrará allí.
+
+Los datos planificados y los entrenamientos realmente realizados son conceptos distintos. El intercambio de resultados requerirá un contrato específico.
+
+## Estructura del repositorio
 
 ```text
 sprinters-e5/
 ├── web/
-│   ├── src/                 Interfaz React
-│   └── vite.config.ts       Puerto y conexión con la API
+│   ├── src/                 Interfaz React y estilos
+│   └── vite.config.ts       Configuración de Vite y proxy
 ├── api/
-│   ├── src/                 Servidor Express y pruebas HTTP
-│   └── data/exercises.json  Catálogo inicial
+│   ├── src/                 API Express y pruebas HTTP
+│   └── data/
+│       └── exercises.json   Catálogo de ejercicios
 ├── .github/                 Plantilla de pull request
-├── CONTRIBUTING.md          Ramas, revisión y Jira
-├── package.json             Comandos del equipo
-└── package-lock.json        Versiones reproducibles
+├── .nvmrc                   Versión principal de Node.js
+├── CONTRIBUTING.md          Procedimiento de colaboración
+├── package.json             Workspaces y comandos comunes
+└── package-lock.json        Dependencias reproducibles
 ```
 
-## Si algo no arranca
+## Cómo trabajamos
 
-- **Node incorrecto:** usar Node 24.x y volver a ejecutar `npm ci`.
-- **Puerto ocupado:** detener la instancia anterior. Los puertos son fijos (3001/5173) para evitar conectar la web a una API distinta por accidente.
-- **Error de carga:** comprobar la terminal de la API y `/health`.
-- **Error del catálogo:** revisar `api/data/exercises.json`.
-- **Repositorio no encontrado:** comprobar la cuenta y la invitación al repositorio privado.
-- **No aparece la web en el puerto 3001:** ejecutar primero `npm run build`.
+1. Elegir una incidencia de Jira y actualizar su estado.
+2. Partir de `main` actualizado.
+3. Crear una rama para un cambio acotado, por ejemplo:
 
-## Organización y revisión
+   ```sh
+   git switch -c feature/SCRUM-45-ficha-ejercicio
+   ```
 
-- Scrum Master: Fernán.
-- Product Owner delegada: Irene.
-- Developers: Nacho, Christopher, Joaquín y Sergio.
-- [Jira](https://sprinters-urjc.atlassian.net/jira/software/projects/SCRUM/boards/1/backlog): backlog y seguimiento.
-- Miro: decisiones, diseño y acuerdos con otros equipos.
+4. Implementar el cambio y ejecutar `npm run check`.
+5. Subir la rama y abrir un pull request hacia `main`.
+6. Incluir la clave de Jira en el título y enlazar el PR en la incidencia.
+7. Obtener la revisión de un Developer distinto del autor.
+8. Integrar el cambio tras resolver las observaciones.
+9. Validar con Irene los criterios sobre la versión integrada y registrar las evidencias.
+10. Actualizar Jira según el resultado real.
 
-Seguir [CONTRIBUTING.md](CONTRIBUTING.md): rama por cambio, PR hacia `main`, revisión por otro Developer y validación de criterios con Irene para las historias.
-Las pruebas HTTP verifican catálogo real, catálogo vacío y datos inválidos. No hay pipeline de CI configurado todavía.
+Si se añaden o cambian dependencias, incluir también la actualización de `package-lock.json`.
+
+Consultar [CONTRIBUTING.md](CONTRIBUTING.md) para el procedimiento de colaboración.
+
+## Organización del equipo
+
+| Rol | Personas |
+| --- | --- |
+| Scrum Master | Fernán |
+| Product Owner delegada | Irene |
+| Developers | Nacho, Christopher, Joaquín y Sergio |
+
+- **Jira:** historias, tareas, prioridades, estimaciones, estados y evidencias.
+- **Miro:** objetivos, diseño, mapa de historias y acuerdos entre equipos.
+- **GitHub:** código, ramas, pull requests y revisiones.
+
+[Jira del equipo](https://sprinters-urjc.atlassian.net/jira/software/projects/SCRUM/boards/1/backlog)
+
+## Resolución de problemas
+
+| Problema | Qué comprobar |
+| --- | --- |
+| No se puede clonar | Cuenta de GitHub y acceso al repositorio privado. |
+| PowerShell bloquea npm | Utilizar `npm.cmd`. |
+| Versión de Node incompatible | Instalar Node.js 24.x y repetir `npm ci`. |
+| Puerto ocupado | Detener la instancia anterior; se utilizan 3001 y 5173. |
+| La web no carga el catálogo | Comprobar la terminal de la API y `/health`. |
+| La API devuelve 500 | Revisar el formato y contenido de `api/data/exercises.json`. |
+| No aparece la web en el puerto 3001 | Ejecutar `npm run build` antes de `npm start`. |
+| `npm ci` indica discrepancias | Revisar que el cambio incluya un `package-lock.json` actualizado. |
+
+Actualmente no hay un pipeline de integración continua configurado. Las comprobaciones se ejecutan localmente mediante `npm run check`.

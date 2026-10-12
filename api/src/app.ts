@@ -6,12 +6,15 @@ type Exercise = {
   name: string;
   muscleGroup: string;
   equipment: string;
+  description: string;
+  instructions: string;
 };
 
 function isExercise(value: unknown): value is Exercise {
   if (typeof value !== "object" || value === null) return false;
   const fields = value as Record<string, unknown>;
-  return ["id", "name", "muscleGroup", "equipment"].every(
+  // Añadimos "description" e "instructions" a la lista de validación
+  return ["id", "name", "muscleGroup", "equipment", "description", "instructions"].every(
     (field) => typeof fields[field] === "string" && fields[field].length > 0,
   );
 }
@@ -53,3 +56,4 @@ export function createApp(options: {
   app.use(handleError);
   return app;
 }
+

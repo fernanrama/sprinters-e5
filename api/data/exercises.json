@@ -1,100 +1,128 @@
 [
-    {
-    "id": "hip-thrust",
-    "name": "Hip thrust",
-    "muscleGroup": "Glúteos",
-    "equipment": "Barra y banco",
-    "imageUrl": "https://i.blogs.es/c30741/como-hacer-hip-thrust/1366_2000.jpeg"
-  },
   {
     "id": "sentadilla",
     "name": "Sentadilla",
     "muscleGroup": "Piernas",
     "equipment": "Peso corporal",
-    "imageUrl": "https://i.blogs.es/76cc7d/1366_2000/450_1000.jpeg"
-  },
-  {
-    "id": "zancadas",
-    "name": "Zancadas",
-    "muscleGroup": "Piernas",
-    "equipment": "Peso corporal",
-    "imageUrl": "https://imgs.search.brave.com/YZy2IKr-MHTDYxlMjIXvqRwozck4Vl-HV55YKBji30U/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly93d3cu/YnVwYXNhbHVkLmNv/bS9zaXRlcy9kZWZh/dWx0L2ZpbGVzL2lu/bGluZS1pbWFnZXMv/dGlwb3MtZGUtemFu/Y2FkYS0zLmpwZw"
-  },
-  {
-    "id": "peso-muerto",
-    "name": "Peso muerto",
-    "muscleGroup": "Piernas y Espalda",
-    "equipment": "Barra",
-    "imageUrl": "https://allfreeweight.com/wp-content/uploads/2022/09/imagen1.jpg"
+    "imageUrl": "https://i.blogs.es/76cc7d/1366_2000/450_1000.jpeg",
+    "description": "Ejercicio fundamental para desarrollar la fuerza y volumen del tren inferior.",
+    "instructions": "Mantén la espalda recta, baja la cadera hacia atrás hasta romper el paralelo de las rodillas y empuja con fuerza desde los talones para subir."
   },
   {
     "id": "remo-mancuerna",
     "name": "Remo con mancuerna",
     "muscleGroup": "Espalda",
     "equipment": "Mancuerna",
-    "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRODYTzm9M11XgvfPueX5p_O8zDLuHMe6_mBzql-I6y5Cm8cxPELcDuws4&s=10"
-  },
-  {
-    "id": "dominadas",
-    "name": "Dominadas",
-    "muscleGroup": "Espalda",
-    "equipment": "Barra de dominadas",
-    "imageUrl": "https://cdn.sanity.io/images/aa8d3hr0/production/7c343a871c05e5b2456c6c528d7a21a1b13d20cd-1920x1080.jpg?rect=531,0,1080,1080&w=1920&h=1920&q=100"
-  },
-  {
-    "id": "plancha",
-    "name": "Plancha",
-    "muscleGroup": "Core",
-    "equipment": "Esterilla",
-    "imageUrl": "https://media.revistagq.com/photos/672355aaf69e7e75196369db/16:9/w_2560%2Cc_limit/590575189"
-  },
-  {
-    "id": "crunch-abdominal",
-    "name": "Crunch abdominal",
-    "muscleGroup": "Core",
-    "equipment": "Esterilla",
-    "imageUrl": "https://fivestarsfitness.com/wp-content/uploads/2025/06/crunch-abdominal.jpeg"
-  },
-  {
-    "id": "press-militar",
-    "name": "Press militar",
-    "muscleGroup": "Hombros",
-    "equipment": "Mancuernas",
-    "imageUrl": "https://www.zonawod.com/wp-content/uploads/Press-militar-con-mancuerna-press-hombro-con-mancuernas.jpg"
-  },
-  {
-    "id": "elevaciones-laterales",
-    "name": "Elevaciones laterales",
-    "muscleGroup": "Hombros",
-    "equipment": "Mancuernas",
-    "imageUrl": "https://i.blogs.es/4fe63b/istock-1443576746/1366_2000.jpeg"
+    "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRODYTzm9M11XgvfPueX5p_O8zDLuHMe6_mBzql-I6y5Cm8cxPELcDuws4&s=10",
+    "description": "Movimiento unilateral ideal para ganar grosor y compensar desequilibrios en la espalda.",
+    "instructions": "Apoya una rodilla y una mano en el banco. Tira de la mancuerna hacia tu cadera manteniendo el codo cerca del torso y la espalda paralela al suelo."
   },
   {
     "id": "press-banca",
     "name": "Press de banca",
     "muscleGroup": "Pecho",
     "equipment": "Barra y banco",
-    "imageUrl": "https://i.blogs.es/a13680/1366_2000/840_560.jpeg"
+    "imageUrl": "https://i.blogs.es/a13680/1366_2000/840_560.jpeg",
+    "description": "El ejercicio principal para el desarrollo de la fuerza, potencia y el volumen del pecho.",
+    "instructions": "Acuéstate en el banco, agarra la barra con las manos un poco más anchas que los hombros. Baja la barra controladamente hasta tocar el pecho y empuja con fuerza hacia arriba."
+  },
+  {
+    "id": "plancha",
+    "name": "Plancha",
+    "muscleGroup": "Core",
+    "equipment": "Esterilla",
+    "imageUrl": "https://media.revistagq.com/photos/672355aaf69e7e75196369db/16:9/w_2560%2Cc_limit/590575189",
+    "description": "Ejercicio isométrico excelente para fortalecer la zona media, mejorar la estabilidad y prevenir lesiones.",
+    "instructions": "Apoya los antebrazos y las puntas de los pies en el suelo. Mantén el cuerpo en línea recta, paralelo al suelo, contrayendo fuertemente el abdomen y los glúteos."
+  },
+  {
+    "id": "peso-muerto",
+    "name": "Peso muerto",
+    "muscleGroup": "Piernas y Espalda",
+    "equipment": "Barra",
+    "imageUrl": "https://allfreeweight.com/wp-content/uploads/2022/09/imagen1.jpg",
+    "description": "Movimiento compuesto brutal que trabaja toda la cadena posterior del cuerpo al mismo tiempo.",
+    "instructions": "Con los pies a la anchura de los hombros, flexiona caderas y rodillas para agarrar la barra. Levanta el peso extendiendo caderas y rodillas simultáneamente manteniendo la espalda neutra en todo momento."
+  },
+  {
+    "id": "dominadas",
+    "name": "Dominadas",
+    "muscleGroup": "Espalda",
+    "equipment": "Barra de dominadas",
+    "imageUrl": "https://cdn.sanity.io/images/aa8d3hr0/production/7c343a871c05e5b2456c6c528d7a21a1b13d20cd-1920x1080.jpg?rect=531,0,1080,1080&w=1920&h=1920&q=100",
+    "description": "Uno de los mejores ejercicios de calistenia para desarrollar la amplitud y fuerza de la espalda.",
+    "instructions": "Cuélgate de la barra con un agarre más ancho que los hombros. Retrae las escápulas y tira de tu cuerpo hacia arriba hasta que la barbilla pase por encima de la barra. Desciende de forma controlada."
+  },
+  {
+    "id": "zancadas",
+    "name": "Zancadas",
+    "muscleGroup": "Piernas",
+    "equipment": "Peso corporal",
+    "imageUrl": "https://i.blogs.es/5917ff/650_1000_zancada/650_1200.jpg",
+    "description": "Excelente ejercicio unilateral para el trabajo de cuádriceps, glúteos, coordinación y equilibrio.",
+    "instructions": "Da un paso amplio hacia adelante y flexiona ambas rodillas hasta que formen ángulos de 90 grados (sin que la rodilla trasera toque el suelo). Empuja con la pierna adelantada para volver a la posición inicial."
+  },
+  {
+    "id": "press-militar",
+    "name": "Press militar",
+    "muscleGroup": "Hombros",
+    "equipment": "Mancuernas",
+    "imageUrl": "https://www.zonawod.com/wp-content/uploads/Press-militar-con-mancuerna-press-hombro-con-mancuernas.jpg",
+    "description": "Ejercicio clave para ganar fuerza de empuje vertical y masa muscular en los hombros.",
+    "instructions": "De pie o sentado con la espalda recta, empuja las mancuernas desde la altura de los hombros hasta extender los brazos casi por completo por encima de la cabeza. Controla la bajada."
+  },
+  {
+    "id": "curl-biceps",
+    "name": "Curl de bíceps",
+    "muscleGroup": "Brazos",
+    "equipment": "Mancuernas",
+    "imageUrl": "https://hips.hearstapps.com/hmg-prod/images/muscle-and-fitness-royalty-free-image-1575304404.jpg?resize=640:*",
+    "description": "Movimiento de aislamiento clásico y efectivo para aumentar el tamaño y la fuerza de los brazos.",
+    "instructions": "De pie, sujeta las mancuernas a los lados. Con los codos pegados al cuerpo en todo momento, flexiona los brazos para llevar el peso hacia los hombros. Baja las mancuernas lentamente."
+  },
+  {
+    "id": "extension-triceps",
+    "name": "Extensión de tríceps",
+    "muscleGroup": "Brazos",
+    "equipment": "Polea o mancuerna",
+    "imageUrl": "https://hips.hearstapps.com/hmg-prod/images/triceps-extension-exercise-royalty-free-image-1575974873.jpg?resize=640:*",
+    "description": "Ejercicio de aislamiento fundamental para el desarrollo completo de la parte posterior del brazo.",
+    "instructions": "Sujeta la polea o mancuerna por detrás o encima de la cabeza. Manteniendo la parte superior del brazo totalmente fija, extiende los codos hasta contraer el tríceps por completo."
+  },
+  {
+    "id": "hip-thrust",
+    "name": "Hip thrust",
+    "muscleGroup": "Glúteos",
+    "equipment": "Barra y banco",
+    "imageUrl": "https://i.blogs.es/c30741/como-hacer-hip-thrust/1366_2000.jpeg",
+    "description": "El mejor ejercicio biomecánico para aislar y maximizar la fuerza e hipertrofia de los glúteos.",
+    "instructions": "Apoya la zona escapular en el borde de un banco. Coloca la barra sobre tu cadera y empuja hacia arriba formando un puente, contrayendo fuertemente los glúteos en la parte alta del movimiento por un segundo."
+  },
+  {
+    "id": "elevaciones-laterales",
+    "name": "Elevaciones laterales",
+    "muscleGroup": "Hombros",
+    "equipment": "Mancuernas",
+    "imageUrl": "https://i.blogs.es/4fe63b/istock-1443576746/1366_2000.jpeg",
+    "description": "Movimiento específico para dar redondez al hombro trabajando de forma directa la cabeza lateral del deltoides.",
+    "instructions": "De pie, con una ligera flexión de codos e inclinando ligeramente el torso hacia adelante, eleva los brazos lateralmente hasta que estén paralelos al suelo. Resiste el peso al bajar."
+  },
+  {
+    "id": "crunch-abdominal",
+    "name": "Crunch abdominal",
+    "muscleGroup": "Core",
+    "equipment": "Esterilla",
+    "imageUrl": "https://fivestarsfitness.com/wp-content/uploads/2025/06/crunch-abdominal.jpeg",
+    "description": "Ejercicio clásico de aislamiento para fortalecer y marcar la musculatura del recto abdominal.",
+    "instructions": "Acostado boca arriba con las rodillas flexionadas y los pies en el suelo. Contrae el abdomen para despegar los hombros del suelo unos centímetros. Importante: no tires del cuello con las manos."
   },
   {
     "id": "fondos-paralelas",
     "name": "Fondos en paralelas",
     "muscleGroup": "Pecho y Tríceps",
     "equipment": "Barras paralelas",
-    "imageUrl": "https://fivestarsfitness.com/wp-content/uploads/2025/06/fondos-en-paralelas.jpeg"
-  },
-  {
-    "id": "extension-triceps",
-    "name": "Extensión de tríceps",
-    "muscleGroup": "Tríceps",
-    "equipment": "Polea o mancuerna",
-    "imageUrl": "https://hips.hearstapps.com/hmg-prod/images/triceps-extension-exercise-royalty-free-image-1575974873.jpg?resize=640:*"
-  },
-  {
-    "id": "curl-biceps",
-    "name": "Curl de bíceps",
-    "muscleGroup": "Bíceps",
-    "equipment": "Mancuernas",
-    "imageUrl": "https://hips.hearstapps.com/hmg-prod/images/muscle-and-fitness-royalty-free-image-1575304404.jpg?resize=640:*"
+    "imageUrl": "https://fivestarsfitness.com/wp-content/uploads/2025/06/fondos-en-paralelas.jpeg",
+    "description": "Ejercicio compuesto muy completo con el peso corporal enfocado en el pecho inferior y los tríceps.",
+    "instructions": "Sostente en las barras paralelas con los brazos estirados. Inclina ligeramente el torso hacia adelante y baja el cuerpo controladamente hasta que los codos formen un ángulo de 90 grados. Empuja con el pecho y tríceps para subir."
   }
 ]

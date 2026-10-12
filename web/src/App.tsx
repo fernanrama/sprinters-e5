@@ -6,6 +6,7 @@ type Exercise = {
   muscleGroup: string;
   equipment: string;
   imageUrl: string;
+  instructions: string;
 };
 
 type CatalogState =
@@ -29,7 +30,7 @@ export default function App() {
         if (!response.ok) throw new Error("Catalog unavailable");
         const exercises: Exercise[] = await response.json();
         if (!Array.isArray(exercises)) throw new Error("Invalid catalog");
-        
+
         if (!controller.signal.aborted) setState({ status: "ready", exercises });
       } catch {
         if (!controller.signal.aborted) setState({ status: "error" });
@@ -66,15 +67,15 @@ export default function App() {
                 <div className="message" style={{ marginTop: '20px' }}>
                   <p style={{ margin: 0, fontWeight: '600', color: '#cb0017' }}>Instrucciones de ejecución:</p>
                   <p style={{ margin: '8px 0 0 0', fontSize: '0.95rem', lineHeight: '1.5' }}>
-                    Mantén una postura firme, controla la respiración y ejecuta el movimiento de forma fluida centrándote en el aislamiento del grupo muscular de {selectedExercise.muscleGroup.toLowerCase()}.
+                    {selectedExercise.instructions}
                   </p>
                 </div>
               </div>
               <div>
-                <img 
-                  src={selectedExercise.imageUrl} 
-                  alt={selectedExercise.name} 
-                  style={{ width: '100%', height: '320px', objectFit: 'cover', borderRadius: '8px', border: '1px solid #e4e2de' }} 
+                <img
+                  src={selectedExercise.imageUrl}
+                  alt={selectedExercise.name}
+                  style={{ width: '100%', height: '320px', objectFit: 'cover', borderRadius: '8px', border: '1px solid #e4e2de' }}
                   onError={(e) => {
                     e.currentTarget.src = FALLBACK_IMAGE;
                   }}
@@ -105,18 +106,18 @@ export default function App() {
                       <p className="count">{state.exercises.length} ejercicios disponibles</p>
                       <ul className="catalog" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: '20px', listStyle: 'none', padding: 0 }}>
                         {state.exercises.map((exercise) => (
-                          <li 
-                            key={exercise.id + Math.random()} 
+                          <li
+                            key={exercise.id}
                             onClick={() => setSelectedExercise(exercise)}
                             style={{ background: '#fff', border: '1px solid #e4e2de', borderRadius: '6px', overflow: 'hidden', cursor: 'pointer', transition: 'transform 0.2s', boxShadow: '0 2px 4px rgba(0,0,0,0.04)' }}
                             onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-3px)'}
                             onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
                           >
                             <div style={{ height: '140px', overflow: 'hidden', background: '#eee' }}>
-                              <img 
-                                src={exercise.imageUrl} 
-                                alt={exercise.name} 
-                                style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+                              <img
+                                src={exercise.imageUrl}
+                                alt={exercise.name}
+                                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                                 onError={(e) => {
                                   e.currentTarget.src = FALLBACK_IMAGE;
                                 }}

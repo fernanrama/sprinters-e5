@@ -87,3 +87,32 @@ test("ejercicio con nombre vacío da 500 controlado", async (t) => {
   assert.equal(response.status, 500);
   assert.deepEqual(await response.json(), { error: "No se pudo cargar el catálogo." });
 });
+test("GET /exercises/:id devuelve el ejercicio solicitado", async (t) => {
+  const origin = await serve(t);
+  const expected = JSON.parse(await readFile(
+    new URL("../data/exercises.json", import.meta.url), "utf8",
+  ));
+  const first = expected[0];
+
+  for (const route of [`/exercises/${first.id}`, `/api/exercises/${first.id}`]) {
+    const response = await fetch(origin + route);
+    assert.equal(response.status, 200);
+    assert.deepEqual(await response.json(), first);
+  }
+});
+
+test("GET /exercises/:id devuelve 404 si el ejercicio no existe", async (t) => {
+  const origin = await serve(t);
+  for (const route of ["/exercises/no-existe", "/api/exercises/no-existe"]) {
+    const response = await fetch(origin + route);
+    assert.equal(response.status, 404);
+    assert.deepEqual(await response.json(), { error: "Ejercicio no encontrado." });
+  }
+});
+
+test("GET /exercises/:id devuelve 500 si el catálogo es inválido", async (t) => {
+  const origin = await serve(t, await fixture(t, '[{"name":"Incompleto"}]'));
+  const response = await fetch(origin + "/exercises/sentadilla");
+  assert.equal(response.status, 500);
+  assert.deepEqual(await response.json(), { error: "No se pudo cargar el catálogo." });
+});

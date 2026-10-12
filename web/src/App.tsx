@@ -1,11 +1,14 @@
 import { useEffect, useState } from "react";
 
+// 1. Tipo actualizado con description e instructions
 type Exercise = {
   id: string;
   name: string;
   muscleGroup: string;
   equipment: string;
   imageUrl: string;
+  description: string;
+  instructions: string;
 };
 
 type CatalogState =
@@ -19,19 +22,14 @@ export default function App() {
   const [state, setState] = useState<CatalogState>({ status: "loading" });
   const [attempt, setAttempt] = useState(0);
   const [selectedExercise, setSelectedExercise] = useState<Exercise | null>(null);
+  
+  // Estado para la animación de cierre del modal
   const [isClosing, setIsClosing] = useState(false);
-
-  const handleCloseModal = () => {
-    setIsClosing(true); // 1. Activa la animación de cierre
-    setTimeout(() => {
-      setSelectedExercise(null); // 2. Borra el modal después de 300ms (lo que dura la animación en CSS)
-      setIsClosing(false); // 3. Resetea el estado
-    }, 300); 
-  };
 
   useEffect(() => {
     const controller = new AbortController();
     setState({ status: "loading" });
+
     async function load() {
       try {
         const response = await fetch("/api/exercises", { signal: controller.signal });
@@ -44,28 +42,38 @@ export default function App() {
         if (!controller.signal.aborted) setState({ status: "error" });
       }
     }
+
     void load();
     return () => controller.abort();
   }, [attempt]);
 
+  // Función para cerrar el modal con retraso para que se vea la animación
+  const handleCloseModal = () => {
+    if (!selectedExercise) return;
+    setIsClosing(true);
+    setTimeout(() => {
+      setSelectedExercise(null);
+      setIsClosing(false);
+    }, 300); // 300ms es lo que dura la animación en el CSS
+  };
+
   return (
     <>
       <header className="topbar">
-        <a className="brand" href="/" onClick={(e) => { e.preventDefault(); setSelectedExercise(null); }}>
+        <a className="brand" href="/" onClick={(e) => { e.preventDefault(); handleCloseModal(); }}>
           <img src="/data/URJC-Emblem-700x394.webp" alt="Logo URJC" style={{ height: '32px', objectFit: 'contain' }} />
           Healthy Life<span>Entrenamiento</span>
         </a>
         <span className="section-label">Subsistema E5</span>
       </header>
 
-      {/* EL CATÁLOGO SE MUESTRA SIEMPRE DE FONDO */}
       <main>
         <div style={{ marginBottom: '30px' }}>
           <p className="eyebrow">Tu entrenamiento empieza aquí</p>
           <h1>Catálogo de Ejercicios</h1>
           <p className="intro">Selecciona cualquier ejercicio para consultar su ficha técnica detallada y sus pautas de entrenamiento.</p>
         </div>
-        
+
         <section aria-label="Ejercicios disponibles" aria-live="polite" aria-busy={state.status === "loading"}>
           {state.status === "loading" && <p className="message" role="status">Cargando ejercicios...</p>}
           
@@ -90,7 +98,7 @@ export default function App() {
                         onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-3px)'}
                         onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
                       >
-                        <div style={{ height: '140px', overflow: 'hidden', background: '#eee' }}>
+                        <div style={{ height: '140px', overflow: 'hidden', background: '#dcdcdc' }}>
                           <img 
                             src={exercise.imageUrl} 
                             alt={exercise.name} 
@@ -113,7 +121,7 @@ export default function App() {
 
       <footer>Sprinters — Equipo 5 — Healthy Life</footer>
 
-      {/* MODAL SUPERPUESTO */}
+      {/* MODAL SUPERPUESTO CON ANIMACIONES */}
       {selectedExercise && (
         <div 
           className={`modal-backdrop ${isClosing ? 'closing' : ''}`} 
@@ -124,18 +132,20 @@ export default function App() {
             onClick={(e) => e.stopPropagation()}
           >
             <section aria-label="Ficha del ejercicio">
-              {/* (Aquí sigue el resto del contenido de tu modal tal cual lo tenías: el grid, imagen, etc) */}
+              
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '30px', alignItems: 'center' }}>
                 <div>
                   <span className="tag" style={{ marginBottom: '12px', display: 'inline-block' }}>{selectedExercise.muscleGroup}</span>
                   <h1 style={{ marginTop: '0', fontSize: '2.2rem' }}>{selectedExercise.name}</h1>
+                  
+                  {/* Textos dinámicos sacados del JSON */}
                   <p style={{ fontSize: '1rem', color: '#4b5563', lineHeight: '1.6' }}>
-                    Ficha técnica oficial para la ejecución de <strong>{selectedExercise.name}</strong>. Requiere el siguiente equipamiento: <strong>{selectedExercise.equipment}</strong>.
+                    {selectedExercise.description}
                   </p>
                   <div className="message" style={{ marginTop: '20px' }}>
                     <p style={{ margin: 0, fontWeight: '600', color: '#cb0017' }}>Instrucciones de ejecución:</p>
                     <p style={{ margin: '8px 0 0 0', fontSize: '0.95rem', lineHeight: '1.5' }}>
-                      Mantén una postura firme, controla la respiración y ejecuta el movimiento de forma fluida centrándote en el aislamiento del grupo muscular de {selectedExercise.muscleGroup.toLowerCase()}.
+                      {selectedExercise.instructions}
                     </p>
                   </div>
                 </div>
@@ -148,11 +158,14 @@ export default function App() {
                   />
                 </div>
               </div>
+
+              {/* Botón de cerrar situado abajo a la derecha */}
               <div style={{ marginTop: '30px', display: 'flex', justifyContent: 'flex-end' }}>
                 <button onClick={handleCloseModal}>
                   Cerrar
                 </button>
               </div>
+
             </section>
           </div>
         </div>

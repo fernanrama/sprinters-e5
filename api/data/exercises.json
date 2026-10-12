@@ -4,98 +4,111 @@
     "name": "Sentadilla",
     "muscleGroup": "Piernas",
     "equipment": "Peso corporal",
-    "imageUrl": "https://i.blogs.es/76cc7d/1366_2000/450_1000.jpeg"
+    "imageUrl": "https://i.blogs.es/76cc7d/1366_2000/450_1000.jpeg",
+    "instructions": "De pie con los pies a la anchura de los hombros y las puntas ligeramente hacia fuera. Baja flexionando rodillas y caderas mientras llevas los glúteos hacia atrás, manteniendo el pecho erguido y la espalda recta, hasta que los muslos queden paralelos al suelo. Sube empujando con los talones y aprieta los glúteos al final del movimiento."
   },
   {
     "id": "remo-mancuerna",
     "name": "Remo con mancuerna",
     "muscleGroup": "Espalda",
     "equipment": "Mancuerna",
-    "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRODYTzm9M11XgvfPueX5p_O8zDLuHMe6_mBzql-I6y5Cm8cxPELcDuws4&s=10"
+    "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRODYTzm9M11XgvfPueX5p_O8zDLuHMe6_mBzql-I6y5Cm8cxPELcDuws4&s=10",
+    "instructions": "Apoya una rodilla y una mano en un banco, con la espalda paralela al suelo y la mancuerna en la mano libre colgando hacia abajo. Tira de la mancuerna hacia la cadera flexionando el codo y llevando el hombro hacia atrás, sin balancear el torso. Baja de forma controlada hasta la posición inicial."
   },
   {
     "id": "press-banca",
     "name": "Press de banca",
     "muscleGroup": "Pecho",
     "equipment": "Barra y banco",
-    "imageUrl": "https://i.blogs.es/a13680/1366_2000/840_560.jpeg"
+    "imageUrl": "https://i.blogs.es/a13680/1366_2000/840_560.jpeg",
+    "instructions": "Túmbate en el banco con los pies apoyados en el suelo y agarra la barra con las manos algo más anchas que los hombros. Baja la barra de forma controlada hasta la parte media del pecho, manteniendo los codos a unos 45 grados respecto al torso. Empuja la barra hacia arriba hasta extender los brazos sin bloquear los codos de golpe."
   },
   {
     "id": "plancha",
     "name": "Plancha",
     "muscleGroup": "Core",
     "equipment": "Esterilla",
-    "imageUrl": "https://media.revistagq.com/photos/672355aaf69e7e75196369db/16:9/w_2560%2Cc_limit/590575189"
+    "imageUrl": "https://media.revistagq.com/photos/672355aaf69e7e75196369db/16:9/w_2560%2Cc_limit/590575189",
+    "instructions": "Apoya los antebrazos y las puntas de los pies en el suelo, con los codos alineados bajo los hombros. Mantén el cuerpo en línea recta desde la cabeza hasta los talones, activando abdomen y glúteos. Evita que la cadera suba o caiga y respira de forma constante durante el tiempo de trabajo."
   },
   {
     "id": "peso-muerto",
     "name": "Peso muerto",
     "muscleGroup": "Piernas y Espalda",
     "equipment": "Barra",
-    "imageUrl": "https://allfreeweight.com/wp-content/uploads/2022/09/imagen1.jpg"
+    "imageUrl": "https://allfreeweight.com/wp-content/uploads/2022/09/imagen1.jpg",
+    "instructions": "Colócate con los pies a la anchura de las caderas y la barra pegada a las espinillas. Flexiona caderas y rodillas para agarrar la barra con los brazos extendidos y la espalda recta. Empuja el suelo con los pies y sube extendiendo caderas y rodillas a la vez, manteniendo la barra cerca del cuerpo. Baja de forma controlada invirtiendo el movimiento."
   },
   {
     "id": "dominadas",
     "name": "Dominadas",
     "muscleGroup": "Espalda",
     "equipment": "Barra de dominadas",
-    "imageUrl": "https://cdn.sanity.io/images/aa8d3hr0/production/7c343a871c05e5b2456c6c528d7a21a1b13d20cd-1920x1080.jpg?rect=531,0,1080,1080&w=1920&h=1920&q=100"
+    "imageUrl": "https://cdn.sanity.io/images/aa8d3hr0/production/7c343a871c05e5b2456c6c528d7a21a1b13d20cd-1920x1080.jpg?rect=531,0,1080,1080&w=1920&h=1920&q=100",
+    "instructions": "Cuélgate de la barra con las manos algo más anchas que los hombros y las palmas mirando hacia delante. Tira de los codos hacia abajo y hacia los costados para elevar el cuerpo hasta que la barbilla supere la barra. Baja de forma controlada hasta extender completamente los brazos, evitando balanceos."
   },
   {
     "id": "zancadas",
     "name": "Zancadas",
     "muscleGroup": "Piernas",
     "equipment": "Peso corporal",
-    "imageUrl": "https://i.blogs.es/5917ff/650_1000_zancada/650_1200.jpg"
-
+    "imageUrl": "https://i.blogs.es/5917ff/650_1000_zancada/650_1200.jpg",
+    "instructions": "De pie con los pies a la anchura de las caderas y las manos en la cintura. Da un paso al frente y baja flexionando ambas rodillas hasta que la de atrás casi toque el suelo y la de delante forme un ángulo de 90 grados. Empuja con el pie delantero para volver a la posición inicial y alterna con la otra pierna."
   },
   {
     "id": "press-militar",
     "name": "Press militar",
     "muscleGroup": "Hombros",
     "equipment": "Mancuernas",
-    "imageUrl": "https://www.zonawod.com/wp-content/uploads/Press-militar-con-mancuerna-press-hombro-con-mancuernas.jpg"
+    "imageUrl": "https://www.zonawod.com/wp-content/uploads/Press-militar-con-mancuerna-press-hombro-con-mancuernas.jpg",
+    "instructions": "De pie o sentado con la espalda recta, sostén las mancuernas a la altura de los hombros con las palmas hacia delante. Empuja las mancuernas hacia arriba hasta extender los brazos por encima de la cabeza sin arquear la espalda. Baja de forma controlada hasta la posición inicial."
   },
   {
     "id": "curl-biceps",
     "name": "Curl de bíceps",
     "muscleGroup": "Brazos",
     "equipment": "Mancuernas",
-    "imageUrl": "https://hips.hearstapps.com/hmg-prod/images/muscle-and-fitness-royalty-free-image-1575304404.jpg?resize=640:*"
+    "imageUrl": "https://hips.hearstapps.com/hmg-prod/images/muscle-and-fitness-royalty-free-image-1575304404.jpg?resize=640:*",
+    "instructions": "De pie con los brazos extendidos a lo largo del cuerpo y una mancuerna en cada mano con las palmas hacia delante. Flexiona los codos llevando las mancuernas hacia los hombros, manteniendo los codos pegados al torso y sin balancear el cuerpo. Baja de forma controlada hasta la posición inicial."
   },
   {
     "id": "extension-triceps",
     "name": "Extensión de tríceps",
     "muscleGroup": "Brazos",
     "equipment": "Polea o mancuerna",
-    "imageUrl": "https://hips.hearstapps.com/hmg-prod/images/triceps-extension-exercise-royalty-free-image-1575974873.jpg?resize=640:*"
+    "imageUrl": "https://hips.hearstapps.com/hmg-prod/images/triceps-extension-exercise-royalty-free-image-1575974873.jpg?resize=640:*",
+    "instructions": "Colócate frente a la polea con los codos pegados al torso y las manos agarrando el maneral. Extiende los codos hacia abajo hasta que los brazos queden completamente rectos, apretando el tríceps al final. Vuelve de forma controlada a la posición inicial sin separar los codos del cuerpo."
   },
   {
     "id": "hip-thrust",
     "name": "Hip thrust",
     "muscleGroup": "Glúteos",
     "equipment": "Barra y banco",
-    "imageUrl": "https://i.blogs.es/c30741/como-hacer-hip-thrust/1366_2000.jpeg"
+    "imageUrl": "https://i.blogs.es/c30741/como-hacer-hip-thrust/1366_2000.jpeg",
+    "instructions": "Siéntate en el suelo con la espalda alta apoyada en un banco y la barra sobre las caderas (usa una almohadilla). Con los pies a la anchura de las caderas, empuja con los talones y extiende las caderas hasta que el torso y los muslos queden alineados. Aprieta los glúteos arriba y baja de forma controlada."
   },
   {
     "id": "elevaciones-laterales",
     "name": "Elevaciones laterales",
     "muscleGroup": "Hombros",
     "equipment": "Mancuernas",
-    "imageUrl": "https://i.blogs.es/4fe63b/istock-1443576746/1366_2000.jpeg"
+    "imageUrl": "https://i.blogs.es/4fe63b/istock-1443576746/1366_2000.jpeg",
+    "instructions": "De pie con una mancuerna en cada mano a los lados del cuerpo y los codos ligeramente flexionados. Eleva los brazos hacia los lados hasta que queden paralelos al suelo, sin subir los hombros ni balancear el torso. Baja de forma controlada hasta la posición inicial."
   },
   {
     "id": "crunch-abdominal",
     "name": "Crunch abdominal",
     "muscleGroup": "Core",
     "equipment": "Esterilla",
-    "imageUrl": "https://fivestarsfitness.com/wp-content/uploads/2025/06/crunch-abdominal.jpeg"
+    "imageUrl": "https://fivestarsfitness.com/wp-content/uploads/2025/06/crunch-abdominal.jpeg",
+    "instructions": "Túmbate boca arriba con las rodillas flexionadas y los pies apoyados en el suelo. Coloca las manos detrás de la cabeza sin tirar del cuello y eleva el torso contrayendo el abdomen hasta despegar la parte alta de la espalda del suelo. Baja de forma controlada sin relajar por completo el abdomen."
   },
   {
     "id": "fondos-paralelas",
     "name": "Fondos en paralelas",
     "muscleGroup": "Pecho y Tríceps",
     "equipment": "Barras paralelas",
-    "imageUrl": "https://fivestarsfitness.com/wp-content/uploads/2025/06/fondos-en-paralelas.jpeg"
+    "imageUrl": "https://fivestarsfitness.com/wp-content/uploads/2025/06/fondos-en-paralelas.jpeg",
+    "instructions": "Sujétate en las barras paralelas con los brazos extendidos y el cuerpo ligeramente inclinado hacia delante. Baja flexionando los codos hasta que los hombros queden a la altura de los codos, manteniendo el control. Empuja hacia arriba hasta extender los brazos sin bloquear los codos de golpe."
   }
 ]

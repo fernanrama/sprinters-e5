@@ -26,3 +26,8 @@ Desktop.ini
 # Configuración personal de IDE
 .idea/
 .vscode/
+
+# SQLite
+api/data/*.db
+api/data/*.db-shm
+api/data/*.db-wal

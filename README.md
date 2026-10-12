@@ -88,7 +88,7 @@ La API lee el archivo en cada petición: cambiar el JSON y recargar basta para c
 | --- | --- |
 | `GET /health` | Estado de servicio, sin comprobar el contenido del catálogo. |
 | `GET /exercises` | Lista de ejercicios; `[]` si el catálogo está vacío. |
-
+|`GET /exercises/:id` | Ejercicio concreto; HTTP 404 con `{"error":"Ejercicio no encontrado."}` si no existe. |
 Ejemplo de un elemento:
 
 ```json

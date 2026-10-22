@@ -13,8 +13,8 @@
 Los puntos de historia, prioridades y contratos con E1/E2 requieren acuerdo del equipo.
 No marcar una historia como terminada solo porque existan el código o sus subtareas.
 
-## Trabajo con la preparación inicial
+## Preparación inicial completada
 
-El PR de SCRUM-81 prepara la estructura y un catálogo mínimo conectado a la API.
-Debe revisarlo otro Developer antes de integrarlo. Para probarlo mientras está abierto,
-consultar la sección de clonación del README.
+La preparación de SCRUM-81 está integrada en `main`. Nacho ha revisado el arranque y Fernán ha registrado su confirmación en Jira. Para clonar o actualizar la versión integrada, seguir el README.
+
+HU01 permite consultar el catálogo y HU04 abrir sus fichas con descripción e instrucciones específicas. Las revisiones técnicas y la aceptación de producto son evidencias distintas: enlazar ambas en la historia correspondiente.

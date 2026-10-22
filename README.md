@@ -11,14 +11,12 @@ La rama `main` incluye:
 - Catálogo de 14 ejercicios obtenido desde la API.
 - Información de nombre, grupo muscular, equipamiento e imagen.
 - Apertura de una ficha desde cada tarjeta.
+- Descripción e instrucciones específicas para cada uno de los 14 ejercicios.
 - Estados de carga, catálogo vacío y error con reintento.
 - Comprobación de tipos, pruebas HTTP y compilación.
 
 ### Pendientes conocidos
 
-- Incorporar instrucciones específicas para cada ejercicio: la ficha actual utiliza un texto genérico.
-- Incorporar la consulta individual `GET /exercises/:id`.
-- Corregir la ruta del logo URJC.
 - Mejorar la navegación mediante teclado y la accesibilidad del modal.
 
 Esta rama añade edición de rutinas ficticias con persistencia JSON. La creación (HU02), autenticación y consultas entre equipos siguen fuera de este cambio. Consultar el estado de las PRs antes de atribuir estas funciones a `main`.
@@ -130,7 +128,7 @@ Antes de abrir un pull request:
 1. Ejecutar `npm run check` y comprobar que termina sin errores.
 2. Arrancar la aplicación con `npm run dev`.
 3. Comprobar que aparecen los 14 ejercicios del catálogo.
-4. Abrir varias fichas y verificar los datos de cada ejercicio.
+4. Abrir varias fichas, verificar su descripción e instrucciones específicas y comprobar que se puede volver al catálogo.
 5. Comprobar que `/health` devuelve `"status": "ok"`.
 6. Comprobar que `/exercises` devuelve una lista JSON.
 
@@ -172,11 +170,13 @@ Ejemplo de un ejercicio:
   "name": "Sentadilla",
   "muscleGroup": "Piernas",
   "equipment": "Peso corporal",
-  "imageUrl": "https://i.blogs.es/76cc7d/1366_2000/450_1000.jpeg"
+  "imageUrl": "https://i.blogs.es/76cc7d/1366_2000/450_1000.jpeg",
+  "description": "Ejercicio fundamental para desarrollar la fuerza y volumen del tren inferior.",
+  "instructions": "Mantén la espalda recta, baja la cadera hacia atrás hasta romper el paralelo de las rodillas y empuja con fuerza desde los talones para subir."
 }
 ```
 
-La API comprueba que `id`, `name`, `muscleGroup` y `equipment` sean cadenas no vacías. Actualmente no valida `imageUrl`.
+La API comprueba que `id`, `name`, `muscleGroup`, `equipment`, `description` e `instructions` sean cadenas no vacías. Actualmente no valida `imageUrl`.
 
 Si el archivo no se puede leer o los datos son inválidos, devuelve HTTP 500:
 
@@ -211,7 +211,7 @@ Este acuerdo describe el prototipo actual. La comprobación de permisos deberá 
 
 ### Equipo 2 · Hábitos
 
-Se ha propuesto la consulta:
+Se ha acordado el contrato documental de la consulta:
 
 ```http
 GET /users/{id_user}/routines
@@ -219,12 +219,13 @@ GET /users/{id_user}/routines
 
 Su respuesta contendrá las rutinas planificadas del usuario, con:
 
-- Identificador y nombre de la rutina.
-- Ejercicios con identificador, nombre, series y repeticiones.
-- Fechas concretas en formato `AAAA-MM-DD`.
-- Una lista vacía cuando el usuario no tenga rutinas.
+- `id_user`: cadena con el identificador único proporcionado por E1.
+- `routines`: lista de rutinas con `routine_id` estable y `name`.
+- `exercises`: lista de ejercicios con `exercise_id`, `name`, `sets` y `reps` (series y repeticiones como enteros positivos).
+- `programmed_dates`: lista de fechas concretas en formato `AAAA-MM-DD`.
+- `routines: []` cuando el usuario no tenga rutinas.
 
-E2 ha confirmado que para Sprint 1 no necesita la consulta implementada. El acuerdo y el ejemplo JSON quedan documentados en Miro; cualquier ajuste del formato se registrará allí.
+Fernán confirma que E2 aceptó el formato final con `id_user` el **10/10/2026**. E2 ha confirmado que para Sprint 1 no necesita la consulta implementada. El acuerdo y el ejemplo JSON quedan documentados en Miro y enlazados desde [SCRUM-82](https://sprinters-urjc.atlassian.net/browse/SCRUM-82). Esta ruta todavía no está implementada. La URL base, la fecha de integración y el mecanismo de acceso se concretarán al planificar su desarrollo.
 
 Los datos planificados y los entrenamientos realmente realizados son conceptos distintos. El intercambio de resultados requerirá un contrato específico.
 

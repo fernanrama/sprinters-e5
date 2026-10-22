@@ -7,7 +7,7 @@
 4. Subir la rama y abrir un pull request hacia `main`. Usar la clave de Jira en el título.
 5. Enlazar el PR en Jira y mover la tarjeta a revisión.
 6. Pedir revisión a un Developer distinto del autor. Resolver sus observaciones antes de integrar.
-7. Cuando se complete una historia, Irene verifica los criterios de aceptación.
+7. Cuando se complete una historia, Ignacio (Nacho), PO del Sprint 2, verifica los criterios de aceptación.
 8. Integrar tras la revisión y actualizar Jira según el resultado real.
 
 Los puntos de historia, prioridades y contratos con E1/E2 requieren acuerdo del equipo.

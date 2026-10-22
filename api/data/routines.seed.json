@@ -1,0 +1,17 @@
+[
+  {
+    "id": "rutina-demo-fuerza",
+    "name": "Fuerza · cuerpo completo",
+    "version": 1,
+    "items": [
+      { "id": "demo-sentadilla", "exerciseId": "sentadilla", "sets": 3, "repetitions": 10, "parameters": { "restSeconds": 90, "rir": 2 } },
+      { "id": "demo-remo", "exerciseId": "remo-mancuerna", "sets": 3, "repetitions": 12, "parameters": { "restSeconds": 60 } }
+    ]
+  },
+  {
+    "id": "rutina-demo-vacia",
+    "name": "Mi próxima sesión",
+    "version": 1,
+    "items": []
+  }
+]

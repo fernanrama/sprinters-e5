@@ -109,3 +109,15 @@ test("JSON de petición mal formado se rechaza con 400", async (t) => {
   });
   assert.equal(response.status, 400);
 });
+test("añadir varios y repetidos persiste tras reiniciar sin alterar otras rutinas o parámetros", async (t) => {
+  const { put, original, stop, serve } = await setup(t);
+  const items = [...original[0].items,
+    { id: "nuevo-1", exerciseId: "sentadilla", sets: 3, repetitions: 10 },
+    { id: "nuevo-2", exerciseId: "remo-mancuerna", sets: 3, repetitions: 10 }];
+  assert.equal((await put({ ...original[0], items })).status, 200);
+  await stop(); const restarted = await serve();
+  const reopened = await (await fetch(`${restarted.origin}/routines/${original[0].id}`)).json();
+  assert.deepEqual(reopened.items, items);
+  assert.deepEqual(reopened.items[0].parameters, original[0].items[0].parameters);
+  assert.deepEqual(await (await fetch(`${restarted.origin}/routines/${original[1].id}`)).json(), original[1]);
+});

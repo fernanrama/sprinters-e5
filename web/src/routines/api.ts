@@ -4,7 +4,13 @@ export class ApiError extends Error {
   constructor(public status: number, message: string) { super(message); }
 }
 export async function request(path: string, options?: RequestInit): Promise<unknown> {
-  const response = await fetch(`/api${path}`, { cache: "no-store", ...options });
+  let response: Response;
+  try {
+    response = await fetch(`/api${path}`, { cache: "no-store", ...options });
+  } catch (error) {
+    if (options?.signal?.aborted) throw error;
+    throw new Error("No se puede conectar con el servidor. Comprueba la conexión y vuelve a intentarlo.");
+  }
   const body: unknown = await response.json();
   if (!response.ok) {
     const message = typeof body === "object" && body && "error" in body && typeof body.error === "string"

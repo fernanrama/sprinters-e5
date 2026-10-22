@@ -306,3 +306,15 @@ La API copia `api/data/routines.seed.json` al archivo ignorado `api/data/routine
 API nueva: `GET /api/routines`, `GET /api/routines/:id`, `PUT /api/routines/:id`. El PUT recibe nombre, versión e items y devuelve la versión actualizada; responde 409 ante cambios simultáneos.
 
 Contrato, continuidad de HU02/HU08, diagrama para Miro y pruebas: [docs/HU08.md](docs/HU08.md).
+
+### Añadir ejercicios (SCRUM-83)
+
+En el editor, pulsar **Añadir ejercicio**, buscar por nombre y marcar uno o varios.
+La selección se conserva al cambiar la búsqueda. **Añadir seleccionados** los lleva
+al borrador con 3 series y 10 repeticiones; **Guardar cambios** los conserva en el
+JSON. **Cerrar selector** descarta solo la selección pendiente; **Cancelar** permite
+descartar los cambios del borrador o seguir editando. Ante un fallo de conexión,
+se conserva el borrador y se puede volver a guardar cuando responda la API.
+
+Esta rama depende de la vista/API de SCRUM-89 (PR #12). Todavía no incorpora quitar
+ejercicios (SCRUM-84), ordenar ni editar series/repeticiones.

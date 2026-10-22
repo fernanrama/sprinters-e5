@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import type { Routine } from "../../../shared/routines";
+import { appendExercises, MAX_ROUTINE_ITEMS } from "../../../shared/routineEdits";
+import { ExercisePicker } from "./ExercisePicker";
 import { ApiError, listRoutines, loadCatalog, loadRoutine, saveRoutine, type Exercise } from "./api";
 
 type Props = { route: string; onDirty: (dirty: boolean) => void; onSaving: (saving: boolean) => void };
@@ -52,11 +54,15 @@ export function RoutineEditor({ id, onDirty, onSaving }: Omit<Props, "route"> & 
   const [attempt, setAttempt] = useState(0);
   const savingRef = useRef(false);
   const heading = useRef<HTMLHeadingElement>(null);
+  const addButton = useRef<HTMLButtonElement>(null);
+  const [pickerOpen, setPickerOpen] = useState(false);
+  const [editNotice, setEditNotice] = useState("");
   const dirty = original !== null && draft !== null && JSON.stringify(original) !== JSON.stringify(draft);
   useEffect(() => { onDirty(dirty); }, [dirty, onDirty]);
   useEffect(() => {
     const controller = new AbortController();
     setLoading(true); setLoadError(""); setNotice(""); setSaveError(""); setConflict(false);
+    setPickerOpen(false); setEditNotice("");
     void Promise.all([loadRoutine(id, controller.signal), loadCatalog(controller.signal)])
       .then(([routine, exercises]) => {
         if (!controller.signal.aborted) { setOriginal(routine); setDraft(structuredClone(routine)); setCatalog(exercises); }
@@ -68,9 +74,17 @@ export function RoutineEditor({ id, onDirty, onSaving }: Omit<Props, "route"> & 
   function reload() {
     if (!dirty || window.confirm("Recargar descartará tus cambios pendientes. ¿Quieres continuar?")) setAttempt((a) => a + 1);
   }
+  function closePicker() { setPickerOpen(false); addButton.current?.focus(); }
+  function addExercises(ids: string[]) {
+    if (!draft || savingRef.current) return;
+    setDraft(appendExercises(draft, ids, () => crypto.randomUUID()));
+    setNotice("");
+    setEditNotice(`${ids.length === 1 ? "Ejercicio añadido" : `${ids.length} ejercicios añadidos`}. Guarda la rutina para conservar los cambios.`);
+    closePicker();
+  }
   async function save() {
     if (!draft || savingRef.current) return;
-    savingRef.current = true; setSaving(true); onSaving(true); setSaveError(""); setNotice("");
+    savingRef.current = true; setSaving(true); onSaving(true); setSaveError(""); setNotice(""); setEditNotice("");
     try {
       const saved = await saveRoutine(draft);
       setOriginal(saved); setDraft(structuredClone(saved)); onDirty(false); setConflict(false);
@@ -87,7 +101,15 @@ export function RoutineEditor({ id, onDirty, onSaving }: Omit<Props, "route"> & 
       : draft && <>
         <div className="routine-heading"><div><h2>{draft.name}</h2><p>{draft.items.length} ejercicios · {dirty ? "Cambios sin guardar" : "Todo guardado"}</p></div></div>
         <section className="editor-panel" aria-label="Ejercicios de la rutina" aria-busy={saving}>
-          <div className="panel-heading"><h2>Tu sesión</h2></div>
+          <div className="panel-heading"><h2>Tu sesión</h2>
+            <button ref={addButton} type="button" aria-expanded={pickerOpen} aria-controls="exercise-selector"
+              disabled={saving || draft.items.length >= MAX_ROUTINE_ITEMS}
+              onClick={() => setPickerOpen((open) => !open)}>+ Añadir ejercicio</button>
+          </div>
+          <div id="exercise-selector" hidden={!pickerOpen}>{pickerOpen && <ExercisePicker
+            catalog={catalog} capacity={MAX_ROUTINE_ITEMS - draft.items.length}
+            onAdd={addExercises} onCancel={closePicker} />}</div>
+          {draft.items.length >= MAX_ROUTINE_ITEMS && <p className="empty-state">Has alcanzado el límite de 500 ejercicios.</p>}
           {draft.items.length === 0 ? <p className="empty-state">Esta rutina todavía no tiene ejercicios.</p>
             : <ol className="routine-items">{draft.items.map((item, index) => {
               const exercise = catalog.find((e) => e.id === item.exerciseId);
@@ -100,11 +122,12 @@ export function RoutineEditor({ id, onDirty, onSaving }: Omit<Props, "route"> & 
               </li>;
             })}</ol>}
         </section>
+        {editNotice && <p className="edit-notice" role="status">{editNotice}</p>}
         {saveError && <div className="message" role="alert"><p>{saveError}</p><p>Tus cambios siguen en pantalla.</p>{conflict && <button className="secondary" onClick={reload}>Recargar rutina</button>}</div>}
         {notice && <p className="save-notice" role="status">✓ {notice}</p>}
-        <div className="editor-actions"><p aria-live="polite">{saving ? "Guardando cambios…" : dirty ? "Guarda para conservar los cambios." : "Puedes volver a tus rutinas."}</p>
+        <div className="editor-actions"><p aria-live="polite">{saving ? "Guardando cambios…" : pickerOpen ? "Añade la selección o cierra el selector antes de guardar." : dirty ? "Guarda para conservar los cambios." : "Puedes volver a tus rutinas."}</p>
           <div><a className={`button-link secondary ${saving ? "disabled" : ""}`} href="#/rutinas" aria-disabled={saving} onClick={(event) => { if (saving) event.preventDefault(); }}>Cancelar</a>
-            <button onClick={() => void save()} disabled={saving || conflict}>{saving ? "Guardando…" : "Guardar cambios"}</button></div>
+            <button onClick={() => void save()} disabled={saving || conflict || pickerOpen}>{saving ? "Guardando…" : "Guardar cambios"}</button></div>
         </div>
       </>}
   </main>;

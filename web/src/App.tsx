@@ -8,12 +8,20 @@ export default function App() {
   const current = useRef(route);
   const [dirty, setDirty] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [pendingRoute, setPendingRoute] = useState<string | null>(null);
+  const discardDialog = useRef<HTMLDialogElement>(null);
+  useEffect(() => {
+    if (pendingRoute && !discardDialog.current?.open) discardDialog.current?.showModal();
+    if (!pendingRoute && discardDialog.current?.open) discardDialog.current.close();
+  }, [pendingRoute]);
   useEffect(() => {
     function change() {
       const next = window.location.hash || "#/catalogo";
       if (next === current.current) return;
-      if (saving || (dirty && !window.confirm("Tienes cambios sin guardar. ¿Quieres descartarlos?"))) {
-        window.history.replaceState(null, "", current.current); return;
+      if (saving || dirty) {
+        window.history.replaceState(null, "", current.current);
+        if (!saving) setPendingRoute(next);
+        return;
       }
       current.current = next; setDirty(false); setRoute(next); window.scrollTo(0, 0);
     }
@@ -40,6 +48,20 @@ export default function App() {
       </nav>
     </header>
     {routines ? <Routines key={route} route={route} onDirty={setDirty} onSaving={setSaving} /> : <Catalog />}
+    <dialog ref={discardDialog} className="discard-dialog" aria-labelledby="discard-title"
+      aria-describedby="discard-description" onCancel={(event) => { event.preventDefault(); setPendingRoute(null); }}>
+      <h2 id="discard-title">¿Descartar los cambios?</h2>
+      <p id="discard-description">Tienes cambios sin guardar. Si sales ahora, perderás estos cambios.</p>
+      <div className="picker-actions">
+        <button className="secondary" autoFocus onClick={() => setPendingRoute(null)}>Seguir editando</button>
+        <button onClick={() => {
+          if (!pendingRoute) return;
+          current.current = pendingRoute;
+          window.history.replaceState(null, "", pendingRoute);
+          setDirty(false); setRoute(pendingRoute); setPendingRoute(null); window.scrollTo(0, 0);
+        }}>Descartar cambios</button>
+      </div>
+    </dialog>
     <footer>Universidad Rey Juan Carlos · Healthy Life · Sprinters E5</footer>
   </>;
 }

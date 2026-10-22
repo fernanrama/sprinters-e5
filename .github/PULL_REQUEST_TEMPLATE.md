@@ -9,6 +9,7 @@ Tarjeta de Jira:
 - [ ] He ejecutado `npm run check`.
 - [ ] He actualizado el README o la documentación de API si corresponde.
 - [ ] Otro Developer ha revisado el PR.
+- [ ] Para una historia de usuario: Ignacio (PO del Sprint 2) ha comprobado sus criterios de aceptación.
 - [ ] El estado y el enlace del PR están registrados en Jira.
 
 ## Tras integrar una historia de usuario

@@ -6,9 +6,9 @@
   "scripts": {
     "dev": "tsx watch src/server.ts",
     "typecheck": "tsc --noEmit",
-    "test": "tsx --test src/app.test.ts",
+    "test": "tsx --test src/*.test.ts",
     "build": "tsc",
-    "start": "node dist/server.js"
+    "start": "node dist/api/src/server.js"
   },
   "dependencies": {
     "express": "^5.3.0"

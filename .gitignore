@@ -1,5 +1,7 @@
 # Dependencias y resultados de compilación
 node_modules/
+api/data/routines.local.json
+api/data/routines.local.json.*.tmp
 dist/
 build/
 coverage/

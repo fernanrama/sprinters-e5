@@ -19,9 +19,7 @@ La rama `main` incluye:
 
 - Mejorar la navegación mediante teclado y la accesibilidad del modal.
 
-Para HU04, la ficha utiliza el ejercicio seleccionado del catálogo ya cargado mediante `GET /api/exercises`. No realiza una segunda consulta. La decisión está registrada en [SCRUM-71](https://sprinters-urjc.atlassian.net/browse/SCRUM-71); `GET /exercises/:id` queda fuera del alcance de Sprint 1.
-
-La creación de rutinas, SQLite, la autenticación y las consultas entre equipos todavía no están integradas en `main`.
+Esta rama añade edición de rutinas ficticias con persistencia JSON. La creación (HU02), autenticación y consultas entre equipos siguen fuera de este cambio. Consultar el estado de las PRs antes de atribuir estas funciones a `main`.
 
 El estado de una historia se determina mediante sus criterios de aceptación y la Definition of Done; la existencia de código en una rama no implica que esté entregada.
 
@@ -32,7 +30,7 @@ El estado de una historia se determina mediante sus criterios de aceptación y l
 | Interfaz | React + TypeScript + Vite |
 | API | Node.js + TypeScript + Express |
 | Catálogo actual | Archivo JSON leído por la API |
-| Persistencia prevista | SQLite |
+| Persistencia de rutinas | Archivo JSON local |
 | Gestión de dependencias | npm workspaces |
 
 ## Requisitos
@@ -264,7 +262,7 @@ sprinters-e5/
 6. Incluir la clave de Jira en el título y enlazar el PR en la incidencia.
 7. Obtener la revisión de un Developer distinto del autor.
 8. Integrar el cambio tras resolver las observaciones.
-9. Validar con Irene los criterios sobre la versión integrada y registrar las evidencias.
+9. Validar con Ignacio (PO del Sprint 2) los criterios sobre la versión integrada y registrar las evidencias.
 10. Actualizar Jira según el resultado real.
 
 Si se añaden o cambian dependencias, incluir también la actualización de `package-lock.json`.
@@ -275,9 +273,9 @@ Consultar [CONTRIBUTING.md](CONTRIBUTING.md) para el procedimiento de colaboraci
 
 | Rol | Personas |
 | --- | --- |
-| Scrum Master | Fernán |
-| Product Owner delegada | Irene |
-| Developers | Nacho, Christopher, Joaquín y Sergio |
+| Scrum Master | Pendiente de confirmar para Sprint 2 |
+| Product Owner delegado | Ignacio (Nacho) |
+| Developers | Fernán, Joaquín, Sergio e Irene según tareas del Sprint 2; resto pendiente de confirmar |
 
 - **Jira:** historias, tareas, prioridades, estimaciones, estados y evidencias.
 - **Miro:** objetivos, diseño, mapa de historias y acuerdos entre equipos.
@@ -299,3 +297,13 @@ Consultar [CONTRIBUTING.md](CONTRIBUTING.md) para el procedimiento de colaboraci
 | `npm ci` indica discrepancias | Revisar que el cambio incluya un `package-lock.json` actualizado. |
 
 Actualmente no hay un pipeline de integración continua configurado. Las comprobaciones se ejecutan localmente mediante `npm run check`.
+
+## Edición de rutinas · Sprint 2
+
+Abrir **/#/rutinas** desde Mis rutinas. Las rutas con `#` funcionan en desarrollo y en la versión compilada.
+
+La API copia `api/data/routines.seed.json` al archivo ignorado `api/data/routines.local.json` solo cuando falta este último. Guardar escribe el JSON local; Cancelar conserva lo guardado. No hay base de datos. Usar únicamente datos ficticios. No ejecutar varios servidores escritores sobre el mismo archivo.
+
+API nueva: `GET /api/routines`, `GET /api/routines/:id`, `PUT /api/routines/:id`. El PUT recibe nombre, versión e items y devuelve la versión actualizada; responde 409 ante cambios simultáneos.
+
+Contrato, continuidad de HU02/HU08, diagrama para Miro y pruebas: [docs/HU08.md](docs/HU08.md).

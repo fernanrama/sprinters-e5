@@ -48,23 +48,17 @@ export function createApp(options: {
     response.json(catalog);
   });
 
-  // --- RUTAS DE RUTINAS ---
-
-  // Recuperar todas las rutinas
   router.get("/routines", async (_request, response) => {
     response.set("Cache-Control", "no-store").json(await store.read());
   });
   
-  // Recuperar una rutina por ID
   router.get("/routines/:id", async (request, response) => {
     const routine = (await store.read()).find((r) => r.id === request.params.id);
     if (!routine) throw new RoutineError(404, "Rutina no encontrada.");
     response.set("Cache-Control", "no-store").json(routine);
   });
 
-  // Crear una nueva rutina (POST)
   router.post("/routines", async (request, response) => {
-    // Validación básica para la creación
     if (
       typeof request.body !== "object" || request.body === null ||
       typeof request.body.name !== "string" || request.body.name.trim() === "" ||
@@ -94,10 +88,10 @@ export function createApp(options: {
     response.status(201).json(newRoutine);
   });
   
-  // Editar una rutina existente (PUT)
   router.put("/routines/:id", async (request, response) => {
+    // Mensaje de error amigable si falla la validación estricta
     if (!isRoutineUpdate(request.body)) {
-      throw new RoutineError(400, "Revisa el nombre, los ejercicios, las series y las repeticiones.");
+      throw new RoutineError(400, "Los datos de la rutina no son válidos. Asegúrate de que las series y repeticiones no sean negativas ni decimales, y de que no haya ejercicios duplicados.");
     }
     const catalog: unknown = JSON.parse(await readFile(catalogFile, "utf8"));
     if (!Array.isArray(catalog) || !catalog.every(isExercise)) throw new Error("Invalid exercise catalog");
@@ -108,7 +102,6 @@ export function createApp(options: {
     response.set("Cache-Control", "no-store").json(await store.update(request.params.id, request.body));
   });
 
-  // Borrar una rutina (DELETE)
   router.delete("/routines/:id", async (request, response) => {
     const routines = await store.read();
     const filtered = routines.filter(r => r.id !== request.params.id);
@@ -120,8 +113,6 @@ export function createApp(options: {
     await store.saveAll(filtered);
     response.status(204).send();
   });
-
-  // --- FIN RUTAS DE RUTINAS ---
 
   app.use("/api", router);
   app.use(router);

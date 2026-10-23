@@ -1,111 +1,307 @@
-import { useEffect, useRef, useState } from "react";
-import type { Routine } from "../../../shared/routines";
-import { ApiError, listRoutines, loadCatalog, loadRoutine, saveRoutine, type Exercise } from "./api";
+import { useEffect, useState } from "react";
 
-type Props = { route: string; onDirty: (dirty: boolean) => void; onSaving: (saving: boolean) => void };
-export function Routines({ route, onDirty, onSaving }: Props) {
-  const match = /^#\/rutinas\/([^/]+)\/editar$/.exec(route);
-  if (match) {
-    let id: string;
-    try { id = decodeURIComponent(match[1]); } catch { return <main><p role="alert">La dirección no es válida.</p><a href="#/rutinas">Volver a mis rutinas</a></main>; }
-    return <RoutineEditor id={id} onDirty={onDirty} onSaving={onSaving} />;
-  }
-  if (route !== "#/rutinas") return <main><h1>Página no encontrada</h1><a href="#/rutinas">Volver a mis rutinas</a></main>;
-  return <RoutineList />;
-}
-function RoutineList() {
-  const [routines, setRoutines] = useState<Routine[] | null>(null);
-  const [error, setError] = useState("");
-  const [attempt, setAttempt] = useState(0);
-  useEffect(() => {
-    const controller = new AbortController(); setError(""); setRoutines(null);
-    void listRoutines(controller.signal).then((result) => { if (!controller.signal.aborted) setRoutines(result); }).catch((e: Error) => {
-      if (!controller.signal.aborted) setError(e.message);
-    });
-    return () => controller.abort();
-  }, [attempt]);
-  return <main className="routines-page">
-    <p className="eyebrow">Tu plan de entrenamiento</p><h1>Mis rutinas</h1>
-    <p className="intro">Revisa tus ejercicios y adapta cada sesión a tu próximo objetivo.</p>
-    <p className="demo-note">Espacio de demostración con rutinas ficticias.</p>
-    {error ? <div className="message" role="alert"><p>{error}</p><button onClick={() => setAttempt((a) => a + 1)}>Volver a intentar</button></div>
-      : routines === null ? <p role="status">Cargando rutinas…</p>
-      : routines.length === 0 ? <p className="message">Todavía no tienes rutinas guardadas.</p>
-      : <ul className="routine-grid">{routines.map((r) => <li key={r.id} className="routine-card">
-        <span className="routine-category">Rutina guardada</span><h2>{r.name}</h2>
-        <p>{r.items.length} {r.items.length === 1 ? "ejercicio" : "ejercicios"}</p>
-        <a className="button-link" href={`#/rutinas/${encodeURIComponent(r.id)}/editar`} aria-label={`Editar ${r.name}`}>Editar rutina <span aria-hidden="true">→</span></a>
-      </li>)}</ul>}
-  </main>;
-}
+type RoutineItem = {
+  id: string;
+  exerciseId: string;
+  sets: number;
+  repetitions: number;
+  parameters?: { restSeconds?: number; rir?: number; };
+};
 
-export function RoutineEditor({ id, onDirty, onSaving }: Omit<Props, "route"> & { id: string }) {
-  const [original, setOriginal] = useState<Routine | null>(null);
-  const [draft, setDraft] = useState<Routine | null>(null);
-  const [catalog, setCatalog] = useState<Exercise[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [loadError, setLoadError] = useState("");
-  const [saveError, setSaveError] = useState("");
-  const [conflict, setConflict] = useState(false);
-  const [saving, setSaving] = useState(false);
-  const [notice, setNotice] = useState("");
-  const [attempt, setAttempt] = useState(0);
-  const savingRef = useRef(false);
-  const heading = useRef<HTMLHeadingElement>(null);
-  const dirty = original !== null && draft !== null && JSON.stringify(original) !== JSON.stringify(draft);
-  useEffect(() => { onDirty(dirty); }, [dirty, onDirty]);
+type Routine = {
+  id: string;
+  name: string;
+  version: number;
+  items: RoutineItem[];
+};
+
+type Props = {
+  route: string;
+  onDirty: (d: boolean) => void;
+  onSaving: (s: boolean) => void;
+};
+
+function RoutineForm({ initialRoutine, exercises, onSave, onCancel }: {
+  initialRoutine: Routine | null;
+  exercises: any[];
+  onSave: () => void;
+  onCancel: () => void;
+}) {
+  const [name, setName] = useState(initialRoutine?.name || "");
+  const [items, setItems] = useState<RoutineItem[]>(initialRoutine?.items || []);
+  
+  const [exerciseId, setExerciseId] = useState("");
+  const [sets, setSets] = useState(0);
+  const [reps, setReps] = useState(0);
+  const [rest, setRest] = useState(0);
+  const [rir, setRir] = useState<number | "">(0);
+  
+  // Estado para mostrar errores amigables en pantalla
+  const [error, setError] = useState<string | null>(null);
+
   useEffect(() => {
-    const controller = new AbortController();
-    setLoading(true); setLoadError(""); setNotice(""); setSaveError(""); setConflict(false);
-    void Promise.all([loadRoutine(id, controller.signal), loadCatalog(controller.signal)])
-      .then(([routine, exercises]) => {
-        if (!controller.signal.aborted) { setOriginal(routine); setDraft(structuredClone(routine)); setCatalog(exercises); }
-      }).catch((e: Error) => { if (!controller.signal.aborted) setLoadError(e.message); })
-      .finally(() => { if (!controller.signal.aborted) setLoading(false); });
-    return () => controller.abort();
-  }, [id, attempt]);
-  useEffect(() => { if (!loading) heading.current?.focus(); }, [loading]);
-  function reload() {
-    if (!dirty || window.confirm("Recargar descartará tus cambios pendientes. ¿Quieres continuar?")) setAttempt((a) => a + 1);
-  }
-  async function save() {
-    if (!draft || savingRef.current) return;
-    savingRef.current = true; setSaving(true); onSaving(true); setSaveError(""); setNotice("");
+    if (exerciseId !== "") {
+      setSets(0);
+      setReps(0);
+      setRest(0);
+      setRir(0);
+      setError(null); // Limpiamos errores al cambiar de ejercicio
+    }
+  }, [exerciseId]);
+
+  const handleAddItem = () => {
+    if (!exerciseId) {
+      setError("Por favor, selecciona un ejercicio de la lista.");
+      return;
+    }
+    if (sets <= 0 || reps <= 0) {
+      setError("Las series y las repeticiones deben ser mayores que 0.");
+      return;
+    }
+    if (rest < 0 || (typeof rir === "number" && rir < 0)) {
+      setError("El descanso y el RIR no pueden ser números negativos.");
+      return;
+    }
+
+    setError(null); // Todo correcto, limpiamos error
+    setItems([...items, {
+      id: crypto.randomUUID(),
+      exerciseId,
+      sets,
+      repetitions: reps,
+      parameters: { 
+        restSeconds: rest, 
+        ...(rir !== "" ? { rir: Number(rir) } : {}) 
+      }
+    }]);
+    
+    // Reiniciamos a 0
+    setExerciseId("");
+    setSets(0);
+    setReps(0);
+    setRest(0);
+    setRir(0);
+  };
+
+  const handleSubmit = async () => {
+    if (items.length === 0) {
+      setError("Añade al menos un ejercicio a la rutina antes de guardar.");
+      return;
+    }
+    if (!name.trim()) {
+      setError("El nombre de la rutina es obligatorio.");
+      return;
+    }
+
+    const isEditing = !!initialRoutine;
+    const url = isEditing ? `/api/routines/${initialRoutine.id}` : "/api/routines";
+    const method = isEditing ? "PUT" : "POST";
+    
+    const body = isEditing 
+      ? { name, version: initialRoutine.version, items }
+      : { name, items };
+
     try {
-      const saved = await saveRoutine(draft);
-      setOriginal(saved); setDraft(structuredClone(saved)); onDirty(false); setConflict(false);
-      setNotice("Cambios guardados. Tu rutina está actualizada.");
-    } catch (e) {
-      setSaveError(e instanceof Error ? e.message : "No se pudo guardar la rutina.");
-      setConflict(e instanceof ApiError && e.status === 409);
-    } finally { savingRef.current = false; setSaving(false); onSaving(false); }
-  }
-  return <main className="routines-page">
-    <nav className="breadcrumbs" aria-label="Ruta de navegación"><a href="#/rutinas">Mis rutinas</a><span aria-hidden="true"> / </span><span>Editar</span></nav>
-    <p className="eyebrow">Adapta tu entrenamiento</p><h1 ref={heading} tabIndex={-1}>Editar rutina</h1>
-    {loading ? <p role="status">Cargando tu rutina…</p> : loadError ? <div className="message" role="alert"><p>{loadError}</p><button onClick={reload}>Volver a intentar</button></div>
-      : draft && <>
-        <div className="routine-heading"><div><h2>{draft.name}</h2><p>{draft.items.length} ejercicios · {dirty ? "Cambios sin guardar" : "Todo guardado"}</p></div></div>
-        <section className="editor-panel" aria-label="Ejercicios de la rutina" aria-busy={saving}>
-          <div className="panel-heading"><h2>Tu sesión</h2></div>
-          {draft.items.length === 0 ? <p className="empty-state">Esta rutina todavía no tiene ejercicios.</p>
-            : <ol className="routine-items">{draft.items.map((item, index) => {
-              const exercise = catalog.find((e) => e.id === item.exerciseId);
-              return <li key={item.id} className="routine-item">
-                <span className="item-number" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
-                <div className="item-description"><h3>{exercise?.name ?? `Ejercicio no disponible (${item.exerciseId})`}</h3><p>{exercise ? `${exercise.muscleGroup} · ${exercise.equipment}` : "Consulta el catálogo antes de guardar."}</p>
-                  {item.parameters && Object.keys(item.parameters).length > 0 && <p className="extra-parameters">{Object.entries(item.parameters).map(([key, value]) => `${key === "restSeconds" ? "Descanso (s)" : key === "rir" ? "RIR" : key}: ${String(value)}`).join(" · ")}</p>}
-                </div>
-                <dl className="item-stats"><div><dt>Series</dt><dd>{item.sets}</dd></div><div><dt>Repeticiones</dt><dd>{item.repetitions}</dd></div></dl>
-              </li>;
-            })}</ol>}
-        </section>
-        {saveError && <div className="message" role="alert"><p>{saveError}</p><p>Tus cambios siguen en pantalla.</p>{conflict && <button className="secondary" onClick={reload}>Recargar rutina</button>}</div>}
-        {notice && <p className="save-notice" role="status">✓ {notice}</p>}
-        <div className="editor-actions"><p aria-live="polite">{saving ? "Guardando cambios…" : dirty ? "Guarda para conservar los cambios." : "Puedes volver a tus rutinas."}</p>
-          <div><a className={`button-link secondary ${saving ? "disabled" : ""}`} href="#/rutinas" aria-disabled={saving} onClick={(event) => { if (saving) event.preventDefault(); }}>Cancelar</a>
-            <button onClick={() => void save()} disabled={saving || conflict}>{saving ? "Guardando…" : "Guardar cambios"}</button></div>
+      const res = await fetch(url, {
+        method,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body)
+      });
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.error || "Error al guardar la rutina");
+      }
+      onSave();
+    } catch (err: any) {
+      setError(err.message);
+    }
+  };
+
+  return (
+    <div style={{ padding: "20px", border: "2px solid #cb0017", borderRadius: "8px", marginBottom: "20px", background: "#fff" }}>
+      <h2>{initialRoutine ? "Editando rutina" : "Crear nueva rutina"}</h2>
+      
+      {/* Mensaje de error en rojo */}
+      {error && (
+        <div style={{ padding: "10px", background: "#ffe6e6", color: "#cc0000", border: "1px solid #cc0000", borderRadius: "4px", marginBottom: "15px", fontWeight: "bold" }}>
+          {error}
         </div>
-      </>}
-  </main>;
+      )}
+
+      <div style={{ marginBottom: "15px" }}>
+        <label style={{ display: "block", fontWeight: "bold" }}>Nombre de la rutina</label>
+        <input value={name} onChange={e => setName(e.target.value)} placeholder="Ej: Día de Pierna" style={{ width: "100%", padding: "8px", marginTop: "5px" }} />
+      </div>
+
+      <div style={{ display: "flex", gap: "10px", marginBottom: "15px", flexWrap: "wrap", alignItems: "flex-end", background: "#f0f0f0", padding: "10px", borderRadius: "4px" }}>
+        <div>
+          <label style={{ display: "block", fontSize: "12px" }}>Ejercicio</label>
+          <select value={exerciseId} onChange={e => setExerciseId(e.target.value)} style={{ padding: "8px" }}>
+            <option value="">-- Selecciona --</option>
+            {exercises.map(ex => (
+              <option key={ex.id} value={ex.id}>
+                {ex.name} ({ex.muscleGroup})
+              </option>
+            ))}
+          </select>
+        </div>
+        
+        <div>
+          <label style={{ display: "block", fontSize: "12px" }}>Series</label>
+          <input 
+            type="number" 
+            min="1" 
+            value={sets || ""} 
+            onChange={e => {
+              const val = parseInt(e.target.value, 10);
+              setSets(isNaN(val) ? 0 : Math.max(0, val));
+            }} 
+            style={{ width: "60px", padding: "8px" }} 
+          />
+        </div>
+        <div>
+          <label style={{ display: "block", fontSize: "12px" }}>Reps</label>
+          <input 
+            type="number" 
+            min="1" 
+            value={reps || ""} 
+            onChange={e => {
+              const val = parseInt(e.target.value, 10);
+              setReps(isNaN(val) ? 0 : Math.max(0, val));
+            }} 
+            style={{ width: "60px", padding: "8px" }} 
+          />
+        </div>
+        <div>
+          <label style={{ display: "block", fontSize: "12px" }}>Descanso (s)</label>
+          <input 
+            type="number" 
+            min="0" 
+            value={rest || ""} 
+            onChange={e => {
+              const val = parseInt(e.target.value, 10);
+              setRest(isNaN(val) ? 0 : Math.max(0, val));
+            }} 
+            style={{ width: "70px", padding: "8px" }} 
+          />
+        </div>
+        <div>
+          <label style={{ display: "block", fontSize: "12px" }}>RIR</label>
+          <input 
+            type="number" 
+            min="0" 
+            value={rir === "" ? "" : (rir || "")} 
+            onChange={e => {
+              if (e.target.value === "") {
+                setRir(""); 
+                return;
+              }
+              const val = parseInt(e.target.value, 10);
+              setRir(isNaN(val) ? 0 : Math.max(0, val));
+            }} 
+            style={{ width: "60px", padding: "8px" }} 
+          />
+        </div>
+        
+        <button type="button" onClick={handleAddItem} style={{ padding: "8px 16px", cursor: "pointer" }}>+ Añadir</button>
+      </div>
+
+      <ul style={{ listStyle: "none", padding: 0 }}>
+        {items.map((item, idx) => {
+          const exName = exercises.find(e => e.id === item.exerciseId)?.name || item.exerciseId;
+          return (
+            <li key={item.id} style={{ display: "flex", justifyContent: "space-between", padding: "8px", borderBottom: "1px solid #eee" }}>
+              <span>
+                <strong>{exName}</strong> - {item.sets}x{item.repetitions} 
+                {item.parameters?.restSeconds !== undefined && ` | ${item.parameters.restSeconds}s`} 
+                {item.parameters?.rir !== undefined && ` | RIR ${item.parameters.rir}`}
+              </span>
+              <button onClick={() => setItems(items.filter(i => i.id !== item.id))} style={{ color: "red", background: "none", border: "none", cursor: "pointer" }}>Quitar</button>
+            </li>
+          );
+        })}
+        {items.length === 0 && <p style={{ color: "#888" }}>No has añadido ejercicios todavía.</p>}
+      </ul>
+
+      <div style={{ display: "flex", gap: "10px", marginTop: "20px" }}>
+        <button onClick={handleSubmit} style={{ padding: "10px 20px", background: "#cb0017", color: "white", border: "none", borderRadius: "4px", cursor: "pointer" }}>
+          {initialRoutine ? "Guardar Cambios" : "Crear Rutina"}
+        </button>
+        <button onClick={onCancel} style={{ padding: "10px 20px", background: "#ccc", border: "none", borderRadius: "4px", cursor: "pointer" }}>Cancelar</button>
+      </div>
+    </div>
+  );
+}
+
+export function Routines({ route, onDirty, onSaving }: Props) {
+  const [routines, setRoutines] = useState<Routine[]>([]);
+  const [exercises, setExercises] = useState<any[]>([]);
+  const [editing, setEditing] = useState<Routine | null>(null);
+  const [isCreating, setIsCreating] = useState(false);
+
+  const loadData = () => {
+    fetch("/api/routines").then(r => r.json()).then(setRoutines);
+    fetch("/api/exercises").then(r => r.json()).then(setExercises);
+  };
+
+  useEffect(() => { loadData(); }, [route]);
+
+  const handleDelete = async (id: string) => {
+    if (!window.confirm("¿Seguro que quieres borrar esta rutina?")) return;
+    await fetch(`/api/routines/${id}`, { method: "DELETE" });
+    loadData();
+  };
+
+  const handleSave = () => {
+    setEditing(null);
+    setIsCreating(false);
+    onDirty(false);
+    loadData();
+  };
+
+  if (isCreating || editing) {
+    return (
+      <div style={{ padding: "20px" }}>
+        <RoutineForm 
+          initialRoutine={editing} 
+          exercises={exercises} 
+          onSave={handleSave} 
+          onCancel={() => { setEditing(null); setIsCreating(false); onDirty(false); }} 
+        />
+      </div>
+    );
+  }
+
+  return (
+    <div style={{ padding: "20px" }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
+        <h1>Mis Rutinas</h1>
+        <button 
+          onClick={() => { setIsCreating(true); onDirty(true); }}
+          style={{ padding: "10px 20px", background: "#cb0017", color: "white", border: "none", borderRadius: "4px", cursor: "pointer", fontWeight: "bold" }}
+        >
+          + Crear Nueva Rutina
+        </button>
+      </div>
+
+      {routines.length === 0 ? (
+        <p>No tienes rutinas creadas. ¡Crea la primera!</p>
+      ) : (
+        <ul style={{ listStyle: "none", padding: 0 }}>
+          {routines.map(r => (
+            <li key={r.id} style={{ border: "1px solid #ddd", padding: "15px", marginBottom: "10px", borderRadius: "6px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <div>
+                <strong style={{ fontSize: "1.1rem" }}>{r.name}</strong> <span style={{ color: "#888", fontSize: "0.9rem" }}>(v{r.version})</span>
+                <div style={{ fontSize: "0.9rem", color: "#666", marginTop: "5px" }}>{r.items.length} ejercicios</div>
+              </div>
+              <div style={{ display: "flex", gap: "10px" }}>
+                <button onClick={() => { setEditing(r); onDirty(true); }} style={{ padding: "5px 15px", cursor: "pointer" }}>Editar</button>
+                <button onClick={() => handleDelete(r.id)} style={{ padding: "5px 15px", color: "red", border: "1px solid red", background: "none", borderRadius: "4px", cursor: "pointer" }}>Borrar</button>
+              </div>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
 }

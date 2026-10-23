@@ -30,39 +30,52 @@ function RoutineForm({ initialRoutine, exercises, onSave, onCancel }: {
   const [name, setName] = useState(initialRoutine?.name || "");
   const [items, setItems] = useState<RoutineItem[]>(initialRoutine?.items || []);
   
-  // 1. Los valores iniciales ahora son 0
   const [exerciseId, setExerciseId] = useState("");
   const [sets, setSets] = useState(0);
   const [reps, setReps] = useState(0);
   const [rest, setRest] = useState(0);
   const [rir, setRir] = useState<number | "">(0);
+  
+  // Estado para mostrar errores amigables en pantalla
+  const [error, setError] = useState<string | null>(null);
 
-  // 2. Efecto para reiniciar a 0 cuando se selecciona un ejercicio nuevo
   useEffect(() => {
     if (exerciseId !== "") {
       setSets(0);
       setReps(0);
       setRest(0);
       setRir(0);
+      setError(null); // Limpiamos errores al cambiar de ejercicio
     }
   }, [exerciseId]);
 
   const handleAddItem = () => {
-    if (!exerciseId) return;
-    
-    // Al añadir, también nos aseguramos de que se guarden como números (y no vacíos)
+    if (!exerciseId) {
+      setError("Por favor, selecciona un ejercicio de la lista.");
+      return;
+    }
+    if (sets <= 0 || reps <= 0) {
+      setError("Las series y las repeticiones deben ser mayores que 0.");
+      return;
+    }
+    if (rest < 0 || (typeof rir === "number" && rir < 0)) {
+      setError("El descanso y el RIR no pueden ser números negativos.");
+      return;
+    }
+
+    setError(null); // Todo correcto, limpiamos error
     setItems([...items, {
       id: crypto.randomUUID(),
       exerciseId,
-      sets: sets || 0,
-      repetitions: reps || 0,
+      sets,
+      repetitions: reps,
       parameters: { 
-        restSeconds: rest || 0, 
-        rir: rir === "" ? 0 : Number(rir) 
+        restSeconds: rest, 
+        ...(rir !== "" ? { rir: Number(rir) } : {}) 
       }
     }]);
     
-    // 3. Reiniciamos el selector de ejercicio y los valores a 0 para el siguiente
+    // Reiniciamos a 0
     setExerciseId("");
     setSets(0);
     setReps(0);
@@ -71,6 +84,15 @@ function RoutineForm({ initialRoutine, exercises, onSave, onCancel }: {
   };
 
   const handleSubmit = async () => {
+    if (items.length === 0) {
+      setError("Añade al menos un ejercicio a la rutina antes de guardar.");
+      return;
+    }
+    if (!name.trim()) {
+      setError("El nombre de la rutina es obligatorio.");
+      return;
+    }
+
     const isEditing = !!initialRoutine;
     const url = isEditing ? `/api/routines/${initialRoutine.id}` : "/api/routines";
     const method = isEditing ? "PUT" : "POST";
@@ -87,11 +109,11 @@ function RoutineForm({ initialRoutine, exercises, onSave, onCancel }: {
       });
       if (!res.ok) {
         const data = await res.json();
-        throw new Error(data.error || "Error al guardar");
+        throw new Error(data.error || "Error al guardar la rutina");
       }
       onSave();
     } catch (err: any) {
-      alert(err.message);
+      setError(err.message);
     }
   };
 
@@ -99,6 +121,13 @@ function RoutineForm({ initialRoutine, exercises, onSave, onCancel }: {
     <div style={{ padding: "20px", border: "2px solid #cb0017", borderRadius: "8px", marginBottom: "20px", background: "#fff" }}>
       <h2>{initialRoutine ? "Editando rutina" : "Crear nueva rutina"}</h2>
       
+      {/* Mensaje de error en rojo */}
+      {error && (
+        <div style={{ padding: "10px", background: "#ffe6e6", color: "#cc0000", border: "1px solid #cc0000", borderRadius: "4px", marginBottom: "15px", fontWeight: "bold" }}>
+          {error}
+        </div>
+      )}
+
       <div style={{ marginBottom: "15px" }}>
         <label style={{ display: "block", fontWeight: "bold" }}>Nombre de la rutina</label>
         <input value={name} onChange={e => setName(e.target.value)} placeholder="Ej: Día de Pierna" style={{ width: "100%", padding: "8px", marginTop: "5px" }} />
@@ -117,11 +146,62 @@ function RoutineForm({ initialRoutine, exercises, onSave, onCancel }: {
           </select>
         </div>
         
-        {/* Los inputs ahora muestran 0 por defecto y se actualizan al escribir */}
-        <div><label style={{ display: "block", fontSize: "12px" }}>Series</label><input type="number" value={sets} onChange={e => setSets(Number(e.target.value))} style={{ width: "60px", padding: "8px" }} /></div>
-        <div><label style={{ display: "block", fontSize: "12px" }}>Reps</label><input type="number" value={reps} onChange={e => setReps(Number(e.target.value))} style={{ width: "60px", padding: "8px" }} /></div>
-        <div><label style={{ display: "block", fontSize: "12px" }}>Descanso (s)</label><input type="number" value={rest} onChange={e => setRest(Number(e.target.value))} style={{ width: "70px", padding: "8px" }} /></div>
-        <div><label style={{ display: "block", fontSize: "12px" }}>RIR</label><input type="number" value={rir} onChange={e => setRir(e.target.value === "" ? "" : Number(e.target.value))} style={{ width: "60px", padding: "8px" }} /></div>
+        <div>
+          <label style={{ display: "block", fontSize: "12px" }}>Series</label>
+          <input 
+            type="number" 
+            min="1" 
+            value={sets || ""} 
+            onChange={e => {
+              const val = parseInt(e.target.value, 10);
+              setSets(isNaN(val) ? 0 : Math.max(0, val));
+            }} 
+            style={{ width: "60px", padding: "8px" }} 
+          />
+        </div>
+        <div>
+          <label style={{ display: "block", fontSize: "12px" }}>Reps</label>
+          <input 
+            type="number" 
+            min="1" 
+            value={reps || ""} 
+            onChange={e => {
+              const val = parseInt(e.target.value, 10);
+              setReps(isNaN(val) ? 0 : Math.max(0, val));
+            }} 
+            style={{ width: "60px", padding: "8px" }} 
+          />
+        </div>
+        <div>
+          <label style={{ display: "block", fontSize: "12px" }}>Descanso (s)</label>
+          <input 
+            type="number" 
+            min="0" 
+            value={rest || ""} 
+            onChange={e => {
+              const val = parseInt(e.target.value, 10);
+              setRest(isNaN(val) ? 0 : Math.max(0, val));
+            }} 
+            style={{ width: "70px", padding: "8px" }} 
+          />
+        </div>
+        <div>
+          <label style={{ display: "block", fontSize: "12px" }}>RIR</label>
+          <input 
+            type="number" 
+            min="0" 
+            value={rir === "" ? "" : (rir || "")} 
+            onChange={e => {
+              if (e.target.value === "") {
+                setRir(""); 
+                return;
+              }
+              const val = parseInt(e.target.value, 10);
+              setRir(isNaN(val) ? 0 : Math.max(0, val));
+            }} 
+            style={{ width: "60px", padding: "8px" }} 
+          />
+        </div>
         
         <button type="button" onClick={handleAddItem} style={{ padding: "8px 16px", cursor: "pointer" }}>+ Añadir</button>
       </div>

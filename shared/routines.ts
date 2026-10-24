@@ -1,10 +1,13 @@
-/** Contrato HU02/HU08. El orden de items es el orden de ejecución. */
 export type RoutineItem = {
   id: string;
   exerciseId: string;
   sets: number;
   repetitions: number;
-  parameters?: Record<string, string | number | boolean | null>;
+  parameters?: {
+    restSeconds?: number;
+    rir?: number;
+    [key: string]: unknown;
+  };
 };
 
 export type Routine = {
@@ -14,30 +17,40 @@ export type Routine = {
   items: RoutineItem[];
 };
 
-export type RoutineUpdate = Pick<Routine, "name" | "version" | "items">;
+export type RoutineUpdate = Omit<Routine, "id">;
 
-function record(value: unknown): value is Record<string, unknown> {
-  return typeof value === "object" && value !== null && !Array.isArray(value);
-}
-function text(value: unknown): value is string {
-  return typeof value === "string" && value.trim().length > 0 && value.length <= 200;
-}
-function positive(value: unknown): value is number {
-  return typeof value === "number" && Number.isSafeInteger(value) && value > 0;
-}
-export function isRoutineItem(value: unknown): value is RoutineItem {
-  if (!record(value) || !text(value.id) || !text(value.exerciseId) ||
-      !positive(value.sets) || !positive(value.repetitions)) return false;
-  return value.parameters === undefined || (record(value.parameters) &&
-    Object.values(value.parameters).every((v) => v === null || typeof v === "string" ||
-      typeof v === "boolean" || (typeof v === "number" && Number.isFinite(v))));
-}
-export function isRoutineUpdate(value: unknown): value is RoutineUpdate {
-  return record(value) && text(value.name) && positive(value.version) &&
-    Array.isArray(value.items) && value.items.length <= 500 &&
-    value.items.every(isRoutineItem) &&
-    new Set(value.items.map((item) => item.id)).size === value.items.length;
-}
 export function isRoutine(value: unknown): value is Routine {
-  return record(value) && text(value.id) && isRoutineUpdate(value);
+  if (typeof value !== "object" || value === null) return false;
+  const r = value as Record<string, unknown>;
+  if (typeof r.id !== "string" || typeof r.name !== "string") return false;
+  if (typeof r.version !== "number" || !Number.isInteger(r.version)) return false;
+  if (!Array.isArray(r.items)) return false;
+  
+  return r.items.every((i: any) => 
+    typeof i === "object" && i !== null &&
+    typeof i.id === "string" &&
+    typeof i.exerciseId === "string" &&
+    typeof i.sets === "number" && Number.isInteger(i.sets) && i.sets > 0 &&
+    typeof i.repetitions === "number" && Number.isInteger(i.repetitions) && i.repetitions > 0 &&
+    (i.parameters === undefined || (typeof i.parameters === "object" && i.parameters !== null))
+  );
+}
+
+export function isRoutineUpdate(value: unknown): value is RoutineUpdate {
+  if (typeof value !== "object" || value === null) return false;
+  const r = value as Record<string, unknown>;
+  
+  // Validaciones estrictas exigidas por routines.test.ts
+  if (typeof r.name !== "string" || r.name.trim() === "") return false;
+  if (typeof r.version !== "number" || !Number.isInteger(r.version) || r.version < 1) return false;
+  if (!Array.isArray(r.items)) return false;
+
+  return r.items.every((i: any) => 
+    typeof i === "object" && i !== null &&
+    typeof i.id === "string" &&
+    typeof i.exerciseId === "string" && 
+    typeof i.sets === "number" && Number.isInteger(i.sets) && i.sets > 0 &&
+    typeof i.repetitions === "number" && Number.isInteger(i.repetitions) && i.repetitions > 0 &&
+    (i.parameters === undefined || (typeof i.parameters === "object" && i.parameters !== null))
+  );
 }

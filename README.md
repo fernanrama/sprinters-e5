@@ -307,3 +307,18 @@ La API copia `api/data/routines.seed.json` al archivo ignorado `api/data/routine
 API nueva: `GET /api/routines`, `GET /api/routines/:id`, `PUT /api/routines/:id`. El PUT recibe nombre, versión e items y devuelve la versión actualizada; responde 409 ante cambios simultáneos.
 
 Contrato, continuidad de HU02/HU08, diagrama para Miro y pruebas: [docs/HU08.md](docs/HU08.md).
+
+### Quitar ejercicios de una rutina guardada (SCRUM-84)
+
+En **Mis Rutinas**, pulsar **Editar** y después **Quitar** junto al ejercicio.
+La eliminación solo afecta al borrador hasta pulsar **Guardar Cambios**. Al guardar,
+se conserva en el JSON y se comprueba recargando y volviendo a abrir la rutina.
+Se puede quitar la última entrada y guardar la rutina vacía; no se borra la rutina
+ni el ejercicio del catálogo. La creación de una rutina nueva sigue requiriendo
+al menos un ejercicio, como en el formulario existente.
+
+**Cancelar** con cambios permite seguir editando o descartarlos para recuperar la
+versión guardada. Durante el guardado se bloquea el formulario; si falla, el borrador
+se mantiene para poder reintentar. Orden y parámetros de las entradas restantes
+se conservan. El código de esta tarea está preparado sobre `main` del 25/10/2026;
+su integración y aceptación dependen de la revisión del equipo.

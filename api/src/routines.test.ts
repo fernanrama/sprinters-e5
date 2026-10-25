@@ -109,3 +109,50 @@ test("JSON de petición mal formado se rechaza con 400", async (t) => {
   });
   assert.equal(response.status, 400);
 });
+
+test("quitar un ejercicio persiste tras reiniciar y conserva parámetros, orden, catálogo y otras rutinas", async (t) => {
+  const { put, original, routinesFile, origin, stop, serve } = await setup(t);
+  const routine = { ...original[0], items: [
+    { id: "primero", exerciseId: "sentadilla", sets: 4, repetitions: 8, parameters: { restSeconds: 90, rir: 0 } },
+    { id: "quitar", exerciseId: "plancha", sets: 3, repetitions: 30 },
+    { id: "ultimo", exerciseId: "remo-mancuerna", sets: 2, repetitions: 15, parameters: { restSeconds: 60 } },
+  ] };
+  await writeFile(routinesFile, JSON.stringify([routine, ...original.slice(1)]));
+  const catalogBefore = await (await fetch(`${origin}/exercises`)).json();
+  const items = [routine.items[0], routine.items[2]];
+  const response = await put({ ...routine, items });
+  assert.equal(response.status, 200);
+  await stop(); const restarted = await serve();
+  const reopened = await (await fetch(`${restarted.origin}/routines/${routine.id}`)).json();
+  assert.deepEqual(reopened.items, items);
+  assert.equal(reopened.version, routine.version + 1);
+  assert.deepEqual(JSON.parse(await readFile(routinesFile, "utf8")).slice(1), original.slice(1));
+  assert.deepEqual(await (await fetch(`${restarted.origin}/exercises`)).json(), catalogBefore);
+});
+
+test("preparar una eliminación sin PUT no cambia los datos persistidos", async (t) => {
+  const { original, routinesFile, origin } = await setup(t);
+  const before = await readFile(routinesFile, "utf8");
+  const draft = structuredClone(original[0]);
+  draft.items = draft.items.slice(1);
+  assert.deepEqual(await (await fetch(`${origin}/routines/${draft.id}`)).json(), original[0]);
+  assert.equal(await readFile(routinesFile, "utf8"), before);
+});
+
+test("quitar todos los ejercicios conserva la rutina vacía tras reiniciar", async (t) => {
+  const { put, original, stop, serve } = await setup(t);
+  assert.equal((await put({ ...original[0], items: [] })).status, 200);
+  await stop(); const restarted = await serve();
+  const reopened = await (await fetch(`${restarted.origin}/routines/${original[0].id}`)).json();
+  assert.equal(reopened.id, original[0].id);
+  assert.equal(reopened.name, original[0].name);
+  assert.deepEqual(reopened.items, []);
+});
+
+test("un borrador antiguo no sobrescribe una eliminación ya guardada", async (t) => {
+  const { put, original, origin } = await setup(t);
+  const items = original[0].items.slice(1);
+  assert.equal((await put({ ...original[0], items })).status, 200);
+  assert.equal((await put(original[0])).status, 409);
+  assert.deepEqual((await (await fetch(`${origin}/routines/${original[0].id}`)).json()).items, items);
+});

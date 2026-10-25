@@ -1,19 +1,7 @@
-import { useEffect, useState } from "react";
-
-type RoutineItem = {
-  id: string;
-  exerciseId: string;
-  sets: number;
-  repetitions: number;
-  parameters?: { restSeconds?: number; rir?: number; };
-};
-
-type Routine = {
-  id: string;
-  name: string;
-  version: number;
-  items: RoutineItem[];
-};
+import { useEffect, useRef, useState } from "react";
+import type { Routine, RoutineItem } from "../../../shared/routines";
+import type { Exercise } from "./api";
+import { removeRoutineItem } from "./routineDraft";
 
 type Props = {
   route: string;
@@ -21,11 +9,13 @@ type Props = {
   onSaving: (s: boolean) => void;
 };
 
-function RoutineForm({ initialRoutine, exercises, onSave, onCancel }: {
+function RoutineForm({ initialRoutine, exercises, onSave, onCancel, onDirty, onSaving }: {
   initialRoutine: Routine | null;
-  exercises: any[];
+  exercises: Exercise[];
   onSave: () => void;
   onCancel: () => void;
+  onDirty: (dirty: boolean) => void;
+  onSaving: (saving: boolean) => void;
 }) {
   const [name, setName] = useState(initialRoutine?.name || "");
   const [items, setItems] = useState<RoutineItem[]>(initialRoutine?.items || []);
@@ -38,6 +28,27 @@ function RoutineForm({ initialRoutine, exercises, onSave, onCancel }: {
   
   // Estado para mostrar errores amigables en pantalla
   const [error, setError] = useState<string | null>(null);
+  const [notice, setNotice] = useState("");
+  const [saving, setSaving] = useState(false);
+  const savingRef = useRef(false);
+  const cancelDialog = useRef<HTMLDialogElement>(null);
+  const dirty = name !== (initialRoutine?.name ?? "") ||
+    JSON.stringify(items) !== JSON.stringify(initialRoutine?.items ?? []);
+
+  useEffect(() => { onDirty(dirty); }, [dirty, onDirty]);
+
+  const handleRemoveItem = (id: string, exerciseName: string) => {
+    if (savingRef.current) return;
+    setItems((current) => removeRoutineItem(current, id));
+    setError(null);
+    setNotice(`${exerciseName} se ha quitado del borrador. Guarda los cambios para conservar la eliminación.`);
+  };
+
+  const handleCancel = () => {
+    if (savingRef.current) return;
+    if (dirty) cancelDialog.current?.showModal();
+    else onCancel();
+  };
 
   useEffect(() => {
     if (exerciseId !== "") {
@@ -84,7 +95,8 @@ function RoutineForm({ initialRoutine, exercises, onSave, onCancel }: {
   };
 
   const handleSubmit = async () => {
-    if (items.length === 0) {
+    if (savingRef.current) return;
+    if (!initialRoutine && items.length === 0) {
       setError("Añade al menos un ejercicio a la rutina antes de guardar.");
       return;
     }
@@ -101,6 +113,10 @@ function RoutineForm({ initialRoutine, exercises, onSave, onCancel }: {
       ? { name, version: initialRoutine.version, items }
       : { name, items };
 
+    savingRef.current = true;
+    setSaving(true);
+    onSaving(true);
+    setError(null);
     try {
       const res = await fetch(url, {
         method,
@@ -112,21 +128,30 @@ function RoutineForm({ initialRoutine, exercises, onSave, onCancel }: {
         throw new Error(data.error || "Error al guardar la rutina");
       }
       onSave();
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      setError(err instanceof TypeError
+        ? "No se puede conectar con el servidor. Los cambios siguen en el borrador; vuelve a guardar cuando se restablezca la conexión."
+        : err instanceof Error ? err.message : "No se pudo guardar la rutina. Los cambios siguen en el borrador.");
+    } finally {
+      savingRef.current = false;
+      setSaving(false);
+      onSaving(false);
     }
   };
 
   return (
-    <div style={{ padding: "20px", border: "2px solid #cb0017", borderRadius: "8px", marginBottom: "20px", background: "#fff" }}>
+    <div className="routine-form" style={{ padding: "20px", border: "2px solid #cb0017", borderRadius: "8px", marginBottom: "20px", background: "#fff" }}>
       <h2>{initialRoutine ? "Editando rutina" : "Crear nueva rutina"}</h2>
       
       {/* Mensaje de error en rojo */}
       {error && (
-        <div style={{ padding: "10px", background: "#ffe6e6", color: "#cc0000", border: "1px solid #cc0000", borderRadius: "4px", marginBottom: "15px", fontWeight: "bold" }}>
+        <div role="alert" style={{ padding: "10px", background: "#ffe6e6", color: "#cc0000", border: "1px solid #cc0000", borderRadius: "4px", marginBottom: "15px", fontWeight: "bold" }}>
           {error}
         </div>
       )}
+
+      {notice && <p role="status" className="routine-remove-notice">{notice}</p>}
+      <fieldset disabled={saving} className="routine-form-fields" aria-busy={saving}>
 
       <div style={{ marginBottom: "15px" }}>
         <label style={{ display: "block", fontWeight: "bold" }}>Nombre de la rutina</label>
@@ -206,36 +231,49 @@ function RoutineForm({ initialRoutine, exercises, onSave, onCancel }: {
         <button type="button" onClick={handleAddItem} style={{ padding: "8px 16px", cursor: "pointer" }}>+ Añadir</button>
       </div>
 
-      <ul style={{ listStyle: "none", padding: 0 }}>
+      <ul aria-label="Ejercicios de la rutina" className="routine-form-items" style={{ listStyle: "none", padding: 0 }}>
         {items.map((item, idx) => {
           const exName = exercises.find(e => e.id === item.exerciseId)?.name || item.exerciseId;
           return (
-            <li key={item.id} style={{ display: "flex", justifyContent: "space-between", padding: "8px", borderBottom: "1px solid #eee" }}>
+            <li key={item.id} className="routine-form-item" style={{ display: "flex", justifyContent: "space-between", padding: "8px", borderBottom: "1px solid #eee" }}>
               <span>
                 <strong>{exName}</strong> - {item.sets}x{item.repetitions} 
                 {item.parameters?.restSeconds !== undefined && ` | ${item.parameters.restSeconds}s`} 
                 {item.parameters?.rir !== undefined && ` | RIR ${item.parameters.rir}`}
               </span>
-              <button onClick={() => setItems(items.filter(i => i.id !== item.id))} style={{ color: "red", background: "none", border: "none", cursor: "pointer" }}>Quitar</button>
+              <button type="button" className="remove-exercise" aria-label={`Quitar ${exName}, ejercicio ${idx + 1}`}
+                onClick={() => handleRemoveItem(item.id, exName)}>Quitar</button>
             </li>
           );
         })}
-        {items.length === 0 && <p style={{ color: "#888" }}>No has añadido ejercicios todavía.</p>}
       </ul>
+      {items.length === 0 && <p className="routine-empty-notice">{initialRoutine?.items.length
+        ? "Esta rutina se ha quedado sin ejercicios. Guarda los cambios para conservarla vacía o cancela para recuperar lo guardado."
+        : initialRoutine ? "Esta rutina no tiene ejercicios." : "No has añadido ejercicios todavía."}</p>}
 
       <div style={{ display: "flex", gap: "10px", marginTop: "20px" }}>
-        <button onClick={handleSubmit} style={{ padding: "10px 20px", background: "#cb0017", color: "white", border: "none", borderRadius: "4px", cursor: "pointer" }}>
-          {initialRoutine ? "Guardar Cambios" : "Crear Rutina"}
+        <button type="button" onClick={handleSubmit} style={{ padding: "10px 20px", background: "#cb0017", color: "white", border: "none", borderRadius: "4px", cursor: "pointer" }}>
+          {saving ? "Guardando…" : initialRoutine ? "Guardar Cambios" : "Crear Rutina"}
         </button>
-        <button onClick={onCancel} style={{ padding: "10px 20px", background: "#ccc", border: "none", borderRadius: "4px", cursor: "pointer" }}>Cancelar</button>
+        <button type="button" onClick={handleCancel} style={{ padding: "10px 20px", background: "#ccc", color: "#000", border: "none", borderRadius: "4px", cursor: "pointer" }}>Cancelar</button>
       </div>
+      </fieldset>
+      <dialog ref={cancelDialog} className="routine-cancel-dialog" aria-labelledby="routine-cancel-title"
+        aria-describedby="routine-cancel-description">
+        <h2 id="routine-cancel-title">¿Descartar los cambios?</h2>
+        <p id="routine-cancel-description">Los cambios del borrador todavía no se han guardado. Si los descartas, recuperarás la rutina guardada.</p>
+        <div className="routine-cancel-actions">
+          <button type="button" autoFocus onClick={() => cancelDialog.current?.close()}>Seguir editando</button>
+          <button type="button" className="secondary" onClick={() => { cancelDialog.current?.close(); onCancel(); }}>Descartar cambios</button>
+        </div>
+      </dialog>
     </div>
   );
 }
 
 export function Routines({ route, onDirty, onSaving }: Props) {
   const [routines, setRoutines] = useState<Routine[]>([]);
-  const [exercises, setExercises] = useState<any[]>([]);
+  const [exercises, setExercises] = useState<Exercise[]>([]);
   const [editing, setEditing] = useState<Routine | null>(null);
   const [isCreating, setIsCreating] = useState(false);
 
@@ -266,6 +304,8 @@ export function Routines({ route, onDirty, onSaving }: Props) {
           initialRoutine={editing} 
           exercises={exercises} 
           onSave={handleSave} 
+          onDirty={onDirty}
+          onSaving={onSaving}
           onCancel={() => { setEditing(null); setIsCreating(false); onDirty(false); }} 
         />
       </div>

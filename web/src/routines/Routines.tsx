@@ -44,6 +44,24 @@ function RoutineForm({ initialRoutine, exercises, onSave, onCancel, onDirty, onS
     setNotice(`${exerciseName} se ha quitado del borrador. Guarda los cambios para conservar la eliminación.`);
   };
 
+  // Lógica para subir o bajar el ejercicio de posición - Sergio Alejandro
+const handleMoveItem = (index: number, direction: "up" | "down") => {
+  const newItems = [...items];
+  const targetIndex = direction === "up" ? index - 1 : index + 1;
+  if (targetIndex < 0 || targetIndex >= newItems.length) return;
+
+  const temp = newItems[index];
+  newItems[index] = newItems[targetIndex];
+  newItems[targetIndex] = temp;
+
+  setItems(newItems);
+};
+
+// Lógica para actualizar series o repeticiones al vuelo - Sergio Alejandro
+const handleUpdateItemParam = (id: string, field: "sets" | "repetitions", value: number) => {
+  setItems(items.map(i => i.id === id ? { ...i, [field]: Math.max(1, value) } : i));
+};
+
   const handleCancel = () => {
     if (savingRef.current) return;
     if (dirty) cancelDialog.current?.showModal();
@@ -230,23 +248,49 @@ function RoutineForm({ initialRoutine, exercises, onSave, onCancel, onDirty, onS
         
         <button type="button" onClick={handleAddItem} style={{ padding: "8px 16px", cursor: "pointer" }}>+ Añadir</button>
       </div>
-
-      <ul aria-label="Ejercicios de la rutina" className="routine-form-items" style={{ listStyle: "none", padding: 0 }}>
+      {/* Sergio Alejandro */}
+      <ul aria-label="Ejercicios de la rutina" className="routine-form-items" style={{ listStyle: "none", padding: 0, marginTop: "15px" }}>
         {items.map((item, idx) => {
           const exName = exercises.find(e => e.id === item.exerciseId)?.name || item.exerciseId;
           return (
-            <li key={item.id} className="routine-form-item" style={{ display: "flex", justifyContent: "space-between", padding: "8px", borderBottom: "1px solid #eee" }}>
-              <span>
-                <strong>{exName}</strong> - {item.sets}x{item.repetitions} 
-                {item.parameters?.restSeconds !== undefined && ` | ${item.parameters.restSeconds}s`} 
-                {item.parameters?.rir !== undefined && ` | RIR ${item.parameters.rir}`}
-              </span>
-              <button type="button" className="remove-exercise" aria-label={`Quitar ${exName}, ejercicio ${idx + 1}`}
-                onClick={() => handleRemoveItem(item.id, exName)}>Quitar</button>
+            <li key={item.id} className="routine-form-item" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "12px", background: "#fdfdfd", border: "1px solid #e4e2de", borderRadius: "6px", marginBottom: "10px" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "15px", flex: 1, flexWrap: "wrap" }}>
+                <span style={{ fontWeight: "bold", color: "#cb0017", minWidth: "20px" }}>#{idx + 1}</span>
+                <span style={{ fontWeight: "600", minWidth: "140px" }}>{exName}</span>
+                
+                {/* SCRUM-86: Inputs en línea para editar Series y Reps */}
+                <div style={{ display: "flex", gap: "10px", alignItems: "center", fontSize: "13px" }}>
+                  <label>Series: 
+                    <input 
+                      type="number" 
+                      min="1" 
+                      value={item.sets} 
+                      onChange={e => handleUpdateItemParam(item.id, "sets", parseInt(e.target.value, 10) || 1)}
+                      className="inline-param-input"
+                    />
+                  </label>
+                  <label>Reps: 
+                    <input 
+                      type="number" 
+                      min="1" 
+                      value={item.repetitions} 
+                      onChange={e => handleUpdateItemParam(item.id, "repetitions", parseInt(e.target.value, 10) || 1)}
+                      className="inline-param-input"
+                    />
+                  </label>
+                </div>
+              </div>
+
+              <div className="routine-item-controls">
+                <button type="button" className="order-btn" onClick={() => handleMoveItem(idx, "up")} disabled={idx === 0} aria-label="Mover arriba">↑</button>
+                <button type="button" className="order-btn" onClick={() => handleMoveItem(idx, "down")} disabled={idx === items.length - 1} aria-label="Mover abajo">↓</button>
+                <button type="button" className="remove-exercise" onClick={() => handleRemoveItem(item.id, exName)}>Quitar</button>
+              </div>
             </li>
           );
         })}
       </ul>
+      {/* Fin  */}
       {items.length === 0 && <p className="routine-empty-notice">{initialRoutine?.items.length
         ? "Esta rutina se ha quedado sin ejercicios. Guarda los cambios para conservarla vacía o cancela para recuperar lo guardado."
         : initialRoutine ? "Esta rutina no tiene ejercicios." : "No has añadido ejercicios todavía."}</p>}
@@ -272,6 +316,22 @@ function RoutineForm({ initialRoutine, exercises, onSave, onCancel, onDirty, onS
 }
 
 export function Routines({ route, onDirty, onSaving }: Props) {
+  // Sergio Alejandro
+  const [routineToDelete, setRoutineToDelete] = useState<Routine | null>(null);
+  const deleteDialog = useRef<HTMLDialogElement>(null);
+
+  const promptDelete = (routine: Routine) => {
+    setRoutineToDelete(routine);
+    deleteDialog.current?.showModal();
+  };
+
+  const confirmDelete = async () => {
+    if (!routineToDelete) return;
+    await fetch(`/api/routines/${routineToDelete.id}`, { method: "DELETE" });
+    deleteDialog.current?.close();
+    setRoutineToDelete(null);
+    loadData();
+  };
   const [routines, setRoutines] = useState<Routine[]>([]);
   const [exercises, setExercises] = useState<Exercise[]>([]);
   const [editing, setEditing] = useState<Routine | null>(null);
@@ -336,12 +396,22 @@ export function Routines({ route, onDirty, onSaving }: Props) {
               </div>
               <div style={{ display: "flex", gap: "10px" }}>
                 <button onClick={() => { setEditing(r); onDirty(true); }} style={{ padding: "5px 15px", cursor: "pointer" }}>Editar</button>
-                <button onClick={() => handleDelete(r.id)} style={{ padding: "5px 15px", color: "red", border: "1px solid red", background: "none", borderRadius: "4px", cursor: "pointer" }}>Borrar</button>
-              </div>
+                <button onClick={() => promptDelete(r)} className="delete-routine-btn">Borrar</button></div>
             </li>
           ))}
         </ul>
       )}
+      {/* SCRUM-87: Modal de confirmación estilizado y profesional */}
+      <dialog ref={deleteDialog} className="routine-cancel-dialog" aria-labelledby="delete-dialog-title">
+        <h2 id="delete-dialog-title" style={{ marginTop: 0, color: "#cb0017" }}>¿Eliminar rutina completa?</h2>
+        <p style={{ lineHeight: "1.6", color: "#555" }}>
+          ¿Estás seguro de que deseas eliminar permanentemente la rutina <strong>{routineToDelete?.name}</strong>? Esta acción borrará todo su contenido y no se puede deshacer.
+        </p>
+        <div className="routine-cancel-actions" style={{ display: "flex", gap: "10px", marginTop: "20px" }}>
+          <button type="button" autoFocus onClick={() => deleteDialog.current?.close()} style={{ background: "#ccc", color: "#000", border: 0, padding: "10px 18px", fontWeight: 600, cursor: "pointer" }}>Cancelar</button>
+          <button type="button" onClick={confirmDelete} style={{ background: "#d32f2f", color: "white", border: 0, padding: "10px 18px", fontWeight: 600, cursor: "pointer" }}>Sí, eliminar rutina</button>
+        </div>
+      </dialog>
     </div>
   );
 }

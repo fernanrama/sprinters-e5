@@ -50,3 +50,64 @@ input:focus-visible,a:focus-visible,button:focus-visible{outline:3px solid #000;
   .routine-form-item > span { flex-basis: 100%; }
   .routine-cancel-actions { flex-direction: column; }
 }
+
+/* --- Sergio Alejandro: ESTILOS MEJORADOS PARA HU08 (SCRUM-85, 86, 87) --- */
+.routine-item-controls {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.order-btn, .remove-exercise {
+  background: #ffffff;
+  color: #cb0017;
+  border: 1px solid #cb0017;
+  padding: 6px 10px;
+  font-size: 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.order-btn:hover:not(:disabled), .remove-exercise:hover {
+  background: #cb0017;
+  color: #ffffff;
+}
+
+.order-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  border-color: #ccc;
+  color: #999;
+}
+
+.inline-param-input {
+  width: 55px;
+  padding: 4px 6px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  text-align: center;
+}
+
+.inline-param-input:focus {
+  outline: 2px solid #cb0017;
+  border-color: transparent;
+}
+
+.delete-routine-btn {
+  background: #fff;
+  color: #d32f2f;
+  border: 1px solid #d32f2f;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.delete-routine-btn:hover {
+  background: #d32f2f;
+  color: #fff;
+}
+
+/* --- Fin --- */

@@ -87,3 +87,58 @@ test("ejercicio con nombre vacío da 500 controlado", async (t) => {
   assert.equal(response.status, 500);
   assert.deepEqual(await response.json(), { error: "No se pudo cargar el catálogo." });
 });
+
+test("los ejercicios del catálogo incluyen grupo muscular y etiquetas (tags)", async (t) => {
+  const origin = await serve(t);
+  const response = await fetch(origin + "/exercises");
+  assert.equal(response.status, 200);
+  const exercises = (await response.json()) as Array<{
+    id: string;
+    muscleGroup: string;
+    tags?: string[];
+  }>;
+  assert.ok(exercises.length > 0);
+  for (const ex of exercises) {
+    assert.ok(typeof ex.muscleGroup === "string" && ex.muscleGroup.length > 0);
+    assert.ok(Array.isArray(ex.tags) && ex.tags.length > 0);
+  }
+
+  // Validación específica de ejercicio con múltiples etiquetas (ej. Peso muerto)
+  const pesoMuerto = exercises.find((ex) => ex.id === "peso-muerto");
+  assert.ok(pesoMuerto);
+  assert.ok(pesoMuerto.tags!.includes("Espalda"));
+  assert.ok(pesoMuerto.tags!.includes("Piernas"));
+});
+
+test("filtrado de ejercicios por grupo muscular y por etiqueta", async (t) => {
+  const origin = await serve(t);
+
+  // Filtrar por grupo muscular
+  const resGroup = await fetch(origin + "/exercises?group=Espalda");
+  assert.equal(resGroup.status, 200);
+  const espaldaExercises = (await resGroup.json()) as Array<{ name: string; muscleGroup: string; tags?: string[] }>;
+  assert.ok(espaldaExercises.length > 0);
+  assert.ok(espaldaExercises.some((e) => e.name === "Remo con mancuerna" || e.name === "Peso muerto"));
+
+  // Filtrar por etiqueta específica
+  const resTag = await fetch(origin + "/exercises?tag=Calistenia");
+  assert.equal(resTag.status, 200);
+  const calisteniaExercises = (await resTag.json()) as Array<{ name: string; tags: string[] }>;
+  assert.ok(calisteniaExercises.length > 0);
+  assert.ok(calisteniaExercises.every((e) => e.tags.includes("Calistenia")));
+
+  // Filtro sin coincidencias devuelve lista vacía
+  const resEmpty = await fetch(origin + "/exercises?tag=no-existe-tag-123");
+  assert.equal(resEmpty.status, 200);
+  const emptyResult = await resEmpty.json();
+  assert.deepEqual(emptyResult, []);
+});
+
+test("ejercicio con tags inválidos (no array o elementos no string) da 500 controlado", async (t) => {
+  const origin = await serve(t, await fixture(t,
+    '[{"id":"1","name":"Test","muscleGroup":"pecho","equipment":"barra","description":"desc","instructions":"inst","tags":[123]}]'
+  ));
+  const response = await fetch(origin + "/exercises");
+  assert.equal(response.status, 500);
+  assert.deepEqual(await response.json(), { error: "No se pudo cargar el catálogo." });
+});

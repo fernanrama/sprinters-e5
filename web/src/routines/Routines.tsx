@@ -359,7 +359,7 @@ export function Routines({ route, onDirty, onSaving }: Props) {
 
   if (isCreating || editing) {
     return (
-      <div style={{ padding: "20px" }}>
+      <main id="page-content" className="page-content" tabIndex={-1}>
         <RoutineForm 
           initialRoutine={editing} 
           exercises={exercises} 
@@ -368,12 +368,12 @@ export function Routines({ route, onDirty, onSaving }: Props) {
           onSaving={onSaving}
           onCancel={() => { setEditing(null); setIsCreating(false); onDirty(false); }} 
         />
-      </div>
+      </main>
     );
   }
 
   return (
-    <div style={{ padding: "20px" }}>
+    <main id="page-content" className="page-content" tabIndex={-1}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
         <h1>Mis Rutinas</h1>
         <button 
@@ -412,6 +412,6 @@ export function Routines({ route, onDirty, onSaving }: Props) {
           <button type="button" onClick={confirmDelete} style={{ background: "#d32f2f", color: "white", border: 0, padding: "10px 18px", fontWeight: 600, cursor: "pointer" }}>Sí, eliminar rutina</button>
         </div>
       </dialog>
-    </div>
+    </main>
   );
 }

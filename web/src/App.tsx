@@ -29,6 +29,10 @@ export default function App() {
   }, [dirty, saving]);
   const routines = route.startsWith("#/rutinas");
   return <>
+    <a className="skip-link" href="#page-content" onClick={(event) => {
+      event.preventDefault();
+      document.getElementById("page-content")?.focus();
+    }}>Saltar al contenido</a>
     <header className="topbar">
       <a className="brand" href="#/catalogo" aria-label="Healthy Life, catálogo">
         <img src="/brand/urjc.webp" alt="Universidad Rey Juan Carlos" className="university-logo" />
@@ -39,7 +43,9 @@ export default function App() {
         <a href="#/rutinas" aria-current={routines ? "page" : undefined}>Mis rutinas</a>
       </nav>
     </header>
-    {routines ? <Routines key={route} route={route} onDirty={setDirty} onSaving={setSaving} /> : <Catalog />}
+    <div className="page-shell">
+      {routines ? <Routines key={route} route={route} onDirty={setDirty} onSaving={setSaving} /> : <Catalog />}
+    </div>
     <footer>Universidad Rey Juan Carlos · Healthy Life · Sprinters E5</footer>
   </>;
 }

@@ -17,9 +17,11 @@
     "test": "npm test --workspace @sprinters/api",
     "build": "npm run build --workspaces",
     "check": "npm run typecheck && npm test && npm run build",
-    "start": "npm start --workspace @sprinters/api"
+    "start": "npm start --workspace @sprinters/api",
+    "test:e2e": "tsc --project tests/tsconfig.json && npm run build && playwright test"
   },
   "devDependencies": {
+    "@playwright/test": "^1.64.1",
     "concurrently": "^10.0.6",
     "typescript": "^7.0.2"
   }

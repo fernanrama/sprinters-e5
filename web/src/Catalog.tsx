@@ -146,7 +146,7 @@ export default function Catalog() {
 
   return (
     <>
-      <main>
+      <main id="page-content" className="page-content" tabIndex={-1}>
         <div style={{ marginBottom: "26px" }}>
           <p className="eyebrow">Tu entrenamiento empieza aquí</p>
           <h1>Catálogo de Ejercicios</h1>

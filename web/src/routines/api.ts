@@ -1,5 +1,6 @@
 import { isRoutine, type Routine, type RoutineUpdate } from "../../../shared/routines";
-export type Exercise = { id: string; name: string; muscleGroup: string; equipment: string };
+import type { Exercise } from "../../../shared/exercises";
+export type { Exercise } from "../../../shared/exercises";
 export class ApiError extends Error {
   constructor(public status: number, message: string) { super(message); }
 }

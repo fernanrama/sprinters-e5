@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import type { Routine, RoutineItem } from "../../../shared/routines";
 import type { Exercise } from "./api";
 import { removeRoutineItem } from "./routineDraft";
+import { ExerciseImage } from "../exercises/ExerciseImage";
 
 type Props = {
   route: string;
@@ -34,6 +35,7 @@ function RoutineForm({ initialRoutine, exercises, onSave, onCancel, onDirty, onS
   const cancelDialog = useRef<HTMLDialogElement>(null);
   const dirty = name !== (initialRoutine?.name ?? "") ||
     JSON.stringify(items) !== JSON.stringify(initialRoutine?.items ?? []);
+  const selectedExercise = exercises.find(exercise => exercise.id === exerciseId);
 
   useEffect(() => { onDirty(dirty); }, [dirty, onDirty]);
 
@@ -177,7 +179,7 @@ const handleUpdateItemParam = (id: string, field: "sets" | "repetitions", value:
       </div>
 
       <div style={{ display: "flex", gap: "10px", marginBottom: "15px", flexWrap: "wrap", alignItems: "flex-end", background: "#f0f0f0", padding: "10px", borderRadius: "4px" }}>
-        <div>
+        <div className="routine-exercise-picker">
           <label style={{ display: "block", fontSize: "12px" }}>Ejercicio</label>
           <select value={exerciseId} onChange={e => setExerciseId(e.target.value)} style={{ padding: "8px" }}>
             <option value="">-- Selecciona --</option>
@@ -187,6 +189,10 @@ const handleUpdateItemParam = (id: string, field: "sets" | "repetitions", value:
               </option>
             ))}
           </select>
+          {selectedExercise && <figure className="exercise-selection-preview">
+            <ExerciseImage exercise={selectedExercise} variant="preview" loading="eager" decorative />
+            <figcaption><strong>{selectedExercise.name}</strong><p>{selectedExercise.equipment}</p></figcaption>
+          </figure>}
         </div>
         
         <div>
@@ -251,15 +257,17 @@ const handleUpdateItemParam = (id: string, field: "sets" | "repetitions", value:
       {/* Sergio Alejandro */}
       <ul aria-label="Ejercicios de la rutina" className="routine-form-items" style={{ listStyle: "none", padding: 0, marginTop: "15px" }}>
         {items.map((item, idx) => {
-          const exName = exercises.find(e => e.id === item.exerciseId)?.name || item.exerciseId;
+          const exercise = exercises.find(e => e.id === item.exerciseId);
+          const exName = exercise?.name || item.exerciseId;
           return (
             <li key={item.id} className="routine-form-item" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "12px", background: "#fdfdfd", border: "1px solid #e4e2de", borderRadius: "6px", marginBottom: "10px" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: "15px", flex: 1, flexWrap: "wrap" }}>
+              <ExerciseImage exercise={exercise ?? { id: item.exerciseId, name: exName }} variant="row" decorative />
+              <div className="routine-exercise-description" style={{ display: "flex", alignItems: "center", gap: "15px", flexWrap: "wrap" }}>
                 <span style={{ fontWeight: "bold", color: "#cb0017", minWidth: "20px" }}>#{idx + 1}</span>
-                <span style={{ fontWeight: "600", minWidth: "140px" }}>{exName}</span>
+                <span className="routine-exercise-name" style={{ fontWeight: "600" }}>{exName}</span>
                 
                 {/* SCRUM-86: Inputs en línea para editar Series y Reps */}
-                <div style={{ display: "flex", gap: "10px", alignItems: "center", fontSize: "13px" }}>
+                <div className="routine-inline-parameters" style={{ display: "flex", gap: "10px", alignItems: "center", fontSize: "13px" }}>
                   <label>Series: 
                     <input 
                       type="number" 

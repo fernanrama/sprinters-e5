@@ -1,17 +1,9 @@
 import { readFile } from "node:fs/promises";
 import express, { Router, type ErrorRequestHandler } from "express";
 import { createRoutineStore, RoutineError, isRoutineUpdate } from "./routines.js";
-
-export type Exercise = {
-  id: string;
-  name: string;
-  muscleGroup: string;
-  equipment: string;
-  description: string;
-  instructions: string;
-  imageUrl?: string;
-  tags?: string[];
-};
+import { isExerciseImages } from "../../shared/exercises.js";
+import type { Exercise } from "../../shared/exercises.js";
+export type { Exercise } from "../../shared/exercises.js";
 
 export function isExercise(value: unknown): value is Exercise {
   if (typeof value !== "object" || value === null) return false;
@@ -20,6 +12,8 @@ export function isExercise(value: unknown): value is Exercise {
     (field) => typeof fields[field] === "string" && fields[field].length > 0,
   );
   if (!hasBaseFields) return false;
+  if (fields.imageUrl !== undefined && typeof fields.imageUrl !== "string") return false;
+  if (fields.images !== undefined && !isExerciseImages(fields.images)) return false;
   if ("tags" in fields && fields.tags !== undefined) {
     if (!Array.isArray(fields.tags) || !fields.tags.every((t) => typeof t === "string" && t.trim().length > 0)) {
       return false;

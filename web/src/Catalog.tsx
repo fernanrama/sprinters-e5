@@ -1,22 +1,12 @@
 import { useEffect, useMemo, useState } from "react";
-
-export type Exercise = {
-  id: string;
-  name: string;
-  muscleGroup: string;
-  equipment: string;
-  imageUrl: string;
-  description: string;
-  instructions: string;
-  tags?: string[];
-};
+import { ExerciseImage } from "./exercises/ExerciseImage";
+import type { Exercise } from "../../shared/exercises";
+export type { Exercise } from "../../shared/exercises";
 
 type CatalogState =
   | { status: "loading" }
   | { status: "error" }
   | { status: "ready"; exercises: Exercise[] };
-
-const FALLBACK_IMAGE = "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=600&auto=format&fit=crop&q=80";
 
 export default function Catalog() {
   const [state, setState] = useState<CatalogState>({ status: "loading" });
@@ -303,7 +293,7 @@ export default function Catalog() {
                   padding: 0,
                 }}
               >
-                {filteredExercises.map((exercise) => (
+                {filteredExercises.map((exercise, index) => (
                   <li
                     key={exercise.id}
                     onClick={() => setSelectedExercise(exercise)}
@@ -327,16 +317,7 @@ export default function Catalog() {
                       e.currentTarget.style.boxShadow = "0 2px 4px rgba(0,0,0,0.06)";
                     }}
                   >
-                    <div style={{ height: "140px", overflow: "hidden", background: "#dcdcdc" }}>
-                      <img
-                        src={exercise.imageUrl}
-                        alt={exercise.name}
-                        style={{ width: "100%", height: "100%", objectFit: "cover" }}
-                        onError={(e) => {
-                          e.currentTarget.src = FALLBACK_IMAGE;
-                        }}
-                      />
-                    </div>
+                    <ExerciseImage exercise={exercise} variant="card" loading={index < 4 ? "eager" : "lazy"} decorative />
                     <div style={{ padding: "16px", display: "flex", flexDirection: "column", flex: 1 }}>
                       <div>
                         <span className="tag">{exercise.muscleGroup}</span>
@@ -391,7 +372,7 @@ export default function Catalog() {
               <div
                 style={{
                   display: "grid",
-                  gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+                  gridTemplateColumns: "repeat(auto-fit, minmax(min(280px, 100%), 1fr))",
                   gap: "30px",
                   alignItems: "center",
                 }}
@@ -428,20 +409,7 @@ export default function Catalog() {
                   </div>
                 </div>
                 <div>
-                  <img
-                    src={selectedExercise.imageUrl}
-                    alt={selectedExercise.name}
-                    style={{
-                      width: "100%",
-                      height: "320px",
-                      objectFit: "cover",
-                      borderRadius: "8px",
-                      border: "1px solid #e4e2de",
-                    }}
-                    onError={(e) => {
-                      e.currentTarget.src = FALLBACK_IMAGE;
-                    }}
-                  />
+                  <ExerciseImage exercise={selectedExercise} variant="detail" loading="eager" />
                 </div>
               </div>
 

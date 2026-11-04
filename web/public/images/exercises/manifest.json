@@ -1,0 +1,948 @@
+{
+  "schemaVersion": 1,
+  "reviewedAt": "2026-11-04",
+  "sourceRevision": "f00c92c7dcf1216a928a52c3706c7ce8e2f71ed5",
+  "scope": "P1; no new exercises; visual inspection by developer, not professional technique approval",
+  "license": {
+    "name": "Unlicense",
+    "url": "https://github.com/yuhonas/free-exercise-db/blob/f00c92c7dcf1216a928a52c3706c7ce8e2f71ed5/LICENSE.md",
+    "declaration": "Repository describes dataset and imagery as public domain; per-photo author/model release not supplied. No license claim for URJC logo or Inter."
+  },
+  "quality": "Provisional technical identification at native 850px. Not high-density 1600px detail. No upscaling/cropping. More diverse high-resolution originals remain pending.",
+  "baselineInventory": [
+    {
+      "id": "sentadilla",
+      "name": "Sentadilla",
+      "equipment": "Peso corporal",
+      "url": "https://i.blogs.es/76cc7d/1366_2000/450_1000.jpeg",
+      "redistributionPermission": "not verified; not incorporated locally",
+      "httpStatus": 200,
+      "width": 450,
+      "height": 300,
+      "bytes": 51108,
+      "sha256": "dd930f16ff06eff779ebbbf11a6adbe646a6778ac743c613eb548b52f71d70dc",
+      "load": "decoded",
+      "visualReview": "Old image shows a loaded barbell, unlike bodyweight equipment; replaced with bodyweight squat.",
+      "decision": "replaced with reviewed local derivatives"
+    },
+    {
+      "id": "remo-mancuerna",
+      "name": "Remo con mancuerna",
+      "equipment": "Mancuerna",
+      "url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRODYTzm9M11XgvfPueX5p_O8zDLuHMe6_mBzql-I6y5Cm8cxPELcDuws4&s=10",
+      "redistributionPermission": "not verified; not incorporated locally",
+      "httpStatus": 200,
+      "width": 640,
+      "height": 480,
+      "bytes": 58564,
+      "sha256": "aba41080377a47ec145e64b95ac25972217a8b11d3910005a6c77ecac514c5a2",
+      "load": "decoded",
+      "visualReview": "Movement and bench/dumbbell match; Google thumbnail source has no original attribution; replaced.",
+      "decision": "replaced with reviewed local derivatives"
+    },
+    {
+      "id": "press-banca",
+      "name": "Press de banca",
+      "equipment": "Barra y banco",
+      "url": "https://i.blogs.es/a13680/1366_2000/840_560.jpeg",
+      "redistributionPermission": "not verified; not incorporated locally",
+      "httpStatus": 200,
+      "width": 840,
+      "height": 560,
+      "bytes": 129490,
+      "sha256": "ca676388b6d9a539506c47bbcc0a81ae083e2dd7b8a55df71ef64b35e97839f4",
+      "load": "decoded",
+      "visualReview": "Barbell and bench match; replaced with redistributable declared source and derivatives.",
+      "decision": "replaced with reviewed local derivatives"
+    },
+    {
+      "id": "plancha",
+      "name": "Plancha",
+      "equipment": "Esterilla",
+      "url": "https://media.revistagq.com/photos/672355aaf69e7e75196369db/16:9/w_2560%2Cc_limit/590575189",
+      "redistributionPermission": "not verified; not incorporated locally",
+      "httpStatus": 200,
+      "width": 2560,
+      "height": 1440,
+      "bytes": 674448,
+      "sha256": "1b65379d2887d45e5bf5de3819a6286604f6afd6707ff147d0dcc65ce92841d5",
+      "load": "decoded",
+      "visualReview": "Forearm plank matches movement; no separate mat visible. Retained existing remote URL, local replacement pending.",
+      "decision": "retained remote; licensed local replacement pending"
+    },
+    {
+      "id": "peso-muerto",
+      "name": "Peso muerto",
+      "equipment": "Barra",
+      "url": "https://allfreeweight.com/wp-content/uploads/2022/09/imagen1.jpg",
+      "redistributionPermission": "not verified; not incorporated locally",
+      "httpStatus": 200,
+      "width": 425,
+      "height": 319,
+      "bytes": 30242,
+      "sha256": "39dffa164053e131e4ac974e6603d98c2d02ed76d35a018b46c54793c666dcd9",
+      "load": "decoded",
+      "visualReview": "Old image shows a wide stance competition lift; selected conventional barbell deadlift matching instructions.",
+      "decision": "replaced with reviewed local derivatives"
+    },
+    {
+      "id": "dominadas",
+      "name": "Dominadas",
+      "equipment": "Barra de dominadas",
+      "url": "https://cdn.sanity.io/images/aa8d3hr0/production/7c343a871c05e5b2456c6c528d7a21a1b13d20cd-1920x1080.jpg?rect=531,0,1080,1080&w=1920&h=1920&q=100",
+      "redistributionPermission": "not verified; not incorporated locally",
+      "httpStatus": 200,
+      "width": 1920,
+      "height": 1920,
+      "bytes": 1267103,
+      "sha256": "d809f38e50756d73e5d8d450d28e6bdea885d57685779c71e5ec70ef26f991d6",
+      "load": "decoded",
+      "visualReview": "Pull-up and bar match; replaced with full-body frame and derivatives.",
+      "decision": "replaced with reviewed local derivatives"
+    },
+    {
+      "id": "zancadas",
+      "name": "Zancadas",
+      "equipment": "Peso corporal",
+      "url": "https://i.blogs.es/5917ff/650_1000_zancada/650_1200.jpg",
+      "redistributionPermission": "not verified; not incorporated locally",
+      "httpStatus": 200,
+      "width": 650,
+      "height": 433,
+      "bytes": 15840,
+      "sha256": "d4783246c8a3f2eee1e4910a78bac78b63d0953b9fef889755664e8a15b1f2ab",
+      "load": "decoded",
+      "visualReview": "Bodyweight lunge matches; selected a photographic lowered lunge without added load.",
+      "decision": "replaced with reviewed local derivatives"
+    },
+    {
+      "id": "press-militar",
+      "name": "Press militar",
+      "equipment": "Mancuernas",
+      "url": "https://www.zonawod.com/wp-content/uploads/Press-militar-con-mancuerna-press-hombro-con-mancuernas.jpg",
+      "redistributionPermission": "not verified; not incorporated locally",
+      "httpStatus": 200,
+      "width": 675,
+      "height": 450,
+      "bytes": 49583,
+      "sha256": "0e5655593497ab7122c8e7622168b04068ce2c4fd63435cc993dd8554e4671d4",
+      "load": "decoded",
+      "visualReview": "Seated dumbbell shoulder press matches allowed seated/standing instruction.",
+      "decision": "replaced with reviewed local derivatives"
+    },
+    {
+      "id": "curl-biceps",
+      "name": "Curl de bíceps",
+      "equipment": "Mancuernas",
+      "url": "https://hips.hearstapps.com/hmg-prod/images/muscle-and-fitness-royalty-free-image-1575304404.jpg?resize=640:*",
+      "redistributionPermission": "not verified; not incorporated locally",
+      "httpStatus": 200,
+      "width": 640,
+      "height": 427,
+      "bytes": 30619,
+      "sha256": "175efa0db29d26a1cda4cbe767d13fb9fab8ff7f4ab438e41f08188115fd04c2",
+      "load": "decoded",
+      "visualReview": "Dumbbell curl matches; selected frame includes full body and both dumbbells.",
+      "decision": "replaced with reviewed local derivatives"
+    },
+    {
+      "id": "extension-triceps",
+      "name": "Extensión de tríceps",
+      "equipment": "Polea o mancuerna",
+      "url": "https://hips.hearstapps.com/hmg-prod/images/triceps-extension-exercise-royalty-free-image-1575974873.jpg?resize=640:*",
+      "redistributionPermission": "not verified; not incorporated locally",
+      "httpStatus": 200,
+      "width": 640,
+      "height": 360,
+      "bytes": 32114,
+      "sha256": "c0160a927c1ee3b04af00e74eacaeb5f6d81aa8f7e809089b2429ba5a3d24751",
+      "load": "decoded",
+      "visualReview": "Old image is cable pushdown, unlike the overhead instruction; replaced with overhead dumbbell extension.",
+      "decision": "replaced with reviewed local derivatives"
+    },
+    {
+      "id": "hip-thrust",
+      "name": "Hip thrust",
+      "equipment": "Barra y banco",
+      "url": "https://i.blogs.es/c30741/como-hacer-hip-thrust/1366_2000.jpeg",
+      "redistributionPermission": "not verified; not incorporated locally",
+      "httpStatus": 200,
+      "width": 1254,
+      "height": 836,
+      "bytes": 259083,
+      "sha256": "9cb82da776c10923480c8e5343015053bd0889ef5ede1c411a25c0c11c503255",
+      "load": "decoded",
+      "visualReview": "Barbell with bench support matches; selected full frame.",
+      "decision": "replaced with reviewed local derivatives"
+    },
+    {
+      "id": "elevaciones-laterales",
+      "name": "Elevaciones laterales",
+      "equipment": "Mancuernas",
+      "url": "https://i.blogs.es/4fe63b/istock-1443576746/1366_2000.jpeg",
+      "redistributionPermission": "not verified; not incorporated locally",
+      "httpStatus": 200,
+      "width": 1254,
+      "height": 836,
+      "bytes": 181380,
+      "sha256": "3a02b3294694655dd280234d32ef438c04c14f4bf953aba850992de36310d3ba",
+      "load": "decoded",
+      "visualReview": "Dumbbell side raise matches; selected full frame.",
+      "decision": "replaced with reviewed local derivatives"
+    },
+    {
+      "id": "crunch-abdominal",
+      "name": "Crunch abdominal",
+      "equipment": "Esterilla",
+      "url": "https://fivestarsfitness.com/wp-content/uploads/2025/06/crunch-abdominal.jpeg",
+      "redistributionPermission": "not verified; not incorporated locally",
+      "httpStatus": 200,
+      "width": 1000,
+      "height": 667,
+      "bytes": 69891,
+      "sha256": "2ae16aecf894968a4f59f651613c4a5896bc50059d6cfcb37efa59183c1c518c",
+      "load": "decoded",
+      "visualReview": "Old image has legs raised; instructions specify feet on floor. Replaced with feet-grounded crunch on mat.",
+      "decision": "replaced with reviewed local derivatives"
+    },
+    {
+      "id": "fondos-paralelas",
+      "name": "Fondos en paralelas",
+      "equipment": "Barras paralelas",
+      "url": "https://fivestarsfitness.com/wp-content/uploads/2025/06/fondos-en-paralelas.jpeg",
+      "redistributionPermission": "not verified; not incorporated locally",
+      "httpStatus": 200,
+      "width": 1000,
+      "height": 667,
+      "bytes": 43704,
+      "sha256": "1f64429baea2abf48c768c594eda8864703e7cd49ac588adc656a8ec71f9ca24",
+      "load": "decoded",
+      "visualReview": "Parallel-bar dip matches; selected leaned-forward chest version.",
+      "decision": "replaced with reviewed local derivatives"
+    }
+  ],
+  "resources": [
+    {
+      "id": "sentadilla",
+      "sourcePage": "https://github.com/yuhonas/free-exercise-db/tree/f00c92c7dcf1216a928a52c3706c7ce8e2f71ed5/exercises/Bodyweight_Squat",
+      "author": null,
+      "license": "Unlicense (repository declaration)",
+      "licenseUrl": "https://github.com/yuhonas/free-exercise-db/blob/f00c92c7dcf1216a928a52c3706c7ce8e2f71ed5/LICENSE.md",
+      "reviewedAt": "2026-11-04",
+      "reviewStatus": "visually reviewed; matching movement and equipment; provisional 850px, high-resolution replacement pending",
+      "original": {
+        "file": "sentadilla-1.jpg",
+        "url": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/f00c92c7dcf1216a928a52c3706c7ce8e2f71ed5/exercises/Bodyweight_Squat/1.jpg",
+        "width": 850,
+        "height": 567,
+        "bytes": 41546,
+        "sha256": "3fa6886632674f02308cdee53ce32649fd648774701fbd20ee280d63be40e5a4"
+      },
+      "derivatives": {
+        "thumbnail": {
+          "url": "/images/exercises/sentadilla-thumbnail.webp",
+          "width": 192,
+          "height": 128,
+          "bytes": 2330,
+          "sha256": "507723678fe74683d02dad26545aa48395661d459dc16d800886c60f2c52d1a2",
+          "quality": 80
+        },
+        "card": {
+          "url": "/images/exercises/sentadilla-card.webp",
+          "width": 640,
+          "height": 427,
+          "bytes": 19402,
+          "sha256": "2257cd049b5e483b6d3f4bfbf38831fc1d42f92f48098ff84c1369b38aaf2ac3",
+          "quality": 84
+        },
+        "detail": {
+          "url": "/images/exercises/sentadilla-detail.webp",
+          "width": 850,
+          "height": 567,
+          "bytes": 43744,
+          "sha256": "6c55103564ca99e9a460dfebddb00c0ea94359bafc3703355db0832da07365d3",
+          "quality": 90
+        }
+      }
+    },
+    {
+      "id": "remo-mancuerna",
+      "sourcePage": "https://github.com/yuhonas/free-exercise-db/tree/f00c92c7dcf1216a928a52c3706c7ce8e2f71ed5/exercises/One-Arm_Dumbbell_Row",
+      "author": null,
+      "license": "Unlicense (repository declaration)",
+      "licenseUrl": "https://github.com/yuhonas/free-exercise-db/blob/f00c92c7dcf1216a928a52c3706c7ce8e2f71ed5/LICENSE.md",
+      "reviewedAt": "2026-11-04",
+      "reviewStatus": "visually reviewed; matching movement and equipment; provisional 850px, high-resolution replacement pending",
+      "original": {
+        "file": "remo-mancuerna-1.jpg",
+        "url": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/f00c92c7dcf1216a928a52c3706c7ce8e2f71ed5/exercises/One-Arm_Dumbbell_Row/1.jpg",
+        "width": 850,
+        "height": 567,
+        "bytes": 71407,
+        "sha256": "83d5ceaa6d9ec6732f0afedaaa9a842c34cfdedce89e6fed75681c0bf971174a"
+      },
+      "derivatives": {
+        "thumbnail": {
+          "url": "/images/exercises/remo-mancuerna-thumbnail.webp",
+          "width": 192,
+          "height": 128,
+          "bytes": 5662,
+          "sha256": "71af1a27f286e5d777509fb5b2d4c9c25647c834d37b1eef74b36fbb2582e674",
+          "quality": 80
+        },
+        "card": {
+          "url": "/images/exercises/remo-mancuerna-card.webp",
+          "width": 640,
+          "height": 427,
+          "bytes": 37028,
+          "sha256": "8a791c19bf5f1108e4965aabe8296ba478363b0872ab759177bc0bc1cd20abca",
+          "quality": 84
+        },
+        "detail": {
+          "url": "/images/exercises/remo-mancuerna-detail.webp",
+          "width": 850,
+          "height": 567,
+          "bytes": 78152,
+          "sha256": "acdd83ac26f37eb9f032593b5d996e6aa1552c4c3b61fca58c6174a6f998b143",
+          "quality": 90
+        }
+      }
+    },
+    {
+      "id": "press-banca",
+      "sourcePage": "https://github.com/yuhonas/free-exercise-db/tree/f00c92c7dcf1216a928a52c3706c7ce8e2f71ed5/exercises/Barbell_Bench_Press_-_Medium_Grip",
+      "author": null,
+      "license": "Unlicense (repository declaration)",
+      "licenseUrl": "https://github.com/yuhonas/free-exercise-db/blob/f00c92c7dcf1216a928a52c3706c7ce8e2f71ed5/LICENSE.md",
+      "reviewedAt": "2026-11-04",
+      "reviewStatus": "visually reviewed; matching movement and equipment; provisional 850px, high-resolution replacement pending",
+      "original": {
+        "file": "press-banca-1.jpg",
+        "url": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/f00c92c7dcf1216a928a52c3706c7ce8e2f71ed5/exercises/Barbell_Bench_Press_-_Medium_Grip/1.jpg",
+        "width": 850,
+        "height": 567,
+        "bytes": 72202,
+        "sha256": "5056475ae5def865dbe52882d30d2730142de2b03231bda304f82fd0b088f608"
+      },
+      "derivatives": {
+        "thumbnail": {
+          "url": "/images/exercises/press-banca-thumbnail.webp",
+          "width": 192,
+          "height": 128,
+          "bytes": 5502,
+          "sha256": "b0642e0fc7e7ad1c1697bbdc4965faf4a437f5eb53ab626163da3f561041cfbc",
+          "quality": 80
+        },
+        "card": {
+          "url": "/images/exercises/press-banca-card.webp",
+          "width": 640,
+          "height": 427,
+          "bytes": 37182,
+          "sha256": "2fb4face1b5f65c9415870dbdb17b53b5fd30ddfbb3273792c74a506da61b485",
+          "quality": 84
+        },
+        "detail": {
+          "url": "/images/exercises/press-banca-detail.webp",
+          "width": 850,
+          "height": 567,
+          "bytes": 77638,
+          "sha256": "5b22ddfe6bee42d1060f2fd609067b40ab9e15747312154eaafe7aaafc73a4d6",
+          "quality": 90
+        }
+      }
+    },
+    {
+      "id": "peso-muerto",
+      "sourcePage": "https://github.com/yuhonas/free-exercise-db/tree/f00c92c7dcf1216a928a52c3706c7ce8e2f71ed5/exercises/Barbell_Deadlift",
+      "author": null,
+      "license": "Unlicense (repository declaration)",
+      "licenseUrl": "https://github.com/yuhonas/free-exercise-db/blob/f00c92c7dcf1216a928a52c3706c7ce8e2f71ed5/LICENSE.md",
+      "reviewedAt": "2026-11-04",
+      "reviewStatus": "visually reviewed; matching movement and equipment; provisional 850px, high-resolution replacement pending",
+      "original": {
+        "file": "peso-muerto-0.jpg",
+        "url": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/f00c92c7dcf1216a928a52c3706c7ce8e2f71ed5/exercises/Barbell_Deadlift/0.jpg",
+        "width": 850,
+        "height": 567,
+        "bytes": 69854,
+        "sha256": "f032a7e4566eb3e73258580add64bf2756cb465bfcee22fdfffbed0f43f1eae6"
+      },
+      "derivatives": {
+        "thumbnail": {
+          "url": "/images/exercises/peso-muerto-thumbnail.webp",
+          "width": 192,
+          "height": 128,
+          "bytes": 4996,
+          "sha256": "d244ece5aac69168adcfe2404161864c9611e0c9a60d2d01da747a926e996e8a",
+          "quality": 80
+        },
+        "card": {
+          "url": "/images/exercises/peso-muerto-card.webp",
+          "width": 640,
+          "height": 427,
+          "bytes": 35868,
+          "sha256": "96ac93da6de5444efb9125413d3340b224ebbf86be169f1b11cb7a268ca171b7",
+          "quality": 84
+        },
+        "detail": {
+          "url": "/images/exercises/peso-muerto-detail.webp",
+          "width": 850,
+          "height": 567,
+          "bytes": 73678,
+          "sha256": "beecb8a98a3c83f02a1350a743b2dadce568395ba25e645355bf17c0f7ed13da",
+          "quality": 90
+        }
+      }
+    },
+    {
+      "id": "dominadas",
+      "sourcePage": "https://github.com/yuhonas/free-exercise-db/tree/f00c92c7dcf1216a928a52c3706c7ce8e2f71ed5/exercises/Pullups",
+      "author": null,
+      "license": "Unlicense (repository declaration)",
+      "licenseUrl": "https://github.com/yuhonas/free-exercise-db/blob/f00c92c7dcf1216a928a52c3706c7ce8e2f71ed5/LICENSE.md",
+      "reviewedAt": "2026-11-04",
+      "reviewStatus": "visually reviewed; matching movement and equipment; provisional 850px, high-resolution replacement pending",
+      "original": {
+        "file": "dominadas-1.jpg",
+        "url": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/f00c92c7dcf1216a928a52c3706c7ce8e2f71ed5/exercises/Pullups/1.jpg",
+        "width": 850,
+        "height": 567,
+        "bytes": 40018,
+        "sha256": "40549a52b064e5084a85e2c36afb51438df6ac1097169379a05f21565f8b4f3f"
+      },
+      "derivatives": {
+        "thumbnail": {
+          "url": "/images/exercises/dominadas-thumbnail.webp",
+          "width": 192,
+          "height": 128,
+          "bytes": 3004,
+          "sha256": "bd26015b00dcd988942af1c71afdc1d535b5db322ff249e54e0a4aaa6b672419",
+          "quality": 80
+        },
+        "card": {
+          "url": "/images/exercises/dominadas-card.webp",
+          "width": 640,
+          "height": 427,
+          "bytes": 16326,
+          "sha256": "d5bfcd48b9f7e211785d44249b5cd17e680134eb9f4122d89f2533a0677be742",
+          "quality": 84
+        },
+        "detail": {
+          "url": "/images/exercises/dominadas-detail.webp",
+          "width": 850,
+          "height": 567,
+          "bytes": 35552,
+          "sha256": "3fcbf20717a83898ec1eb1e6f69520de848c6f0e5941958f4d639636ee57a940",
+          "quality": 90
+        }
+      }
+    },
+    {
+      "id": "zancadas",
+      "sourcePage": "https://github.com/yuhonas/free-exercise-db/tree/f00c92c7dcf1216a928a52c3706c7ce8e2f71ed5/exercises/Bodyweight_Walking_Lunge",
+      "author": null,
+      "license": "Unlicense (repository declaration)",
+      "licenseUrl": "https://github.com/yuhonas/free-exercise-db/blob/f00c92c7dcf1216a928a52c3706c7ce8e2f71ed5/LICENSE.md",
+      "reviewedAt": "2026-11-04",
+      "reviewStatus": "visually reviewed; matching movement and equipment; provisional 850px, high-resolution replacement pending",
+      "original": {
+        "file": "zancadas-1.jpg",
+        "url": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/f00c92c7dcf1216a928a52c3706c7ce8e2f71ed5/exercises/Bodyweight_Walking_Lunge/1.jpg",
+        "width": 850,
+        "height": 567,
+        "bytes": 76877,
+        "sha256": "0d1273e80ffb41c2dade4721b8b1721e3e269b28e7824a526543670021499a74"
+      },
+      "derivatives": {
+        "thumbnail": {
+          "url": "/images/exercises/zancadas-thumbnail.webp",
+          "width": 192,
+          "height": 128,
+          "bytes": 5646,
+          "sha256": "8455ca13465199c480816b350cfb4804d1b637818c34c036f54fe6a3dbd84a93",
+          "quality": 80
+        },
+        "card": {
+          "url": "/images/exercises/zancadas-card.webp",
+          "width": 640,
+          "height": 427,
+          "bytes": 41192,
+          "sha256": "2b143abf76c8ad805167e7a88ba1ae30b586336eb017b72493376d2139fb558e",
+          "quality": 84
+        },
+        "detail": {
+          "url": "/images/exercises/zancadas-detail.webp",
+          "width": 850,
+          "height": 567,
+          "bytes": 86004,
+          "sha256": "9622993fb4be789126761352b0a189ec10c3cc672fcae2566c19c7b7c85c1858",
+          "quality": 90
+        }
+      }
+    },
+    {
+      "id": "press-militar",
+      "sourcePage": "https://github.com/yuhonas/free-exercise-db/tree/f00c92c7dcf1216a928a52c3706c7ce8e2f71ed5/exercises/Dumbbell_Shoulder_Press",
+      "author": null,
+      "license": "Unlicense (repository declaration)",
+      "licenseUrl": "https://github.com/yuhonas/free-exercise-db/blob/f00c92c7dcf1216a928a52c3706c7ce8e2f71ed5/LICENSE.md",
+      "reviewedAt": "2026-11-04",
+      "reviewStatus": "visually reviewed; matching movement and equipment; provisional 850px, high-resolution replacement pending",
+      "original": {
+        "file": "press-militar-1.jpg",
+        "url": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/f00c92c7dcf1216a928a52c3706c7ce8e2f71ed5/exercises/Dumbbell_Shoulder_Press/1.jpg",
+        "width": 850,
+        "height": 567,
+        "bytes": 63882,
+        "sha256": "940d5aad6b85960e833f88e218de8ce4f806d84cf2764741f1cbff9cce365d84"
+      },
+      "derivatives": {
+        "thumbnail": {
+          "url": "/images/exercises/press-militar-thumbnail.webp",
+          "width": 192,
+          "height": 128,
+          "bytes": 4436,
+          "sha256": "019b102f6b24674aeedfd527c75b433a436b7bb3e1a6185da6421d4676e07f75",
+          "quality": 80
+        },
+        "card": {
+          "url": "/images/exercises/press-militar-card.webp",
+          "width": 640,
+          "height": 427,
+          "bytes": 31778,
+          "sha256": "3b3733a6080c2a31c3f5070ed360217d873c71432de7215f4de070a9e8fe3ed3",
+          "quality": 84
+        },
+        "detail": {
+          "url": "/images/exercises/press-militar-detail.webp",
+          "width": 850,
+          "height": 567,
+          "bytes": 70524,
+          "sha256": "fa1b642c48361fe6e2ddc7980f7f3fdcde0d025193a8297fc8649d26b5f440c2",
+          "quality": 90
+        }
+      }
+    },
+    {
+      "id": "curl-biceps",
+      "sourcePage": "https://github.com/yuhonas/free-exercise-db/tree/f00c92c7dcf1216a928a52c3706c7ce8e2f71ed5/exercises/Dumbbell_Bicep_Curl",
+      "author": null,
+      "license": "Unlicense (repository declaration)",
+      "licenseUrl": "https://github.com/yuhonas/free-exercise-db/blob/f00c92c7dcf1216a928a52c3706c7ce8e2f71ed5/LICENSE.md",
+      "reviewedAt": "2026-11-04",
+      "reviewStatus": "visually reviewed; matching movement and equipment; provisional 850px, high-resolution replacement pending",
+      "original": {
+        "file": "curl-biceps-1.jpg",
+        "url": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/f00c92c7dcf1216a928a52c3706c7ce8e2f71ed5/exercises/Dumbbell_Bicep_Curl/1.jpg",
+        "width": 850,
+        "height": 567,
+        "bytes": 58066,
+        "sha256": "ec2c3a539aa80ea911a85e00ca9fb74502407e8ef0d8a4526e3b076a5a52b30a"
+      },
+      "derivatives": {
+        "thumbnail": {
+          "url": "/images/exercises/curl-biceps-thumbnail.webp",
+          "width": 192,
+          "height": 128,
+          "bytes": 3894,
+          "sha256": "6b40f740ed19df77609ba4692164d8c18534fd07d0c3089ec61d5197ab50a827",
+          "quality": 80
+        },
+        "card": {
+          "url": "/images/exercises/curl-biceps-card.webp",
+          "width": 640,
+          "height": 427,
+          "bytes": 26340,
+          "sha256": "72e44ee990ef636c0c4cb7cb5ec867750ca90f8645c88091d4337adf0fe10cd4",
+          "quality": 84
+        },
+        "detail": {
+          "url": "/images/exercises/curl-biceps-detail.webp",
+          "width": 850,
+          "height": 567,
+          "bytes": 57692,
+          "sha256": "df40ecd4c4f12eb6fdfcb214814ca525f17c8f79791b485da3a00748ab494cd8",
+          "quality": 90
+        }
+      }
+    },
+    {
+      "id": "extension-triceps",
+      "sourcePage": "https://github.com/yuhonas/free-exercise-db/tree/f00c92c7dcf1216a928a52c3706c7ce8e2f71ed5/exercises/Standing_Dumbbell_Triceps_Extension",
+      "author": null,
+      "license": "Unlicense (repository declaration)",
+      "licenseUrl": "https://github.com/yuhonas/free-exercise-db/blob/f00c92c7dcf1216a928a52c3706c7ce8e2f71ed5/LICENSE.md",
+      "reviewedAt": "2026-11-04",
+      "reviewStatus": "visually reviewed; matching movement and equipment; provisional 850px, high-resolution replacement pending",
+      "original": {
+        "file": "extension-triceps-1.jpg",
+        "url": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/f00c92c7dcf1216a928a52c3706c7ce8e2f71ed5/exercises/Standing_Dumbbell_Triceps_Extension/1.jpg",
+        "width": 850,
+        "height": 567,
+        "bytes": 56376,
+        "sha256": "9fd2a8098c9a042300789e542f651d599114adbb3f070dfe44a0c9e3d3bdcd0c"
+      },
+      "derivatives": {
+        "thumbnail": {
+          "url": "/images/exercises/extension-triceps-thumbnail.webp",
+          "width": 192,
+          "height": 128,
+          "bytes": 3756,
+          "sha256": "2d5b3cc19e9f12b7fe96c1191305e358249e3d11b99e20c7052156fb38dfe30b",
+          "quality": 80
+        },
+        "card": {
+          "url": "/images/exercises/extension-triceps-card.webp",
+          "width": 640,
+          "height": 427,
+          "bytes": 25224,
+          "sha256": "f41cbc1cdcaf11c0f725c40b0c303112e189a21f25eed9b4a8a4137b2e7a3cdd",
+          "quality": 84
+        },
+        "detail": {
+          "url": "/images/exercises/extension-triceps-detail.webp",
+          "width": 850,
+          "height": 567,
+          "bytes": 55654,
+          "sha256": "bde37598c7433df3b8f8f4dd4a90e158a31cbad2abe6c2d3d7df8aad34f2c125",
+          "quality": 90
+        }
+      }
+    },
+    {
+      "id": "hip-thrust",
+      "sourcePage": "https://github.com/yuhonas/free-exercise-db/tree/f00c92c7dcf1216a928a52c3706c7ce8e2f71ed5/exercises/Barbell_Hip_Thrust",
+      "author": null,
+      "license": "Unlicense (repository declaration)",
+      "licenseUrl": "https://github.com/yuhonas/free-exercise-db/blob/f00c92c7dcf1216a928a52c3706c7ce8e2f71ed5/LICENSE.md",
+      "reviewedAt": "2026-11-04",
+      "reviewStatus": "visually reviewed; matching movement and equipment; provisional 850px, high-resolution replacement pending",
+      "original": {
+        "file": "hip-thrust-1.jpg",
+        "url": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/f00c92c7dcf1216a928a52c3706c7ce8e2f71ed5/exercises/Barbell_Hip_Thrust/1.jpg",
+        "width": 850,
+        "height": 567,
+        "bytes": 52252,
+        "sha256": "de1a6390ff4b2720750ed3380c3c9b0c4c1fb5ae811810291b62d8a1fd726ad6"
+      },
+      "derivatives": {
+        "thumbnail": {
+          "url": "/images/exercises/hip-thrust-thumbnail.webp",
+          "width": 192,
+          "height": 128,
+          "bytes": 4388,
+          "sha256": "9544dabfa15b1ad32d82990d01781e4b2733a49d5bedd2d984733f561cb96ffe",
+          "quality": 80
+        },
+        "card": {
+          "url": "/images/exercises/hip-thrust-card.webp",
+          "width": 640,
+          "height": 427,
+          "bytes": 24294,
+          "sha256": "8aa54f94529543a337227ad54ddc6f933f676e98e9b8788ff54a646904b2a247",
+          "quality": 84
+        },
+        "detail": {
+          "url": "/images/exercises/hip-thrust-detail.webp",
+          "width": 850,
+          "height": 567,
+          "bytes": 52232,
+          "sha256": "e35aec62b509e7093015a1723d70c9e409f310d96c1463f4aa5ca10aa5816f86",
+          "quality": 90
+        }
+      }
+    },
+    {
+      "id": "elevaciones-laterales",
+      "sourcePage": "https://github.com/yuhonas/free-exercise-db/tree/f00c92c7dcf1216a928a52c3706c7ce8e2f71ed5/exercises/Side_Lateral_Raise",
+      "author": null,
+      "license": "Unlicense (repository declaration)",
+      "licenseUrl": "https://github.com/yuhonas/free-exercise-db/blob/f00c92c7dcf1216a928a52c3706c7ce8e2f71ed5/LICENSE.md",
+      "reviewedAt": "2026-11-04",
+      "reviewStatus": "visually reviewed; matching movement and equipment; provisional 850px, high-resolution replacement pending",
+      "original": {
+        "file": "elevaciones-laterales-1.jpg",
+        "url": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/f00c92c7dcf1216a928a52c3706c7ce8e2f71ed5/exercises/Side_Lateral_Raise/1.jpg",
+        "width": 850,
+        "height": 567,
+        "bytes": 56355,
+        "sha256": "9210e0fb0202c306026d45a55703aaec89b3bef7aafeb7791aa1d06adcf58ab3"
+      },
+      "derivatives": {
+        "thumbnail": {
+          "url": "/images/exercises/elevaciones-laterales-thumbnail.webp",
+          "width": 192,
+          "height": 128,
+          "bytes": 3778,
+          "sha256": "77136efd622d27398f4a364d6e125aff90253d1196a99141ca782ce315aba9da",
+          "quality": 80
+        },
+        "card": {
+          "url": "/images/exercises/elevaciones-laterales-card.webp",
+          "width": 640,
+          "height": 427,
+          "bytes": 25360,
+          "sha256": "59e5d1d0ae9e42ee0e2005b943bece5849eba013fd351b49b32572dbd6e52eb8",
+          "quality": 84
+        },
+        "detail": {
+          "url": "/images/exercises/elevaciones-laterales-detail.webp",
+          "width": 850,
+          "height": 567,
+          "bytes": 56730,
+          "sha256": "c1e0dd83cb7d83bcc25a541e312f68ce8106f528a008379aaab53c952b2b53f5",
+          "quality": 90
+        }
+      }
+    },
+    {
+      "id": "crunch-abdominal",
+      "sourcePage": "https://github.com/yuhonas/free-exercise-db/tree/f00c92c7dcf1216a928a52c3706c7ce8e2f71ed5/exercises/Crunches",
+      "author": null,
+      "license": "Unlicense (repository declaration)",
+      "licenseUrl": "https://github.com/yuhonas/free-exercise-db/blob/f00c92c7dcf1216a928a52c3706c7ce8e2f71ed5/LICENSE.md",
+      "reviewedAt": "2026-11-04",
+      "reviewStatus": "visually reviewed; matching movement and equipment; provisional 850px, high-resolution replacement pending",
+      "original": {
+        "file": "crunch-abdominal-1.jpg",
+        "url": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/f00c92c7dcf1216a928a52c3706c7ce8e2f71ed5/exercises/Crunches/1.jpg",
+        "width": 850,
+        "height": 567,
+        "bytes": 69225,
+        "sha256": "84df8957fcc20c051475a2d28fedb0c1a3b3e63b00913ae4acec1ed0dc150d22"
+      },
+      "derivatives": {
+        "thumbnail": {
+          "url": "/images/exercises/crunch-abdominal-thumbnail.webp",
+          "width": 192,
+          "height": 128,
+          "bytes": 3290,
+          "sha256": "9614793b4b0d6ed4ffd4fc0511e22ea4b34cd7b333a3cf687cf3001e399716d3",
+          "quality": 80
+        },
+        "card": {
+          "url": "/images/exercises/crunch-abdominal-card.webp",
+          "width": 640,
+          "height": 427,
+          "bytes": 37298,
+          "sha256": "bd76b41d4c7f6cf44aa24cfd00107ee4c1a875f82d294f54f3dc5da7fca3b6be",
+          "quality": 84
+        },
+        "detail": {
+          "url": "/images/exercises/crunch-abdominal-detail.webp",
+          "width": 850,
+          "height": 567,
+          "bytes": 84506,
+          "sha256": "56ca5a65a507f059537956cfacec80a00cd72f38d7944dca6d3d1afd5bfdee10",
+          "quality": 90
+        }
+      }
+    },
+    {
+      "id": "fondos-paralelas",
+      "sourcePage": "https://github.com/yuhonas/free-exercise-db/tree/f00c92c7dcf1216a928a52c3706c7ce8e2f71ed5/exercises/Dips_-_Chest_Version",
+      "author": null,
+      "license": "Unlicense (repository declaration)",
+      "licenseUrl": "https://github.com/yuhonas/free-exercise-db/blob/f00c92c7dcf1216a928a52c3706c7ce8e2f71ed5/LICENSE.md",
+      "reviewedAt": "2026-11-04",
+      "reviewStatus": "visually reviewed; matching movement and equipment; provisional 850px, high-resolution replacement pending",
+      "original": {
+        "file": "fondos-paralelas-1.jpg",
+        "url": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/f00c92c7dcf1216a928a52c3706c7ce8e2f71ed5/exercises/Dips_-_Chest_Version/1.jpg",
+        "width": 850,
+        "height": 567,
+        "bytes": 72525,
+        "sha256": "3d537e22cb97304c0c2068c5209e8db5fec69be86e0465799e1a1b502f6e992f"
+      },
+      "derivatives": {
+        "thumbnail": {
+          "url": "/images/exercises/fondos-paralelas-thumbnail.webp",
+          "width": 192,
+          "height": 128,
+          "bytes": 4850,
+          "sha256": "2b42eaf104b5ba0ea9aaddb7ade8799e57468e53980395a071b3159b7047e01f",
+          "quality": 80
+        },
+        "card": {
+          "url": "/images/exercises/fondos-paralelas-card.webp",
+          "width": 640,
+          "height": 427,
+          "bytes": 37308,
+          "sha256": "4ab57c4056f6c673fc6392b4c29c8edd85c4f3ede478a9f70a4684a6225189d2",
+          "quality": 84
+        },
+        "detail": {
+          "url": "/images/exercises/fondos-paralelas-detail.webp",
+          "width": 850,
+          "height": 567,
+          "bytes": 81312,
+          "sha256": "4c1452d643a4286c17164b86862975cbad9ee1e8b180cd7d51d9607a975027e3",
+          "quality": 90
+        }
+      }
+    }
+  ],
+  "retained": [
+    {
+      "id": "plancha",
+      "decision": "Keep existing imageUrl; do not download into bundle without redistribution permission. Forearm pose verified visually.",
+      "pending": "Licensed local high-resolution photo on a mat. free-exercise-db candidate lacks mat. Pexels 6303764, PxHere 1050273 and PublicDomainPictures 408388 original downloads returned HTTP 403; not bypassed.",
+      "candidatePages": [
+        "https://www.pexels.com/photo/woman-doing-forearm-plank-on-yoga-mat-6303764/",
+        "https://pxhere.com/en/photo/1050273",
+        "https://www.publicdomainpictures.net/en/view-image.php?image=408388&picture=plank-position"
+      ]
+    }
+  ],
+  "performanceObservation": {
+    "baselineCommit": "44eefbdfb6f2f9fb9a53d3a433c44bb264cbc134",
+    "candidate": "uncommitted P1 working tree",
+    "conditions": {
+      "viewport": "390x844",
+      "dpr": 1,
+      "coldCache": true,
+      "latencyMs": 150,
+      "downloadMbps": 1.6,
+      "uploadMbps": 0.75,
+      "cpuSlowdown": 4,
+      "observationMs": 12000,
+      "imageInterception": false,
+      "note": "CDP finished transfer bytes; pending/error resources and cross-origin failures are reported. No field CWV claims."
+    },
+    "browser": "156.0.8078.4",
+    "limitations": "12-second observation with cold cache per run; bytes count completed image requests including brand logo. Baseline has pending external images, so completed-byte medians do not establish total-page savings. No CLS/LCP/field CWV measurement. Preview was absent in baseline.",
+    "scenarios": [
+      {
+        "version": "baseline",
+        "scenario": "catalog",
+        "runs": 3,
+        "medianCompletedImageBytes": 926846,
+        "rangeCompletedImageBytes": [
+          485157,
+          926872
+        ],
+        "requestsPerRun": [
+          15,
+          15,
+          15
+        ],
+        "finishedPerRun": [
+          11,
+          13,
+          13
+        ],
+        "pendingPerRun": [
+          4,
+          2,
+          2
+        ],
+        "medianPreviewReadyMs": null,
+        "rangePreviewReadyMs": null,
+        "imagesWithNaturalDimensionsPerRun": [
+          15,
+          15,
+          15
+        ]
+      },
+      {
+        "version": "baseline",
+        "scenario": "selection",
+        "runs": 3,
+        "medianCompletedImageBytes": 6225,
+        "rangeCompletedImageBytes": [
+          6225,
+          6225
+        ],
+        "requestsPerRun": [
+          1,
+          1,
+          1
+        ],
+        "finishedPerRun": [
+          1,
+          1,
+          1
+        ],
+        "pendingPerRun": [
+          0,
+          0,
+          0
+        ],
+        "medianPreviewReadyMs": null,
+        "rangePreviewReadyMs": null,
+        "imagesWithNaturalDimensionsPerRun": [
+          1,
+          1,
+          1
+        ]
+      },
+      {
+        "version": "candidate",
+        "scenario": "catalog",
+        "runs": 3,
+        "medianCompletedImageBytes": 1080409,
+        "rangeCompletedImageBytes": [
+          1080408,
+          1080417
+        ],
+        "requestsPerRun": [
+          15,
+          15,
+          15
+        ],
+        "finishedPerRun": [
+          15,
+          15,
+          15
+        ],
+        "pendingPerRun": [
+          0,
+          0,
+          0
+        ],
+        "medianPreviewReadyMs": null,
+        "rangePreviewReadyMs": null,
+        "imagesWithNaturalDimensionsPerRun": [
+          15,
+          15,
+          15
+        ]
+      },
+      {
+        "version": "candidate",
+        "scenario": "selection",
+        "runs": 3,
+        "medianCompletedImageBytes": 25909,
+        "rangeCompletedImageBytes": [
+          25909,
+          25909
+        ],
+        "requestsPerRun": [
+          2,
+          2,
+          2
+        ],
+        "finishedPerRun": [
+          2,
+          2,
+          2
+        ],
+        "pendingPerRun": [
+          0,
+          0,
+          0
+        ],
+        "medianPreviewReadyMs": 377,
+        "rangePreviewReadyMs": [
+          369,
+          382
+        ],
+        "imagesWithNaturalDimensionsPerRun": [
+          2,
+          2,
+          2
+        ]
+      }
+    ]
+  }
+}

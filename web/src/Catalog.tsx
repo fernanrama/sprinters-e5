@@ -1,5 +1,8 @@
-import { useEffect, useMemo, useState } from "react";
-import { ExerciseImage } from "./exercises/ExerciseImage";
+import { useEffect, useMemo, useRef, useState, type MouseEvent } from "react";
+import { ExerciseCard } from "./exercises/ExerciseCard";
+import { ExerciseDetailsDialog } from "./exercises/ExerciseDetailsDialog";
+import { CatalogFilters } from "./exercises/CatalogFilters";
+import "./exercises/catalog.css";
 import type { Exercise } from "../../shared/exercises";
 export type { Exercise } from "../../shared/exercises";
 
@@ -12,7 +15,9 @@ export default function Catalog() {
   const [state, setState] = useState<CatalogState>({ status: "loading" });
   const [attempt, setAttempt] = useState(0);
   const [selectedExercise, setSelectedExercise] = useState<Exercise | null>(null);
-  const [isClosing, setIsClosing] = useState(false);
+  const searchRef = useRef<HTMLInputElement>(null);
+  const tagRef = useRef<HTMLSelectElement>(null);
+  const openerRef = useRef<HTMLButtonElement | null>(null);
 
   // Estados locales para los filtros (HU07 - Subtareas 2 y 3)
   const [selectedGroup, setSelectedGroup] = useState<string>("Todos");
@@ -107,322 +112,69 @@ export default function Catalog() {
   // Indicador de si existen filtros activos
   const hasActiveFilters = selectedGroup !== "Todos" || selectedTag !== "Todas" || searchQuery.trim() !== "";
 
-  // Acción para restablecer / limpiar todos los filtros
   const handleClearFilters = () => {
     setSelectedGroup("Todos");
     setSelectedTag("Todas");
     setSearchQuery("");
+    searchRef.current?.focus();
   };
 
-  // Clic directo en un tag de tarjeta
-  const handleTagClick = (tag: string, event: React.MouseEvent) => {
+  const handleTagClick = (tag: string, event: MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
-    if (selectedTag === tag) {
-      setSelectedTag("Todas");
-    } else {
-      setSelectedTag(tag);
-    }
+    const activator = event.currentTarget;
+    setSelectedTag(selectedTag === tag ? "Todas" : tag);
+    requestAnimationFrame(() => {
+      if (!activator.isConnected) tagRef.current?.focus();
+    });
   };
 
-  // Función para cerrar el modal con animación
-  const handleCloseModal = () => {
-    if (!selectedExercise) return;
-    setIsClosing(true);
-    setTimeout(() => {
-      setSelectedExercise(null);
-      setIsClosing(false);
-    }, 300);
-  };
-
-  return (
-    <>
-      <main id="page-content" className="page-content" tabIndex={-1}>
-        <div style={{ marginBottom: "26px" }}>
-          <p className="eyebrow">Tu entrenamiento empieza aquí</p>
-          <h1>Catálogo de Ejercicios</h1>
-          <p className="intro">
-            Explora y filtra nuestro catálogo por grupo muscular o etiquetas para encontrar el entrenamiento ideal.
-          </p>
-        </div>
-
-        {/* Panel de Filtros Interactivos (HU07 - Subtarea 2) */}
-        {state.status === "ready" && (
-          <section className="filter-controls" aria-label="Controles de filtrado de ejercicios">
-            <div className="filter-row search-row">
-              <div className="search-field">
-                <label htmlFor="catalog-search" className="filter-label">Buscar ejercicio</label>
-                <div className="search-input-wrapper">
-                  <span className="search-icon" aria-hidden="true">🔍</span>
-                  <input
-                    id="catalog-search"
-                    type="search"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Buscar por nombre, grupo, etiqueta o equipamiento..."
-                    className="search-input"
-                  />
-                  {searchQuery && (
-                    <button
-                      type="button"
-                      className="search-clear-inline"
-                      onClick={() => setSearchQuery("")}
-                      aria-label="Borrar término de búsqueda"
-                      title="Borrar término de búsqueda"
-                    >
-                      ×
-                    </button>
-                  )}
-                </div>
+  return <>
+    <main id="page-content" className="page-content catalog-page" tabIndex={-1}>
+      <div className="catalog-heading">
+        <h1>Catálogo de Ejercicios</h1>
+        <p>Explora y filtra nuestro catálogo por grupo muscular o etiquetas para encontrar el entrenamiento ideal.</p>
+      </div>
+      {state.status === "ready" && <>
+        <CatalogFilters groups={availableGroups} tags={availableTags}
+          selectedGroup={selectedGroup} selectedTag={selectedTag} searchQuery={searchQuery}
+          active={hasActiveFilters} searchRef={searchRef} tagRef={tagRef}
+          onSearch={setSearchQuery} onTag={setSelectedTag}
+          onGroup={group => setSelectedGroup(selectedGroup === group && group !== "Todos" ? "Todos" : group)}
+          onClearSearch={() => { setSearchQuery(""); searchRef.current?.focus(); }}
+          onClear={handleClearFilters} />
+        <p className="count catalog-result-count" role="status" aria-live="polite" aria-atomic="true">
+          Mostrando <strong>{filteredExercises.length}</strong> de {state.exercises.length} ejercicios disponibles
+          {hasActiveFilters && <span className="filtered-hint"> (filtros aplicados)</span>}
+        </p>
+      </>}
+      <section aria-label="Ejercicios disponibles" aria-busy={state.status === "loading"}>
+        {state.status === "loading" && <p className="catalog-state" role="status">Cargando ejercicios…</p>}
+        {state.status === "error" && <div className="catalog-state" role="alert">
+          <h2>No hemos podido cargar los ejercicios.</h2>
+          <p>Comprueba tu conexión y vuelve a intentarlo.</p>
+          <button type="button" className="catalog-primary-action" onClick={() => setAttempt(value => value + 1)}>Volver a intentar</button>
+        </div>}
+        {state.status === "ready" && (state.exercises.length === 0
+          ? <div className="catalog-state"><h2>Catálogo vacío</h2><p>Todavía no hay ejercicios disponibles en el catálogo.</p></div>
+          : filteredExercises.length === 0
+            ? <div className="no-results-panel catalog-state" role="region" aria-label="Sin resultados">
+              <h2>No se encontraron ejercicios para este filtro</h2>
+              <p>No hay ejercicios en el catálogo que coincidan con la combinación de filtros y criterios de búsqueda actuales.</p>
+              <div className="no-results-active-filters">
+                {selectedGroup !== "Todos" && <span className="active-pill">Grupo: {selectedGroup}</span>}
+                {selectedTag !== "Todas" && <span className="active-pill">Etiqueta: {selectedTag}</span>}
+                {searchQuery.trim() !== "" && <span className="active-pill">Búsqueda: “{searchQuery.trim()}”</span>}
               </div>
-
-              {hasActiveFilters && (
-                <div className="clear-action">
-                  <button
-                    type="button"
-                    onClick={handleClearFilters}
-                    className="btn-clear-filters"
-                    title="Restablecer todos los filtros aplicados"
-                  >
-                    ✕ Limpiar filtros
-                  </button>
-                </div>
-              )}
+              <button type="button" className="catalog-primary-action" onClick={handleClearFilters}>Limpiar filtros y ver todos</button>
             </div>
-
-            <div className="filter-row selectors-row">
-              {/* Filtro por Grupo Muscular */}
-              <div className="filter-block">
-                <span className="filter-label">Grupo muscular:</span>
-                <div className="filter-pills" role="radiogroup" aria-label="Filtro por grupo muscular">
-                  {availableGroups.map((group) => {
-                    const isActive = selectedGroup === group;
-                    return (
-                      <button
-                        key={group}
-                        type="button"
-                        role="radio"
-                        aria-checked={isActive}
-                        className={`pill-btn ${isActive ? "active" : ""}`}
-                        onClick={() => setSelectedGroup(isActive && group !== "Todos" ? "Todos" : group)}
-                        title={`Filtrar por grupo: ${group}`}
-                      >
-                        {group}
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-
-              {/* Filtro por Etiqueta */}
-              <div className="filter-block">
-                <label htmlFor="tag-select" className="filter-label">Etiqueta adicional:</label>
-                <select
-                  id="tag-select"
-                  value={selectedTag}
-                  onChange={(e) => setSelectedTag(e.target.value)}
-                  className="filter-select"
-                  aria-label="Seleccionar etiqueta"
-                >
-                  {availableTags.map((tag) => (
-                    <option key={tag} value={tag}>
-                      {tag === "Todas" ? "Todas las etiquetas" : tag}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
-
-            <div className="catalog-meta">
-              <p className="count" style={{ margin: 0 }}>
-                Mostrando <strong>{filteredExercises.length}</strong> de {state.exercises.length} ejercicios disponibles
-                {hasActiveFilters && <span className="filtered-hint"> (filtros aplicados)</span>}
-              </p>
-            </div>
-          </section>
-        )}
-
-        <section aria-label="Ejercicios disponibles" aria-live="polite" aria-busy={state.status === "loading"}>
-          {state.status === "loading" && <p className="message" role="status">Cargando ejercicios...</p>}
-          
-          {state.status === "error" && (
-            <div className="message" role="alert">
-              <p>No hemos podido cargar los ejercicios.</p>
-              <button onClick={() => setAttempt((value) => value + 1)}>Volver a intentar</button>
-            </div>
-          )}
-          
-          {state.status === "ready" && (
-            state.exercises.length === 0 ? (
-              <p className="message">Todavía no hay ejercicios disponibles en el catálogo.</p>
-            ) : filteredExercises.length === 0 ? (
-              /* Componente Visual de "Sin Resultados" (HU07 - Subtarea 3) */
-              <div className="no-results-panel" role="status">
-                <div className="no-results-icon" aria-hidden="true">🔍</div>
-                <h2>No se encontraron ejercicios para este filtro</h2>
-                <p>
-                  No hay ejercicios en el catálogo que coincidan con la combinación de filtros y criterios de búsqueda actuales.
-                </p>
-                <div className="no-results-active-filters">
-                  {selectedGroup !== "Todos" && (
-                    <span className="active-pill">Grupo: {selectedGroup}</span>
-                  )}
-                  {selectedTag !== "Todas" && (
-                    <span className="active-pill">Etiqueta: {selectedTag}</span>
-                  )}
-                  {searchQuery.trim() !== "" && (
-                    <span className="active-pill">Búsqueda: "{searchQuery.trim()}"</span>
-                  )}
-                </div>
-                <button
-                  type="button"
-                  className="clear-filters-btn"
-                  onClick={handleClearFilters}
-                >
-                  Limpiar filtros y ver todos
-                </button>
-              </div>
-            ) : (
-              /* Listado de tarjetas de ejercicios con etiquetas (HU07 - Subtarea 1) */
-              <ul
-                className="catalog"
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))",
-                  gap: "20px",
-                  listStyle: "none",
-                  padding: 0,
-                }}
-              >
-                {filteredExercises.map((exercise, index) => (
-                  <li
-                    key={exercise.id}
-                    onClick={() => setSelectedExercise(exercise)}
-                    style={{
-                      background: "#d6d6d6",
-                      border: "1px solid #c9c7c2",
-                      borderRadius: "6px",
-                      overflow: "hidden",
-                      cursor: "pointer",
-                      transition: "transform 0.2s, box-shadow 0.2s",
-                      boxShadow: "0 2px 4px rgba(0,0,0,0.06)",
-                      display: "flex",
-                      flexDirection: "column",
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.transform = "translateY(-3px)";
-                      e.currentTarget.style.boxShadow = "0 6px 12px rgba(0,0,0,0.12)";
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.transform = "translateY(0)";
-                      e.currentTarget.style.boxShadow = "0 2px 4px rgba(0,0,0,0.06)";
-                    }}
-                  >
-                    <ExerciseImage exercise={exercise} variant="card" loading={index < 4 ? "eager" : "lazy"} decorative />
-                    <div style={{ padding: "16px", display: "flex", flexDirection: "column", flex: 1 }}>
-                      <div>
-                        <span className="tag">{exercise.muscleGroup}</span>
-                        <h2 style={{ fontSize: "1.15rem", margin: "10px 0 6px 0", color: "#cb0017" }}>
-                          {exercise.name}
-                        </h2>
-                        <p style={{ margin: 0, fontSize: "0.85rem", color: "#444" }}>
-                          {exercise.equipment}
-                        </p>
-                      </div>
-
-                      {/* Etiquetas visibles en las tarjetas (Subtarea 1) */}
-                      {exercise.tags && exercise.tags.length > 0 && (
-                        <div
-                          className="card-tags"
-                          aria-label={`Etiquetas de ${exercise.name}`}
-                          style={{ marginTop: "auto", paddingTop: "12px" }}
-                        >
-                          {exercise.tags.map((tag) => (
-                            <button
-                              key={tag}
-                              type="button"
-                              className={`tag-chip ${selectedTag === tag ? "active" : ""}`}
-                              onClick={(e) => handleTagClick(tag, e)}
-                              title={`Filtrar catálogo por la etiqueta ${tag}`}
-                            >
-                              {tag}
-                            </button>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            )
-          )}
-        </section>
-      </main>
-
-      {/* MODAL DETALLADO CON ETIQUETAS */}
-      {selectedExercise && (
-        <div
-          className={`modal-backdrop ${isClosing ? "closing" : ""}`}
-          onClick={handleCloseModal}
-        >
-          <div
-            className={`modal-window ${isClosing ? "closing" : ""}`}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <section aria-label="Ficha del ejercicio">
-              <div
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "repeat(auto-fit, minmax(min(280px, 100%), 1fr))",
-                  gap: "30px",
-                  alignItems: "center",
-                }}
-              >
-                <div>
-                  <div style={{ display: "flex", flexWrap: "wrap", gap: "8px", marginBottom: "12px" }}>
-                    <span className="tag">{selectedExercise.muscleGroup}</span>
-                    {selectedExercise.tags?.map((t) => (
-                      <span
-                        key={t}
-                        className="tag-chip active"
-                        style={{ cursor: "default" }}
-                      >
-                        {t}
-                      </span>
-                    ))}
-                  </div>
-
-                  <h1 style={{ marginTop: "0", fontSize: "2.2rem" }}>{selectedExercise.name}</h1>
-
-                  <p style={{ fontSize: "1rem", color: "#4b5563", lineHeight: "1.6" }}>
-                    {selectedExercise.description}
-                  </p>
-                  <p style={{ fontSize: "0.95rem", color: "#333", marginTop: "10px" }}>
-                    <strong>Equipamiento:</strong> {selectedExercise.equipment}
-                  </p>
-                  <div className="message" style={{ marginTop: "20px" }}>
-                    <p style={{ margin: 0, fontWeight: "600", color: "#cb0017" }}>
-                      Instrucciones de ejecución:
-                    </p>
-                    <p style={{ margin: "8px 0 0 0", fontSize: "0.95rem", lineHeight: "1.5" }}>
-                      {selectedExercise.instructions}
-                    </p>
-                  </div>
-                </div>
-                <div>
-                  <ExerciseImage exercise={selectedExercise} variant="detail" loading="eager" />
-                </div>
-              </div>
-
-              {/* Botón de cerrar situado abajo a la derecha */}
-              <div style={{ marginTop: "30px", display: "flex", justifyContent: "flex-end" }}>
-                <button onClick={handleCloseModal}>
-                  Cerrar
-                </button>
-              </div>
-            </section>
-          </div>
-        </div>
-      )}
-    </>
-  );
+            : <ul className="catalog">
+              {filteredExercises.map((exercise, index) => <ExerciseCard key={exercise.id}
+                exercise={exercise} index={index} selectedTag={selectedTag} onTagClick={handleTagClick}
+                onOpen={(exercise, opener) => { openerRef.current = opener; setSelectedExercise(exercise); }} />)}
+            </ul>)}
+      </section>
+    </main>
+    {selectedExercise && <ExerciseDetailsDialog exercise={selectedExercise} returnFocusTo={openerRef.current}
+      onClose={() => setSelectedExercise(null)} />}
+  </>;
 }

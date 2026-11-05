@@ -12,7 +12,7 @@ test.beforeEach(async ({ page }) => {
 
 const cards = (page: Page) => page.locator(".catalog > li");
 const search = (page: Page) => page.getByRole("searchbox");
-const group = (page: Page, name: string) => page.getByRole("radio", { name, exact: true });
+const group = (page: Page, name: string) => page.getByRole("group", { name: "Grupo muscular", exact: true }).getByRole("button", { name, exact: true });
 
 for (const width of [320, 390, 768, 1440]) {
   test(`shell and navigation at ${width}px`, async ({ page }) => {
@@ -103,7 +103,7 @@ test("HU07 separate/combined filters, counters, clearing and detail preserve sta
   await expect(page.locator(".catalog")).toContainText("Peso muerto");
   await expect(page.locator(".catalog")).toContainText("Remo");
   await group(page, "Espalda").click();
-  await expect(group(page, "Todos")).toHaveAttribute("aria-checked", "true");
+  await expect(group(page, "Todos")).toHaveAttribute("aria-pressed", "true");
   await page.getByLabel("Seleccionar etiqueta").selectOption("Calistenia");
   const calisthenics = catalog.filter((e: Exercise) => e.muscleGroup.toLowerCase().includes("calistenia") || e.tags?.some((t: string) => t.toLowerCase() === "calistenia"));
   await expect(cards(page)).toHaveCount(calisthenics.length);
@@ -125,13 +125,13 @@ test("HU07 separate/combined filters, counters, clearing and detail preserve sta
   await expect(page.locator(".no-results-panel")).toBeVisible();
   await expect(page.locator(".no-results-panel")).toContainText("Espalda");
   await page.getByRole("button", { name: "Borrar término de búsqueda" }).click();
-  await expect(group(page, "Espalda")).toHaveAttribute("aria-checked", "true");
+  await expect(group(page, "Espalda")).toHaveAttribute("aria-pressed", "true");
   await expect(page.getByLabel("Seleccionar etiqueta")).toHaveValue("Calistenia");
   await expect(cards(page)).toHaveCount(back.filter((e: Exercise) => e.tags?.includes("Calistenia") || e.muscleGroup.includes("Calistenia")).length);
-  await page.getByRole("button", { name: "✕ Limpiar filtros", exact: true }).click();
+  await page.getByRole("button", { name: "Limpiar filtros", exact: true }).click();
   await expect(cards(page)).toHaveCount(14);
   await expect(page.getByLabel("Seleccionar etiqueta")).toHaveValue("Todas");
-  await expect(group(page, "Todos")).toHaveAttribute("aria-checked", "true");
+  await expect(group(page, "Todos")).toHaveAttribute("aria-pressed", "true");
 });
 
 test("HU07 chips toggle by keyboard without opening detail", async ({ page }) => {
@@ -140,11 +140,11 @@ test("HU07 chips toggle by keyboard without opening detail", async ({ page }) =>
   await chip.focus();
   await page.keyboard.press("Enter");
   await expect(page.getByLabel("Seleccionar etiqueta")).toHaveValue("Calistenia");
-  await expect(page.locator(".modal-backdrop")).toHaveCount(0);
+  await expect(page.getByRole("dialog")).toHaveCount(0);
   await page.locator(".tag-chip.active").first().click();
   await expect(page.getByLabel("Seleccionar etiqueta")).toHaveValue("Todas");
   await expect(cards(page)).toHaveCount(14);
-  await expect(page.locator(".modal-backdrop")).toHaveCount(0);
+  await expect(page.getByRole("dialog")).toHaveCount(0);
 });
 
 test("catalog empty/error/retry and optional tags remain distinct", async ({ page }) => {

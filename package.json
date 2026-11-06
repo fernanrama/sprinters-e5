@@ -18,6 +18,7 @@
     "build": "npm run build --workspaces",
     "check": "npm run typecheck && npm test && npm run build",
     "start": "npm start --workspace @sprinters/api",
+    "demo": "npm run build && node scripts/start-demo.cjs",
     "test:e2e": "tsc --project tests/tsconfig.json && npm run build && playwright test",
     "test:cross-browser": "tsc --project tests/tsconfig.json && npm run build && playwright test --config playwright.cross-browser.config.ts",
     "measure:media": "npm run build && node scripts/measure-media.cjs",

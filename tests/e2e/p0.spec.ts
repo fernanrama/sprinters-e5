@@ -78,13 +78,13 @@ test("routine order, inline values and RIR 0 survive save/reload; filtering neve
   expect(await (await request.get("/api/routines")).json()).toEqual(before);
   await page.getByRole("link", { name: "Mis rutinas", exact: true }).click();
   const row = page.getByRole("listitem").filter({ hasText: name });
-  await row.getByRole("button", { name: "Editar", exact: true }).click();
-  await page.getByRole("button", { name: "Mover abajo", exact: true }).first().click();
+  await row.getByRole("button", { name: /^Editar / }).click();
+  await page.getByRole("button", { name: /^Mover abajo / }).first().click();
   await page.locator(".routine-form-item").first().getByRole("spinbutton").first().fill("5");
   await page.getByRole("button", { name: "Guardar Cambios", exact: true }).click();
   await expect(page.getByRole("heading", { name: "Mis Rutinas", exact: true })).toBeVisible();
   await page.reload();
-  await row.getByRole("button", { name: "Editar", exact: true }).click();
+  await row.getByRole("button", { name: /^Editar / }).click();
   await expect(page.locator(".routine-form-item").first()).toContainText(catalog[1].name);
   await expect(page.locator(".routine-form-item").first().getByRole("spinbutton").first()).toHaveValue("5");
   const saved: Routine[] = await (await request.get("/api/routines")).json();
@@ -188,7 +188,7 @@ async function createRoutine(page: Page) {
 test("routine edit/cancel, protected navigation, save and reload use real temporary JSON", async ({ page, request }) => {
   const name = await createRoutine(page);
   const row = page.getByRole("listitem").filter({ hasText: name });
-  await row.getByRole("button", { name: "Editar", exact: true }).click();
+  await row.getByRole("button", { name: /^Editar / }).click();
   await page.getByPlaceholder("Ej: Día de Pierna").fill(`${name} borrador`);
   page.once("dialog", dialog => dialog.dismiss());
   await page.getByRole("link", { name: "Catálogo", exact: true }).click();
@@ -199,13 +199,13 @@ test("routine edit/cancel, protected navigation, save and reload use real tempor
   await expect(page.getByPlaceholder("Ej: Día de Pierna")).toHaveValue(`${name} borrador`);
   await page.getByRole("button", { name: "Cancelar", exact: true }).click();
   await page.getByRole("button", { name: "Descartar cambios", exact: true }).click();
-  await row.getByRole("button", { name: "Editar", exact: true }).click();
+  await row.getByRole("button", { name: /^Editar / }).click();
   await expect(page.getByPlaceholder("Ej: Día de Pierna")).toHaveValue(name);
-  await page.getByRole("button", { name: "Quitar", exact: true }).click();
+  await page.getByRole("button", { name: /^Quitar / }).click();
   await page.getByRole("button", { name: "Guardar Cambios", exact: true }).click();
   await expect(page.getByRole("heading", { name: "Mis Rutinas", exact: true })).toBeVisible();
   await page.reload();
-  await row.getByRole("button", { name: "Editar", exact: true }).click();
+  await row.getByRole("button", { name: /^Editar / }).click();
   await expect(page.locator(".routine-form-item")).toHaveCount(0);
   const routines = await (await request.get("/api/routines")).json();
   const saved = routines.find((r: Routine) => r.name === name);
@@ -215,7 +215,7 @@ test("routine edit/cancel, protected navigation, save and reload use real tempor
 
 test("saving blocks navigation and 409 preserves the draft", async ({ page }) => {
   const name = await createRoutine(page);
-  await page.getByRole("listitem").filter({ hasText: name }).getByRole("button", { name: "Editar", exact: true }).click();
+  await page.getByRole("listitem").filter({ hasText: name }).getByRole("button", { name: /^Editar / }).click();
   await page.getByPlaceholder("Ej: Día de Pierna").fill(`${name} cambio`);
   let release!: () => void;
   const gate = new Promise<void>(resolve => { release = resolve; });

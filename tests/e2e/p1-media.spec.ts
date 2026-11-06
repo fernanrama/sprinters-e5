@@ -44,7 +44,7 @@ test("preview/rows use catalog identity after save/reopen and keep media out of 
   await page.getByRole("button", { name: "Crear Rutina", exact: true }).click();
   await expect(page.getByRole("heading", { name: "Mis Rutinas", exact: true })).toBeVisible();
   await page.reload();
-  await page.getByRole("listitem").filter({ hasText: name }).getByRole("button", { name: "Editar", exact: true }).click();
+  await page.getByRole("listitem").filter({ hasText: name }).getByRole("button", { name: /^Editar / }).click();
   await decoded(page, ".routine-form-item img");
   await expect(page.locator(".routine-form-item img")).toHaveAttribute("src", catalog[1].images!.thumbnail.url);
   const routines: Routine[] = await (await request.get("/api/routines")).json();
@@ -118,7 +118,7 @@ for (const width of [320, 390, 768, 1440]) {
     await page.getByRole("button", { name: "+ Añadir", exact: true }).click();
     await decoded(page, ".routine-form-item img");
     expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(width);
-    await expect(page.getByRole("button", { name: "Quitar", exact: true })).toBeVisible();
+    await expect(page.getByRole("button", { name: /^Quitar / })).toBeVisible();
     await expect(page.getByRole("button", { name: "Crear Rutina", exact: true })).toBeVisible();
     const catalog = await (await request.get("/api/exercises")).json();
     expect(catalog).toHaveLength(14);

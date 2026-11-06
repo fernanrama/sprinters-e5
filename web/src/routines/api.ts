@@ -6,7 +6,13 @@ export class ApiError extends Error {
 }
 export async function request(path: string, options?: RequestInit): Promise<unknown> {
   const response = await fetch(`/api${path}`, { cache: "no-store", ...options });
-  const body: unknown = await response.json();
+  // DELETE may respond without a body; error pages may not contain JSON.
+  const text = await response.text();
+  let body: unknown;
+  try { body = text ? JSON.parse(text) : undefined; }
+  catch {
+    throw new ApiError(response.status, response.ok ? "La respuesta del servidor no es válida." : "No se pudo completar la operación. Vuelve a intentarlo.");
+  }
   if (!response.ok) {
     const message = typeof body === "object" && body && "error" in body && typeof body.error === "string"
       ? body.error : "No se pudo completar la operación.";

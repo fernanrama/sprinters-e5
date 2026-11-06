@@ -1,4 +1,5 @@
 import type { RoutineItem } from "../../../shared/routines";
+import { useId } from "react";
 import type { Exercise } from "../../../shared/exercises";
 import { ExerciseImage } from "../exercises/ExerciseImage";
 
@@ -16,6 +17,9 @@ type Props = {
 export function RoutineItemRow({ item, exercise, index, count, onElement, onMove, onRemove, onUpdate }: Props) {
   const name = exercise?.name ?? item.exerciseId;
   const identity = `${name}, posición ${index + 1}`;
+  const hintId = useId();
+  const invalidSets = !Number.isSafeInteger(item.sets) || item.sets <= 0;
+  const invalidRepetitions = !Number.isSafeInteger(item.repetitions) || item.repetitions <= 0;
   return <li ref={onElement} className="routine-form-item">
     <ExerciseImage exercise={exercise ?? { id: item.exerciseId, name }} variant="row" decorative />
     <div className="routine-exercise-description">
@@ -26,14 +30,17 @@ export function RoutineItemRow({ item, exercise, index, count, onElement, onMove
       </ul>}
       <div className="routine-inline-parameters">
         <label>Series
-          <input name={`${item.id}-sets`} type="number" min="1" step="1" value={item.sets} aria-label={`Series de ${identity}`}
-            onChange={event => onUpdate(item.id, "sets", parseInt(event.target.value, 10) || 1)} className="inline-param-input" />
+          <input name={`${item.id}-sets`} type="number" min="1" step="1" value={item.sets || ""} aria-label={`Series de ${identity}`}
+            aria-invalid={invalidSets || undefined} aria-describedby={invalidSets ? hintId : undefined}
+            onChange={event => onUpdate(item.id, "sets", Number(event.target.value))} className="inline-param-input" />
         </label>
         <label>Repeticiones
-          <input name={`${item.id}-repetitions`} type="number" min="1" step="1" value={item.repetitions} aria-label={`Repeticiones de ${identity}`}
-            onChange={event => onUpdate(item.id, "repetitions", parseInt(event.target.value, 10) || 1)} className="inline-param-input" />
+          <input name={`${item.id}-repetitions`} type="number" min="1" step="1" value={item.repetitions || ""} aria-label={`Repeticiones de ${identity}`}
+            aria-invalid={invalidRepetitions || undefined} aria-describedby={invalidRepetitions ? hintId : undefined}
+            onChange={event => onUpdate(item.id, "repetitions", Number(event.target.value))} className="inline-param-input" />
         </label>
       </div>
+      {(invalidSets || invalidRepetitions) && <p id={hintId} className="sr-only">Series y repeticiones: números enteros mayores que 0.</p>}
       <p className="routine-item-parameters">
         Descanso: {item.parameters?.restSeconds === undefined ? "sin especificar" : `${item.parameters.restSeconds} s`}
         <span>RIR: {item.parameters?.rir ?? "sin especificar"}</span>

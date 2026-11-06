@@ -3,94 +3,20 @@ import { copyFile, mkdir, readFile, rename, unlink, writeFile } from "node:fs/pr
 import { constants } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-
-export type RoutineItem = {
-  id: string;
-  exerciseId: string;
-  sets: number;
-  repetitions: number;
-  parameters?: {
-    restSeconds?: number;
-    rir?: number;
-    [key: string]: unknown;
-  };
-};
-
-export type Routine = {
-  id: string;
-  name: string;
-  version: number;
-  items: RoutineItem[];
-};
-
-export type RoutineUpdate = Omit<Routine, "id">;
+import { setTimeout as delay } from "node:timers/promises";
+import { isRoutine, isRoutineCreate, isRoutineUpdate, type Routine, type RoutineCreate, type RoutineUpdate } from "../../shared/routines.js";
+export { isRoutine, isRoutineCreate, isRoutineUpdate } from "../../shared/routines.js";
+export type { Routine, RoutineItem, RoutineCreate, RoutineUpdate } from "../../shared/routines.js";
 
 export class RoutineError extends Error {
   constructor(public status: number, message: string) { super(message); }
 }
 
-// --- VALIDACIONES ESTRICTAS (Para que pasen los tests) ---
-
-export function isRoutine(value: unknown): value is Routine {
-  if (typeof value !== "object" || value === null) return false;
-  const r = value as Record<string, unknown>;
-  if (typeof r.id !== "string" || typeof r.name !== "string") return false;
-  if (typeof r.version !== "number" || !Number.isInteger(r.version) || r.version < 1) return false;
-  if (!Array.isArray(r.items)) return false;
-  
-  return r.items.every((i: any) => {
-    if (typeof i !== "object" || i === null) return false;
-    if (typeof i.id !== "string" || typeof i.exerciseId !== "string") return false;
-    if (typeof i.sets !== "number" || !Number.isInteger(i.sets) || i.sets <= 0) return false;
-    if (typeof i.repetitions !== "number" || !Number.isInteger(i.repetitions) || i.repetitions <= 0) return false;
-    
-    if (i.parameters !== undefined) {
-      if (typeof i.parameters !== "object" || i.parameters === null) return false;
-      const keys = Object.keys(i.parameters);
-      if (!keys.every(k => ["restSeconds", "rir"].includes(k))) return false;
-      if (i.parameters.restSeconds !== undefined && typeof i.parameters.restSeconds !== "number") return false;
-      if (i.parameters.rir !== undefined && typeof i.parameters.rir !== "number") return false;
-    }
-    return true;
-  });
-}
-
-export function isRoutineUpdate(value: unknown): value is RoutineUpdate {
-  if (typeof value !== "object" || value === null) return false;
-  const r = value as Record<string, unknown>;
-  
-  if (typeof r.name !== "string" || r.name.trim() === "") return false;
-  if (typeof r.version !== "number" || !Number.isInteger(r.version) || r.version < 1) return false;
-  if (!Array.isArray(r.items)) return false;
-
-  // Validar duplicados
-  const exerciseIds = r.items.map((i: any) => i?.exerciseId).filter(Boolean);
-  if (new Set(exerciseIds).size !== exerciseIds.length) return false;
-
-  return r.items.every((i: any) => {
-    if (typeof i !== "object" || i === null) return false;
-    if (typeof i.id !== "string" || typeof i.exerciseId !== "string") return false;
-    if (typeof i.sets !== "number" || !Number.isInteger(i.sets) || i.sets <= 0) return false;
-    if (typeof i.repetitions !== "number" || !Number.isInteger(i.repetitions) || i.repetitions <= 0) return false;
-    
-    if (i.parameters !== undefined) {
-      if (typeof i.parameters !== "object" || i.parameters === null) return false;
-      const keys = Object.keys(i.parameters);
-      if (!keys.every(k => ["restSeconds", "rir"].includes(k))) return false;
-      if (i.parameters.restSeconds !== undefined && typeof i.parameters.restSeconds !== "number") return false;
-      if (i.parameters.rir !== undefined && typeof i.parameters.rir !== "number") return false;
-    }
-    return true;
-  });
-}
-
-// --- ALMACENAMIENTO EN JSON ---
-
+// Every read/modify/write transaction shares a queue across store instances.
 const queues = new Map<string, Promise<unknown>>();
 
 export function createRoutineStore(file: string | URL, seed?: URL) {
   const path = resolve(typeof file === "string" ? file : fileURLToPath(file));
-  
   async function read(): Promise<Routine[]> {
     let raw: string;
     try { raw = await readFile(path, "utf8"); }
@@ -98,65 +24,73 @@ export function createRoutineStore(file: string | URL, seed?: URL) {
       if ((error as NodeJS.ErrnoException).code !== "ENOENT" || !seed) throw error;
       await mkdir(dirname(path), { recursive: true });
       try { await copyFile(seed, path, constants.COPYFILE_EXCL); }
-      catch (copyError) {
-        if ((copyError as NodeJS.ErrnoException).code !== "EEXIST") throw copyError;
-      }
+      catch (copyError) { if ((copyError as NodeJS.ErrnoException).code !== "EEXIST") throw copyError; }
       raw = await readFile(path, "utf8");
     }
     const routines: unknown = JSON.parse(raw);
-    if (!Array.isArray(routines) || !routines.every(isRoutine) ||
-        new Set(routines.map((r) => r.id)).size !== routines.length) {
+    if (!Array.isArray(routines) || !routines.every(isRoutine) || new Set(routines.map(routine => routine.id)).size !== routines.length) {
       throw new Error("Invalid routines file");
     }
     return routines;
   }
 
+  function transaction<T>(operation: () => Promise<T>): Promise<T> {
+    const previous = queues.get(path) ?? Promise.resolve();
+    const task = previous.catch(() => undefined).then(operation);
+    queues.set(path, task);
+    void task.finally(() => { if (queues.get(path) === task) queues.delete(path); }).catch(() => undefined);
+    return task;
+  }
+
+  async function persist(routines: Routine[]) {
+    const temporary = `${path}.${randomUUID()}.tmp`;
+    try {
+      await writeFile(temporary, JSON.stringify(routines, null, 2) + "\n", { flag: "wx" });
+      // Windows can briefly hold the destination open while a concurrent GET reads it.
+      // Keep atomic replacement; never delete the original as a fallback.
+      for (let attempt = 0; ; attempt++) {
+        try { await rename(temporary, path); break; }
+        catch (error) {
+          if (attempt >= 3 || !["EPERM", "EACCES", "EBUSY"].includes((error as NodeJS.ErrnoException).code ?? "")) throw error;
+          await delay(25 * 2 ** attempt);
+        }
+      }
+    } finally {
+      await unlink(temporary).catch((error: NodeJS.ErrnoException) => { if (error.code !== "ENOENT") throw error; });
+    }
+  }
+
   return {
     read,
-    update(id: string, update: RoutineUpdate): Promise<Routine> {
-      if (!isRoutineUpdate(update)) {
-        return Promise.reject(new RoutineError(400, "Datos de rutina inválidos."));
-      }
-
-      const previous = queues.get(path) ?? Promise.resolve();
-      const task = previous.catch(() => undefined).then(async () => {
+    create(input: RoutineCreate): Promise<Routine> {
+      if (!isRoutineCreate(input)) return Promise.reject(new RoutineError(400, "Datos de rutina inválidos. Usa una única entrada por ejercicio."));
+      return transaction(async () => {
         const routines = await read();
-        const index = routines.findIndex((r) => r.id === id);
+        const routine: Routine = { id: `rutina-${randomUUID()}`, name: input.name.trim(), version: 1, items: input.items };
+        await persist([...routines, routine]);
+        return routine;
+      });
+    },
+    update(id: string, input: RoutineUpdate): Promise<Routine> {
+      if (!isRoutineUpdate(input)) return Promise.reject(new RoutineError(400, "Datos de rutina inválidos."));
+      return transaction(async () => {
+        const routines = await read();
+        const index = routines.findIndex(routine => routine.id === id);
         if (index < 0) throw new RoutineError(404, "Rutina no encontrada.");
-        if (routines[index].version !== update.version) {
-          throw new RoutineError(409, "La rutina ha cambiado. Recarga antes de volver a guardar.");
-        }
-        const updated: Routine = { id, name: update.name.trim(),
-          version: update.version + 1, items: update.items };
+        if (routines[index].version !== input.version) throw new RoutineError(409, "La rutina ha cambiado. Recarga antes de volver a guardar.");
+        const updated: Routine = { id, name: input.name.trim(), version: input.version + 1, items: input.items };
         routines[index] = updated;
-        
-        const temporary = `${path}.${randomUUID()}.tmp`;
-        try {
-          await writeFile(temporary, JSON.stringify(routines, null, 2) + "\n", { flag: "wx" });
-          await rename(temporary, path);
-        } finally {
-          await unlink(temporary).catch((error: NodeJS.ErrnoException) => {
-            if (error.code !== "ENOENT") throw error;
-          });
-        }
+        await persist(routines);
         return updated;
       });
-      queues.set(path, task);
-      void task.finally(() => { if (queues.get(path) === task) queues.delete(path); }).catch(() => undefined);
-      return task;
     },
-
-    // NUEVO MÉTODO: Guarda el array completo de rutinas (para POST y DELETE)
-    async saveAll(routines: Routine[]) {
-      const temporary = `${path}.${randomUUID()}.tmp`;
-      try {
-        await writeFile(temporary, JSON.stringify(routines, null, 2) + "\n", { flag: "wx" });
-        await rename(temporary, path);
-      } finally {
-        await unlink(temporary).catch((error: NodeJS.ErrnoException) => {
-          if (error.code !== "ENOENT") throw error;
-        });
-      }
+    remove(id: string): Promise<void> {
+      return transaction(async () => {
+        const routines = await read();
+        const remaining = routines.filter(routine => routine.id !== id);
+        if (remaining.length === routines.length) throw new RoutineError(404, "Rutina no encontrada.");
+        await persist(remaining);
+      });
     },
   };
 }

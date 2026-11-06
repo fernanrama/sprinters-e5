@@ -85,10 +85,27 @@
     "name": "Plancha",
     "muscleGroup": "Core",
     "equipment": "Esterilla",
-    "imageUrl": "https://media.revistagq.com/photos/672355aaf69e7e75196369db/16:9/w_2560%2Cc_limit/590575189",
+    "imageUrl": "/images/exercises/plancha-detail.webp",
     "description": "Ejercicio isométrico excelente para fortalecer la zona media, mejorar la estabilidad y prevenir lesiones.",
     "instructions": "Apoya los antebrazos y las puntas de los pies en el suelo. Mantén el cuerpo en línea recta, paralelo al suelo, contrayendo fuertemente el abdomen y los glúteos.",
-    "tags": ["Core", "Abdomen", "Peso corporal", "Resistencia"]
+    "tags": ["Core", "Abdomen", "Peso corporal", "Resistencia"],
+    "images": {
+      "thumbnail": {
+        "url": "/images/exercises/plancha-thumbnail.webp",
+        "width": 192,
+        "height": 146
+      },
+      "card": {
+        "url": "/images/exercises/plancha-card.webp",
+        "width": 640,
+        "height": 486
+      },
+      "detail": {
+        "url": "/images/exercises/plancha-detail.webp",
+        "width": 1280,
+        "height": 973
+      }
+    }
   },
   {
     "id": "peso-muerto",
@@ -355,6 +372,230 @@
       },
       "detail": {
         "url": "/images/exercises/fondos-paralelas-detail.webp",
+        "width": 850,
+        "height": 567
+      }
+    }
+  },
+  {
+    "id": "flexiones",
+    "name": "Flexiones de brazos",
+    "muscleGroup": "Pecho y Tríceps",
+    "equipment": "Peso corporal",
+    "description": "Empuje horizontal con el peso corporal, apoyando manos y puntas de los pies.",
+    "instructions": "Coloca las manos algo más separadas que los hombros. Mantén el cuerpo alineado, flexiona los codos para acercar el pecho al suelo y empuja hasta volver a la posición inicial.",
+    "tags": ["Pecho", "Tríceps", "Peso corporal", "Calistenia"],
+    "imageUrl": "/images/exercises/flexiones-detail.webp",
+    "images": {
+      "thumbnail": {
+        "url": "/images/exercises/flexiones-thumbnail.webp",
+        "width": 192,
+        "height": 128
+      },
+      "card": {
+        "url": "/images/exercises/flexiones-card.webp",
+        "width": 640,
+        "height": 427
+      },
+      "detail": {
+        "url": "/images/exercises/flexiones-detail.webp",
+        "width": 850,
+        "height": 567
+      }
+    }
+  },
+  {
+    "id": "sentadilla-goblet-kettlebell",
+    "name": "Sentadilla goblet con kettlebell",
+    "muscleGroup": "Piernas y Glúteos",
+    "equipment": "Kettlebell",
+    "description": "Sentadilla con una kettlebell sostenida delante del pecho.",
+    "instructions": "Sujeta la kettlebell por las asas junto al pecho. Flexiona caderas y rodillas manteniendo los talones apoyados y el tronco estable. Extiende las piernas para volver a levantarte.",
+    "tags": ["Piernas", "Glúteos", "Kettlebell", "Fuerza"],
+    "demonstration": {
+      "provider": "NASM",
+      "url": "https://www.nasm.org/resource-center/exercise-library/goblet-squat"
+    },
+    "imageUrl": "/images/exercises/sentadilla-goblet-kettlebell-detail.webp",
+    "images": {
+      "thumbnail": {
+        "url": "/images/exercises/sentadilla-goblet-kettlebell-thumbnail.webp",
+        "width": 192,
+        "height": 129
+      },
+      "card": {
+        "url": "/images/exercises/sentadilla-goblet-kettlebell-card.webp",
+        "width": 640,
+        "height": 428
+      },
+      "detail": {
+        "url": "/images/exercises/sentadilla-goblet-kettlebell-detail.webp",
+        "width": 850,
+        "height": 569
+      }
+    }
+  },
+  {
+    "id": "remo-polea-sentado",
+    "name": "Remo sentado en polea",
+    "muscleGroup": "Espalda y Brazos",
+    "equipment": "Polea baja",
+    "description": "Tirón horizontal sentado con agarre neutro en una polea baja.",
+    "instructions": "Siéntate con los pies apoyados y las rodillas ligeramente flexionadas. Lleva el agarre hacia el abdomen manteniendo el torso estable y devuelve los brazos de forma controlada.",
+    "tags": ["Espalda", "Brazos", "Polea", "Fuerza"],
+    "demonstration": {
+      "provider": "Muscle & Strength",
+      "url": "https://www.muscleandstrength.com/exercises/seated-row.html"
+    },
+    "imageUrl": "/images/exercises/remo-polea-sentado-detail.webp",
+    "images": {
+      "thumbnail": {
+        "url": "/images/exercises/remo-polea-sentado-thumbnail.webp",
+        "width": 192,
+        "height": 128
+      },
+      "card": {
+        "url": "/images/exercises/remo-polea-sentado-card.webp",
+        "width": 640,
+        "height": 427
+      },
+      "detail": {
+        "url": "/images/exercises/remo-polea-sentado-detail.webp",
+        "width": 850,
+        "height": 567
+      }
+    }
+  },
+  {
+    "id": "jalon-pecho",
+    "name": "Jalón al pecho",
+    "muscleGroup": "Espalda y Brazos",
+    "equipment": "Polea alta",
+    "description": "Tirón vertical en polea alta con barra y agarre amplio.",
+    "instructions": "Ajusta el apoyo de los muslos y agarra la barra con las manos separadas. Lleva la barra hacia la parte superior del pecho sin balancear el torso. Extiende los brazos de forma controlada.",
+    "tags": ["Espalda", "Brazos", "Polea", "Fuerza"],
+    "imageUrl": "/images/exercises/jalon-pecho-detail.webp",
+    "images": {
+      "thumbnail": {
+        "url": "/images/exercises/jalon-pecho-thumbnail.webp",
+        "width": 192,
+        "height": 128
+      },
+      "card": {
+        "url": "/images/exercises/jalon-pecho-card.webp",
+        "width": 640,
+        "height": 427
+      },
+      "detail": {
+        "url": "/images/exercises/jalon-pecho-detail.webp",
+        "width": 850,
+        "height": 567
+      }
+    }
+  },
+  {
+    "id": "peso-muerto-semirrigido-mancuernas",
+    "name": "Peso muerto con piernas semirrígidas y mancuernas",
+    "muscleGroup": "Piernas y Glúteos",
+    "equipment": "Mancuernas",
+    "description": "Bisagra de cadera con mancuernas y una ligera flexión de rodillas.",
+    "instructions": "Sostén las mancuernas delante de los muslos. Con las rodillas ligeramente flexionadas, lleva la cadera hacia atrás y baja las mancuernas cerca de las piernas manteniendo la espalda neutra. Extiende la cadera para regresar.",
+    "tags": ["Piernas", "Glúteos", "Mancuerna", "Fuerza"],
+    "imageUrl": "/images/exercises/peso-muerto-semirrigido-mancuernas-detail.webp",
+    "images": {
+      "thumbnail": {
+        "url": "/images/exercises/peso-muerto-semirrigido-mancuernas-thumbnail.webp",
+        "width": 192,
+        "height": 128
+      },
+      "card": {
+        "url": "/images/exercises/peso-muerto-semirrigido-mancuernas-card.webp",
+        "width": 640,
+        "height": 427
+      },
+      "detail": {
+        "url": "/images/exercises/peso-muerto-semirrigido-mancuernas-detail.webp",
+        "width": 850,
+        "height": 567
+      }
+    }
+  },
+  {
+    "id": "step-up-mancuernas",
+    "name": "Step-up al banco con mancuernas",
+    "muscleGroup": "Piernas y Glúteos",
+    "equipment": "Banco y mancuernas",
+    "description": "Subida unilateral a un banco estable con mancuernas a los lados.",
+    "instructions": "Apoya un pie completo sobre un banco estable de altura adecuada. Impúlsate con la pierna apoyada para subir y baja de forma controlada. Repite con la otra pierna manteniendo las mancuernas a los lados.",
+    "tags": ["Piernas", "Glúteos", "Mancuerna", "Unilateral"],
+    "imageUrl": "/images/exercises/step-up-mancuernas-detail.webp",
+    "images": {
+      "thumbnail": {
+        "url": "/images/exercises/step-up-mancuernas-thumbnail.webp",
+        "width": 192,
+        "height": 128
+      },
+      "card": {
+        "url": "/images/exercises/step-up-mancuernas-card.webp",
+        "width": 640,
+        "height": 427
+      },
+      "detail": {
+        "url": "/images/exercises/step-up-mancuernas-detail.webp",
+        "width": 850,
+        "height": 567
+      }
+    }
+  },
+  {
+    "id": "elevacion-talones-maquina",
+    "name": "Elevación de talones de pie en máquina",
+    "muscleGroup": "Piernas",
+    "equipment": "Máquina de gemelos",
+    "description": "Elevación de talones de pie con apoyo de hombros en una máquina de gemelos.",
+    "instructions": "Ajusta la máquina y coloca la parte delantera de los pies sobre la plataforma. Eleva los talones sin rebotar y desciende de forma controlada manteniendo el cuerpo estable.",
+    "tags": ["Piernas", "Gemelos", "Máquina", "Fuerza"],
+    "imageUrl": "/images/exercises/elevacion-talones-maquina-detail.webp",
+    "images": {
+      "thumbnail": {
+        "url": "/images/exercises/elevacion-talones-maquina-thumbnail.webp",
+        "width": 192,
+        "height": 128
+      },
+      "card": {
+        "url": "/images/exercises/elevacion-talones-maquina-card.webp",
+        "width": 640,
+        "height": 427
+      },
+      "detail": {
+        "url": "/images/exercises/elevacion-talones-maquina-detail.webp",
+        "width": 850,
+        "height": 567
+      }
+    }
+  },
+  {
+    "id": "puente-gluteos-suelo",
+    "name": "Puente de glúteos en suelo",
+    "muscleGroup": "Glúteos",
+    "equipment": "Esterilla",
+    "description": "Extensión de cadera tumbado en el suelo, sin banco ni barra.",
+    "instructions": "Túmbate boca arriba con las rodillas flexionadas y los pies apoyados. Eleva la cadera contrayendo los glúteos sin arquear la espalda y vuelve a bajar de forma controlada.",
+    "tags": ["Glúteos", "Peso corporal", "Calistenia"],
+    "imageUrl": "/images/exercises/puente-gluteos-suelo-detail.webp",
+    "images": {
+      "thumbnail": {
+        "url": "/images/exercises/puente-gluteos-suelo-thumbnail.webp",
+        "width": 192,
+        "height": 128
+      },
+      "card": {
+        "url": "/images/exercises/puente-gluteos-suelo-card.webp",
+        "width": 640,
+        "height": 427
+      },
+      "detail": {
+        "url": "/images/exercises/puente-gluteos-suelo-detail.webp",
         "width": 850,
         "height": 567
       }

@@ -13,6 +13,14 @@ test("medios opcionales conservan catálogos sin imagen o etiquetas", () => {
   assert.ok(isExercise({ ...exercise, images: { thumbnail: asset, card: asset, detail: asset } }));
 });
 
+test("las demostraciones son opcionales y solo admiten enlaces HTTPS sin credenciales", () => {
+  assert.ok(isExercise({ ...exercise, demonstration: { url: "https://example.com/demo", provider: "Ejemplo" } }));
+  for (const demonstration of [null, {}, { url: "https://example.com", provider: " " },
+    ...["javascript:alert(1)", "data:text/html,test", "http://example.com", "https://user:secret@example.com", "/demo"].map(url => ({ url, provider: "Ejemplo" }))]) {
+    assert.equal(isExercise({ ...exercise, demonstration }), false);
+  }
+});
+
 test("metadatos presentes deben tener las tres variantes y dimensiones positivas", () => {
   for (const images of [null, {}, { thumbnail: asset, card: asset },
     { thumbnail: asset, card: asset, detail: { ...asset, width: 0 } },
@@ -26,7 +34,8 @@ test("recursos locales coinciden con API, hashes y presupuestos del manifiesto",
   const publicRoot = new URL("../../web/public/", import.meta.url);
   const manifest = JSON.parse(await readFile(new URL("images/exercises/manifest.json", publicRoot), "utf8"));
   const catalog = JSON.parse(await readFile(new URL("../data/exercises.json", import.meta.url), "utf8"));
-  assert.equal(catalog.length, 14);
+  assert.equal(catalog.length, 22);
+  assert.equal(manifest.retained.length, 0);
   assert.equal(manifest.resources.length + manifest.retained.length, catalog.length);
   for (const resource of manifest.resources) {
     const entry = catalog.find((item: { id: string }) => item.id === resource.id);

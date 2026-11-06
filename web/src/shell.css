@@ -137,6 +137,9 @@ footer {
   transform: translateY(calc(-100% - 16px));
 }
 
+.media-credits-link { display: inline-flex; min-height: 44px; align-items: center; margin-inline-start: 16px; color: var(--color-brand-hover); text-underline-offset: 4px; }
+.media-credits-link:focus-visible { outline: 3px solid var(--color-focus); outline-offset: 3px; }
+
 .skip-link:focus {
   transform: translateY(0);
 }

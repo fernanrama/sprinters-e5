@@ -1,3 +1,4 @@
+import { catalogSize } from "./catalog-fixture";
 import { test, expect, type Page } from "@playwright/test";
 import type { Exercise } from "../../api/src/app";
 import type { Routine } from "../../shared/routines";
@@ -18,7 +19,7 @@ for (const width of [320, 390, 768, 1440]) {
   test(`shell and navigation at ${width}px`, async ({ page }) => {
     await page.setViewportSize({ width, height: 900 });
     await page.goto("/");
-    await expect(cards(page)).toHaveCount(14);
+    await expect(cards(page)).toHaveCount(catalogSize);
     const nav = page.getByRole("navigation", { name: "Navegación principal" });
     await expect(nav.getByRole("link", { name: "Catálogo" })).toHaveAttribute("aria-current", "page");
     for (const locator of [page.locator(".topbar"), nav, page.locator(".page-shell")]) {
@@ -31,7 +32,7 @@ for (const width of [320, 390, 768, 1440]) {
     await expect(page.getByRole("heading", { name: "Mis Rutinas", exact: true })).toBeVisible();
     await expect(nav.getByRole("link", { name: "Mis rutinas" })).toHaveAttribute("aria-current", "page");
     await nav.getByRole("link", { name: "Catálogo" }).click();
-    await expect(cards(page)).toHaveCount(14);
+    await expect(cards(page)).toHaveCount(catalogSize);
     await group(page, "Espalda").click();
     await page.getByLabel("Seleccionar etiqueta").selectOption("Calistenia");
     await search(page).fill("dominadas");
@@ -40,13 +41,14 @@ for (const width of [320, 390, 768, 1440]) {
     await search(page).fill("no-coincide-p0");
     await expect(page.locator(".no-results-panel")).toBeVisible();
     await page.getByRole("button", { name: "Limpiar filtros y ver todos", exact: true }).click();
-    await expect(cards(page)).toHaveCount(14);
+    await expect(cards(page)).toHaveCount(catalogSize);
     expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(width);
   });
 }
 
 test("keyboard skip link and navigation keep hash routing", async ({ page }) => {
   await page.goto("/");
+  await expect(page.getByRole("link", { name: "Saltar al contenido" })).toHaveCount(1);
   await page.keyboard.press("Tab");
   await expect(page.getByRole("link", { name: "Saltar al contenido" })).toBeFocused();
   await page.keyboard.press("Enter");
@@ -110,7 +112,7 @@ test("HU07 separate/combined filters, counters, clearing and detail preserve sta
   await group(page, "Espalda").click();
   await search(page).fill(" dominadas ");
   await expect(cards(page)).toHaveCount(1);
-  await expect(page.locator(".count")).toContainText("Mostrando 1 de 14");
+  await expect(page.locator(".count")).toContainText(`Mostrando 1 de ${catalogSize}`);
   const options = await page.locator("#tag-select option").allTextContents();
   expect(options.length).toBeGreaterThan(2);
   await cards(page).first().getByRole("heading", { name: "Dominadas", exact: true }).click();
@@ -129,7 +131,7 @@ test("HU07 separate/combined filters, counters, clearing and detail preserve sta
   await expect(page.getByLabel("Seleccionar etiqueta")).toHaveValue("Calistenia");
   await expect(cards(page)).toHaveCount(back.filter((e: Exercise) => e.tags?.includes("Calistenia") || e.muscleGroup.includes("Calistenia")).length);
   await page.getByRole("button", { name: "Limpiar filtros", exact: true }).click();
-  await expect(cards(page)).toHaveCount(14);
+  await expect(cards(page)).toHaveCount(catalogSize);
   await expect(page.getByLabel("Seleccionar etiqueta")).toHaveValue("Todas");
   await expect(group(page, "Todos")).toHaveAttribute("aria-pressed", "true");
 });
@@ -143,7 +145,7 @@ test("HU07 chips toggle by keyboard without opening detail", async ({ page }) =>
   await expect(page.getByRole("dialog")).toHaveCount(0);
   await page.locator(".tag-chip.active").first().click();
   await expect(page.getByLabel("Seleccionar etiqueta")).toHaveValue("Todas");
-  await expect(cards(page)).toHaveCount(14);
+  await expect(cards(page)).toHaveCount(catalogSize);
   await expect(page.getByRole("dialog")).toHaveCount(0);
 });
 

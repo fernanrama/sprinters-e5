@@ -1,3 +1,4 @@
+import { catalogSize } from "./catalog-fixture";
 import { test, expect } from "@playwright/test";
 
 test("cards expose independent controls; native dialog traps and restores keyboard focus", async ({ page }) => {
@@ -32,13 +33,13 @@ test("local filters keep options, input focus and a concise live summary", async
   let requests = 0;
   page.on("request", request => { if (request.url().endsWith("/api/exercises")) requests++; });
   await page.goto("/");
-  await expect(page.locator(".catalog > li")).toHaveCount(14);
+  await expect(page.locator(".catalog > li")).toHaveCount(catalogSize);
   const initialRequests = requests;
   const options = await page.locator("#tag-select option").allTextContents();
   const search = page.getByRole("searchbox");
   await search.pressSequentially("dominadas");
   await expect(search).toBeFocused();
-  await expect(page.getByRole("status")).toContainText("Mostrando 1 de 14");
+  await expect(page.getByRole("status")).toContainText(`Mostrando 1 de ${catalogSize}`);
   expect(await page.locator("#tag-select option").allTextContents()).toEqual(options);
   await expect(page.locator(".catalog")).not.toHaveAttribute("aria-live");
   await page.getByRole("button", { name: "Borrar término de búsqueda" }).click();
@@ -47,7 +48,7 @@ test("local filters keep options, input focus and a concise live summary", async
   await page.getByRole("button", { name: "Limpiar filtros", exact: true }).click();
   await expect(search).toBeFocused();
   await expect(page.getByRole("button", { name: "Limpiar filtros", exact: true })).toBeDisabled();
-  await expect(page.locator(".catalog > li")).toHaveCount(14);
+  await expect(page.locator(".catalog > li")).toHaveCount(catalogSize);
   expect(requests).toBe(initialRequests);
 });
 
@@ -56,7 +57,7 @@ for (const width of [320, 390, 768, 1440]) {
     await page.setViewportSize({ width, height: 900 });
     await page.emulateMedia({ reducedMotion: "reduce" });
     await page.goto("/");
-    await expect(page.locator(".catalog > li")).toHaveCount(14);
+    await expect(page.locator(".catalog > li")).toHaveCount(catalogSize);
     expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(width);
     await page.getByRole("button", { name: "Ver ficha de Dominadas", exact: true }).click();
     const dialog = page.getByRole("dialog");

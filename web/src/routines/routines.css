@@ -1,4 +1,5 @@
 @font-face{font-family:Inter;src:url('/fonts/InterVariable.woff2') format('woff2');font-weight:100 900;font-display:swap}
+@font-face{font-family:Inter;src:url('/fonts/InterVariable-latin.woff2') format('woff2');font-weight:100 900;font-display:swap;unicode-range:U+0000-024F,U+1E00-1EFF,U+2000-206F,U+20A0-20CF,U+2100-214F,U+2190-21FF,U+2212,U+FEFF,U+FFFD}
 :root{--urjc-red:#cb0017;--urjc-black:#000;--urjc-white:#fff}
 button:disabled,.disabled{opacity:.55;cursor:not-allowed}
 input:focus-visible,a:focus-visible,button:focus-visible{outline:3px solid #000;outline-offset:4px}

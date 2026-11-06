@@ -18,39 +18,41 @@ export type Routine = {
 };
 
 export type RoutineUpdate = Omit<Routine, "id">;
+export type RoutineCreate = Pick<Routine, "name" | "items">;
+
+function record(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+function isItem(value: unknown): value is RoutineItem {
+  if (!record(value) || typeof value.id !== "string" || !value.id.trim() ||
+    typeof value.exerciseId !== "string" || !value.exerciseId.trim() ||
+    !Number.isSafeInteger(value.sets) || (value.sets as number) <= 0 ||
+    !Number.isSafeInteger(value.repetitions) || (value.repetitions as number) <= 0) return false;
+  if (value.parameters === undefined) return true;
+  if (!record(value.parameters)) return false;
+  return Object.entries(value.parameters).every(([key, parameter]) =>
+    ["restSeconds", "rir"].includes(key) && typeof parameter === "number" && Number.isFinite(parameter) && parameter >= 0);
+}
+
+function validItems(value: unknown): value is RoutineItem[] {
+  return Array.isArray(value) && value.every(isItem) && new Set(value.map(item => item.id)).size === value.length;
+}
+
+export function isRoutineCreate(value: unknown): value is RoutineCreate {
+  return record(value) && typeof value.name === "string" && !!value.name.trim() && validItems(value.items) &&
+    new Set(value.items.map(item => item.exerciseId)).size === value.items.length;
+}
 
 export function isRoutine(value: unknown): value is Routine {
-  if (typeof value !== "object" || value === null) return false;
-  const r = value as Record<string, unknown>;
-  if (typeof r.id !== "string" || typeof r.name !== "string") return false;
-  if (typeof r.version !== "number" || !Number.isInteger(r.version)) return false;
-  if (!Array.isArray(r.items)) return false;
-  
-  return r.items.every((i: any) => 
-    typeof i === "object" && i !== null &&
-    typeof i.id === "string" &&
-    typeof i.exerciseId === "string" &&
-    typeof i.sets === "number" && Number.isInteger(i.sets) && i.sets > 0 &&
-    typeof i.repetitions === "number" && Number.isInteger(i.repetitions) && i.repetitions > 0 &&
-    (i.parameters === undefined || (typeof i.parameters === "object" && i.parameters !== null))
-  );
+  // Legacy files may contain a repeated exercise from the old POST contract.
+  // Keep them readable so the user can remove the extra entry before saving.
+  return record(value) && typeof value.id === "string" && !!value.id.trim() && typeof value.name === "string" &&
+    Number.isSafeInteger(value.version) && (value.version as number) >= 1 && validItems(value.items);
 }
 
 export function isRoutineUpdate(value: unknown): value is RoutineUpdate {
-  if (typeof value !== "object" || value === null) return false;
-  const r = value as Record<string, unknown>;
-  
-  // Validaciones estrictas exigidas por routines.test.ts
-  if (typeof r.name !== "string" || r.name.trim() === "") return false;
-  if (typeof r.version !== "number" || !Number.isInteger(r.version) || r.version < 1) return false;
-  if (!Array.isArray(r.items)) return false;
-
-  return r.items.every((i: any) => 
-    typeof i === "object" && i !== null &&
-    typeof i.id === "string" &&
-    typeof i.exerciseId === "string" && 
-    typeof i.sets === "number" && Number.isInteger(i.sets) && i.sets > 0 &&
-    typeof i.repetitions === "number" && Number.isInteger(i.repetitions) && i.repetitions > 0 &&
-    (i.parameters === undefined || (typeof i.parameters === "object" && i.parameters !== null))
-  );
+  if (!record(value)) return false;
+  const version = value.version;
+  return isRoutineCreate(value) && Number.isSafeInteger(version) && (version as number) >= 1;
 }

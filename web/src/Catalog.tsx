@@ -3,7 +3,7 @@ import { ExerciseCard } from "./exercises/ExerciseCard";
 import { ExerciseDetailsDialog } from "./exercises/ExerciseDetailsDialog";
 import { CatalogFilters } from "./exercises/CatalogFilters";
 import "./exercises/catalog.css";
-import type { Exercise } from "../../shared/exercises";
+import { isExercise, type Exercise } from "../../shared/exercises";
 export type { Exercise } from "../../shared/exercises";
 
 type CatalogState =
@@ -32,8 +32,8 @@ export default function Catalog() {
       try {
         const response = await fetch("/api/exercises", { signal: controller.signal });
         if (!response.ok) throw new Error("Catalog unavailable");
-        const exercises: Exercise[] = await response.json();
-        if (!Array.isArray(exercises)) throw new Error("Invalid catalog");
+        const exercises: unknown = await response.json();
+        if (!Array.isArray(exercises) || !exercises.every(isExercise)) throw new Error("Invalid catalog");
         
         if (!controller.signal.aborted) setState({ status: "ready", exercises });
       } catch {
@@ -134,6 +134,7 @@ export default function Catalog() {
         <h1>Catálogo de Ejercicios</h1>
         <p>Explora y filtra nuestro catálogo por grupo muscular o etiquetas para encontrar el entrenamiento ideal.</p>
       </div>
+      <section className="catalog-content" aria-label="Ejercicios disponibles" aria-busy={state.status === "loading"}>
       {state.status === "ready" && <>
         <CatalogFilters groups={availableGroups} tags={availableTags}
           selectedGroup={selectedGroup} selectedTag={selectedTag} searchQuery={searchQuery}
@@ -147,7 +148,6 @@ export default function Catalog() {
           {hasActiveFilters && <span className="filtered-hint"> (filtros aplicados)</span>}
         </p>
       </>}
-      <section aria-label="Ejercicios disponibles" aria-busy={state.status === "loading"}>
         {state.status === "loading" && <p className="catalog-state" role="status">Cargando ejercicios…</p>}
         {state.status === "error" && <div className="catalog-state" role="alert">
           <h2>No hemos podido cargar los ejercicios.</h2>

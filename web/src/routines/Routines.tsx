@@ -96,12 +96,13 @@ export function Routines({ route, onDirty, onSaving }: Props) {
               ref={element => { if (element) editRefs.current.set(routine.id, element); else editRefs.current.delete(routine.id); }}
               onClick={() => { returnTo.current = routine.id; setNotice(""); setEditing(routine); }}>Editar</button>
             <button type="button" className="routine-danger" aria-label={`Borrar ${routine.name}`}
-              onClick={() => { setDeleteError(null); setRoutineToDelete(routine); }}>Borrar</button>
+              onClick={event => { event.currentTarget.focus(); setDeleteError(null); setRoutineToDelete(routine); }}>Borrar</button>
           </div>
         </li>)}
       </ul>)}
     </section>
     {routineToDelete && <RoutineDialog title="¿Eliminar rutina completa?" cancelLabel="Cancelar"
+      fallbackFocusRef={headingRef}
       confirmLabel={deleting ? "Eliminando…" : "Sí, eliminar rutina"} pending={deleting} error={deleteError}
       description={<>Eliminarás permanentemente la rutina <strong>{routineToDelete.name}</strong> y todos sus ejercicios. Esta acción no se puede deshacer.</>}
       onClose={() => { if (!deletingRef.current) setRoutineToDelete(null); }} onConfirm={() => { void confirmDelete(); }} />}

@@ -1,26 +1,11 @@
 import { readFile } from "node:fs/promises";
 import express, { Router, type ErrorRequestHandler } from "express";
-import { createRoutineStore, RoutineError, isRoutineUpdate } from "./routines.js";
-import { isExerciseImages } from "../../shared/exercises.js";
+import compression from "compression";
+import { createRoutineStore, RoutineError, isRoutineCreate, isRoutineUpdate } from "./routines.js";
+import { isExercise } from "../../shared/exercises.js";
 import type { Exercise } from "../../shared/exercises.js";
 export type { Exercise } from "../../shared/exercises.js";
-
-export function isExercise(value: unknown): value is Exercise {
-  if (typeof value !== "object" || value === null) return false;
-  const fields = value as Record<string, unknown>;
-  const hasBaseFields = ["id", "name", "muscleGroup", "equipment", "description", "instructions"].every(
-    (field) => typeof fields[field] === "string" && fields[field].length > 0,
-  );
-  if (!hasBaseFields) return false;
-  if (fields.imageUrl !== undefined && typeof fields.imageUrl !== "string") return false;
-  if (fields.images !== undefined && !isExerciseImages(fields.images)) return false;
-  if ("tags" in fields && fields.tags !== undefined) {
-    if (!Array.isArray(fields.tags) || !fields.tags.every((t) => typeof t === "string" && t.trim().length > 0)) {
-      return false;
-    }
-  }
-  return true;
-}
+export { isExercise } from "../../shared/exercises.js";
 
 export function createApp(options: {
   catalogFile?: URL;
@@ -30,6 +15,7 @@ export function createApp(options: {
 } = {}) {
   const app = express();
   app.disable("x-powered-by");
+  app.use(compression());
   const router = Router();
   router.use(express.json({ limit: "256kb" }));
   const store = createRoutineStore(
@@ -80,33 +66,18 @@ export function createApp(options: {
   });
 
   router.post("/routines", async (request, response) => {
-    if (
-      typeof request.body !== "object" || request.body === null ||
-      typeof request.body.name !== "string" || request.body.name.trim() === "" ||
-      !Array.isArray(request.body.items)
-    ) {
-      throw new RoutineError(400, "Revisa el nombre y los ejercicios de la rutina.");
+    if (!isRoutineCreate(request.body)) {
+      throw new RoutineError(400, "Revisa el nombre, los parámetros y los ejercicios de la rutina. Cada ejercicio solo puede aparecer una vez.");
     }
 
     const catalog: unknown = JSON.parse(await readFile(catalogFile, "utf8"));
     if (!Array.isArray(catalog) || !catalog.every(isExercise)) throw new Error("Invalid exercise catalog");
     const ids = new Set(catalog.map((exercise) => exercise.id));
-    if (request.body.items.some((item: any) => !ids.has(item.exerciseId))) {
+    if (request.body.items.some(item => !ids.has(item.exerciseId))) {
       throw new RoutineError(400, "Uno de los ejercicios no está disponible en el catálogo.");
     }
 
-    const newRoutine = {
-      id: `rutina-${Date.now()}`,
-      name: request.body.name.trim(),
-      version: 1,
-      items: request.body.items
-    };
-
-    const routines = await store.read();
-    routines.push(newRoutine);
-    await store.saveAll(routines);
-    
-    response.status(201).json(newRoutine);
+    response.status(201).json(await store.create(request.body));
   });
   
   router.put("/routines/:id", async (request, response) => {
@@ -124,14 +95,7 @@ export function createApp(options: {
   });
 
   router.delete("/routines/:id", async (request, response) => {
-    const routines = await store.read();
-    const filtered = routines.filter(r => r.id !== request.params.id);
-    
-    if (routines.length === filtered.length) {
-      throw new RoutineError(404, "Rutina no encontrada.");
-    }
-    
-    await store.saveAll(filtered);
+    await store.remove(request.params.id);
     response.status(204).send();
   });
 

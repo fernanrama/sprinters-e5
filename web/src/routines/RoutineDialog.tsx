@@ -1,4 +1,4 @@
-import { useEffect, useId, useRef, type ReactNode } from "react";
+import { useEffect, useId, useRef, type ReactNode, type RefObject } from "react";
 
 type Props = {
   title: string;
@@ -9,9 +9,10 @@ type Props = {
   error?: string | null;
   onConfirm: () => void;
   onClose: () => void;
+  fallbackFocusRef?: RefObject<HTMLElement | null>;
 };
 
-export function RoutineDialog({ title, description, confirmLabel, cancelLabel, pending, error, onConfirm, onClose }: Props) {
+export function RoutineDialog({ title, description, confirmLabel, cancelLabel, pending, error, onConfirm, onClose, fallbackFocusRef }: Props) {
   const ref = useRef<HTMLDialogElement>(null);
   const cancelRef = useRef<HTMLButtonElement>(null);
   const id = useId();
@@ -25,7 +26,9 @@ export function RoutineDialog({ title, description, confirmLabel, cancelLabel, p
     return () => {
       dialog.close();
       document.body.style.overflow = overflow;
-      if (opener?.isConnected) opener.focus();
+      requestAnimationFrame(() => {
+        if (opener?.isConnected) opener.focus(); else fallbackFocusRef?.current?.focus();
+      });
     };
   }, []);
 

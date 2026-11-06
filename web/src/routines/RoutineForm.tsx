@@ -86,15 +86,16 @@ export function RoutineForm({ initialRoutine, exercises, onSave, onCancel, onDir
     });
   };
   const updateItem = (itemId: string, field: "sets" | "repetitions", value: number) => {
-    if (!savingRef.current) setItems(current => current.map(item => item.id === itemId ? { ...item, [field]: Math.max(1, value) } : item));
+    if (!savingRef.current) setItems(current => current.map(item => item.id === itemId ? { ...item, [field]: value } : item));
   };
   const addItem = () => {
     if (savingRef.current) return;
     if (!exerciseId) return reportError("Por favor, selecciona un ejercicio de la lista.", "exercise");
-    if (sets <= 0) return reportError("Las series deben ser mayores que 0.", "sets");
-    if (reps <= 0) return reportError("Las repeticiones deben ser mayores que 0.", "reps");
-    if (rest < 0) return reportError("El descanso no puede ser negativo.", "rest");
-    if (typeof rir === "number" && rir < 0) return reportError("El RIR no puede ser negativo.", "rir");
+    if (items.some(item => item.exerciseId === exerciseId)) return reportError("Este ejercicio ya está en tu rutina. Modifica su entrada o elige otro ejercicio.", "exercise");
+    if (!Number.isSafeInteger(sets) || sets <= 0) return reportError("Las series deben ser un número entero mayor que 0.", "sets");
+    if (!Number.isSafeInteger(reps) || reps <= 0) return reportError("Las repeticiones deben ser un número entero mayor que 0.", "reps");
+    if (!Number.isFinite(rest) || rest < 0) return reportError("El descanso debe ser un número mayor o igual que 0.", "rest");
+    if (typeof rir === "number" && (!Number.isFinite(rir) || rir < 0)) return reportError("El RIR debe ser un número mayor o igual que 0.", "rir");
     setItems(current => [...current, {
       id: crypto.randomUUID(), exerciseId, sets, repetitions: reps,
       parameters: { restSeconds: rest, ...(rir !== "" ? { rir } : {}) },
@@ -107,6 +108,12 @@ export function RoutineForm({ initialRoutine, exercises, onSave, onCancel, onDir
     if (savingRef.current) return;
     if (!name.trim()) return reportError("El nombre de la rutina es obligatorio.", "name");
     if (!initialRoutine && items.length === 0) return reportError("Añade al menos un ejercicio a la rutina antes de guardar.", "exercise");
+    if (new Set(items.map(item => item.exerciseId)).size !== items.length) return reportError("Hay ejercicios repetidos en esta rutina antigua. Quita las entradas repetidas antes de guardar.");
+    if (items.some(item => !Number.isSafeInteger(item.sets) || item.sets <= 0 || !Number.isSafeInteger(item.repetitions) || item.repetitions <= 0)) {
+      reportError("Revisa las series y repeticiones de tu rutina: deben ser números enteros mayores que 0.");
+      requestAnimationFrame(() => formRef.current?.querySelector<HTMLInputElement>('.routine-form-item input[aria-invalid="true"]')?.focus());
+      return;
+    }
     savingRef.current = true;
     setSaving(true); onSaving(true); setError(null);
     try {
@@ -126,7 +133,7 @@ export function RoutineForm({ initialRoutine, exercises, onSave, onCancel, onDir
 
   return <>
     <header className="routine-page-heading">
-      <button type="button" className="routine-back" disabled={saving} onClick={cancel}>Volver a Mis rutinas</button>
+      <button type="button" className="routine-back" disabled={saving} onClick={event => { event.currentTarget.focus(); cancel(); }}>Volver a Mis rutinas</button>
       <h1 ref={headingRef} tabIndex={-1}>{initialRoutine ? "Editar rutina" : "Crear nueva rutina"}</h1>
       <p>{initialRoutine ? `Edita «${initialRoutine.name}». Los cambios se aplican al guardar.` : "Elige tus ejercicios y organiza el orden de tu entrenamiento."}</p>
     </header>
@@ -161,19 +168,19 @@ export function RoutineForm({ initialRoutine, exercises, onSave, onCancel, onDir
             <div className="routine-add-parameters">
               <label htmlFor={`${id}-sets`}>Series
                 <input id={`${id}-sets`} name="sets" type="number" min="1" step="1" value={sets || ""} {...fieldError("sets")}
-                  onChange={event => setSets(parseInt(event.target.value, 10) || 0)} />
+                  onChange={event => setSets(Number(event.target.value))} />
               </label>
               <label htmlFor={`${id}-reps`}>Repeticiones
                 <input id={`${id}-reps`} name="reps" type="number" min="1" step="1" value={reps || ""} {...fieldError("reps")}
-                  onChange={event => setReps(parseInt(event.target.value, 10) || 0)} />
+                  onChange={event => setReps(Number(event.target.value))} />
               </label>
               <label htmlFor={`${id}-rest`}>Descanso (s)
-                <input id={`${id}-rest`} name="rest" type="number" min="0" step="1" value={rest} {...fieldError("rest")}
-                  onChange={event => setRest(parseInt(event.target.value, 10) || 0)} />
+                <input id={`${id}-rest`} name="rest" type="number" min="0" step="any" value={rest} {...fieldError("rest")}
+                  onChange={event => setRest(Number(event.target.value))} />
               </label>
               <label htmlFor={`${id}-rir`}>RIR <span>(opcional)</span>
-                <input id={`${id}-rir`} name="rir" type="number" min="0" step="1" value={rir} {...fieldError("rir")}
-                  onChange={event => setRir(event.target.value === "" ? "" : parseInt(event.target.value, 10) || 0)} />
+                <input id={`${id}-rir`} name="rir" type="number" min="0" step="any" value={rir} {...fieldError("rir")}
+                  onChange={event => setRir(event.target.value === "" ? "" : Number(event.target.value))} />
               </label>
             </div>
             <p className="routine-field-hint">Descanso en segundos. RIR: repeticiones en reserva; 0 es un valor válido.</p>
@@ -197,7 +204,7 @@ export function RoutineForm({ initialRoutine, exercises, onSave, onCancel, onDir
         </div>
         <div className="routine-editor-actions">
           <button type="submit" className="routine-primary">{saving ? "Guardando…" : initialRoutine ? "Guardar Cambios" : "Crear Rutina"}</button>
-          <button type="button" className="routine-secondary" onClick={cancel}>Cancelar</button>
+          <button type="button" className="routine-secondary" onClick={event => { event.currentTarget.focus(); cancel(); }}>Cancelar</button>
         </div>
       </fieldset>
     </form>

@@ -1,3 +1,4 @@
+import { catalogSize } from "./catalog-fixture";
 import { test, expect, type Page } from "@playwright/test";
 import type { Exercise } from "../../shared/exercises";
 import type { Routine } from "../../shared/routines";
@@ -121,6 +122,6 @@ for (const width of [320, 390, 768, 1440]) {
     await expect(page.getByRole("button", { name: /^Quitar / })).toBeVisible();
     await expect(page.getByRole("button", { name: "Crear Rutina", exact: true })).toBeVisible();
     const catalog = await (await request.get("/api/exercises")).json();
-    expect(catalog).toHaveLength(14);
+    expect(catalog).toHaveLength(catalogSize);
   });
 }

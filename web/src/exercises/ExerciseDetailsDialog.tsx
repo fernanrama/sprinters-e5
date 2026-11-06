@@ -28,8 +28,11 @@ export function ExerciseDetailsDialog({ exercise, returnFocusTo, onClose }: Prop
 
   return <dialog ref={dialogRef} className="modal-window exercise-details-dialog" aria-labelledby={titleId}
     onKeyDown={event => {
-      // Closing is the only interactive control in this read-only detail.
-      if (event.key === "Tab") { event.preventDefault(); closeRef.current?.focus(); }
+      if (event.key !== "Tab") return;
+      const controls = [...event.currentTarget.querySelectorAll<HTMLElement>("button:not(:disabled), a[href]")];
+      const current = controls.indexOf(document.activeElement as HTMLElement);
+      event.preventDefault();
+      controls[(current + (event.shiftKey ? controls.length - 1 : 1)) % controls.length]?.focus();
     }}
     onCancel={event => { event.preventDefault(); onClose(); }}
     onClick={event => {
@@ -56,6 +59,12 @@ export function ExerciseDetailsDialog({ exercise, returnFocusTo, onClose }: Prop
           </div>}
           <h3>Instrucciones de ejecución:</h3>
           <p>{exercise.instructions}</p>
+          {exercise.demonstration && <p className="exercise-demonstration">
+            <a href={exercise.demonstration.url} target="_blank" rel="noopener noreferrer">
+              Ver demostración en {exercise.demonstration.provider}
+            </a>
+            <span>Se abre en otra pestaña.</span>
+          </p>}
         </div>
       </div>
     </section>

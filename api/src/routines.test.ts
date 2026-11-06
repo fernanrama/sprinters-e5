@@ -156,3 +156,71 @@ test("un borrador antiguo no sobrescribe una eliminación ya guardada", async (t
   assert.equal((await put(original[0])).status, 409);
   assert.deepEqual((await (await fetch(`${origin}/routines/${original[0].id}`)).json()).items, items);
 });
+
+test("POST rechaza entradas inválidas y duplicados igual que PUT, sin tocar el archivo", async t => {
+  const { origin, original, routinesFile, put } = await setup(t);
+  const before = await readFile(routinesFile, "utf8");
+  const item = original[0].items[0];
+  for (const items of [null, [null], [{ ...item, id: "" }], [{ ...item, sets: 0 }],
+    [{ ...item, repetitions: 1.5 }], [{ ...item, parameters: { restSeconds: -1 } }],
+    [{ ...item, parameters: { rir: null } }], [{ ...item, parameters: { unexpected: 1 } }],
+    [{ ...item, parameters: [] }], [item, { ...item, id: "other" }],
+    [item, { ...original[0].items[1], id: item.id }]]) {
+    const response = await fetch(`${origin}/routines`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ name: "No guardar", items }) });
+    assert.equal(response.status, 400);
+    assert.equal((await put({ ...original[0], items })).status, 400);
+    assert.equal(await readFile(routinesFile, "utf8"), before);
+  }
+});
+
+test("POST, PUT y DELETE simultáneos conservan todas las transacciones", async t => {
+  const { origin, original, put, routinesFile } = await setup(t);
+  const creates = Array.from({ length: 8 }, (_, index) => fetch(`${origin}/routines`, {
+    method: "POST", headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ name: `Concurrente ${index}`, items: original[0].items }),
+  }));
+  const results = await Promise.all([...creates,
+    put({ ...original[0], name: "Actualizada simultáneamente" }),
+    fetch(`${origin}/routines/${original[1].id}`, { method: "DELETE" }),
+  ]);
+  assert.deepEqual(results.map(response => response.status), [...Array(8).fill(201), 200, 204]);
+  const disk = JSON.parse(await readFile(routinesFile, "utf8"));
+  assert.equal(disk.length, 9);
+  assert.equal(new Set(disk.map((routine: { id: string }) => routine.id)).size, 9);
+  assert.equal(disk.find((routine: { id: string }) => routine.id === original[0].id).name, "Actualizada simultáneamente");
+  assert.equal(disk.find((routine: { id: string }) => routine.id === original[0].id).version, 2);
+  assert.ok(!disk.some((routine: { id: string }) => routine.id === original[1].id));
+});
+
+test("dos almacenes coordinan altas, bajas y actualizaciones sobre el mismo archivo", async t => {
+  const { routinesFile, original } = await setup(t);
+  const a = createRoutineStore(routinesFile), b = createRoutineStore(routinesFile);
+  const [created] = await Promise.all([
+    a.create({ name: "Nueva", items: [] }), b.update(original[0].id, { ...original[0], name: "Editada" }), a.remove(original[1].id),
+  ]);
+  const disk = await b.read();
+  assert.deepEqual(new Set(disk.map(routine => routine.id)), new Set([created.id, original[0].id]));
+  assert.equal(disk.find(routine => routine.id === original[0].id)?.name, "Editada");
+  await assert.rejects(() => b.remove("no-existe"), { status: 404 });
+});
+
+test("una rutina antigua con ejercicios repetidos se puede leer y reparar", async t => {
+  const { routinesFile, original, origin, put } = await setup(t);
+  const legacy = { ...original[0], items: [original[0].items[0], { ...original[0].items[0], id: "legacy-copy" }] };
+  await writeFile(routinesFile, JSON.stringify([legacy]));
+  assert.equal((await fetch(`${origin}/routines/${legacy.id}`)).status, 200);
+  assert.equal((await put(legacy)).status, 400);
+  assert.equal((await put({ ...legacy, items: legacy.items.slice(1) })).status, 200);
+  const saved = await (await fetch(`${origin}/routines/${legacy.id}`)).json();
+  assert.equal(saved.items.length, 1);
+  assert.equal(saved.items[0].id, "legacy-copy");
+});
+
+test("POST y DELETE no reemplazan un JSON corrupto", async t => {
+  const { routinesFile, origin, original } = await setup(t);
+  await writeFile(routinesFile, "{corrupto");
+  const response = await fetch(`${origin}/routines`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ name: "Nueva", items: [] }) });
+  assert.equal(response.status, 500);
+  assert.equal((await fetch(`${origin}/routines/${original[0].id}`, { method: "DELETE" })).status, 500);
+  assert.equal(await readFile(routinesFile, "utf8"), "{corrupto");
+});

@@ -1,5 +1,5 @@
 import { isRoutine, type Routine, type RoutineUpdate } from "../../../shared/routines";
-import type { Exercise } from "../../../shared/exercises";
+import { isExercise, type Exercise } from "../../../shared/exercises";
 export type { Exercise } from "../../../shared/exercises";
 export class ApiError extends Error {
   constructor(public status: number, message: string) { super(message); }
@@ -40,8 +40,7 @@ export async function saveRoutine(routine: Routine): Promise<Routine> {
 }
 export async function loadCatalog(signal: AbortSignal): Promise<Exercise[]> {
   const result = await request("/exercises", { signal });
-  if (!Array.isArray(result) || !result.every((e) => e && typeof e.id === "string" &&
-    typeof e.name === "string" && typeof e.muscleGroup === "string" && typeof e.equipment === "string")) {
+  if (!Array.isArray(result) || !result.every(isExercise)) {
     throw new Error("El catálogo no es válido.");
   }
   return result;

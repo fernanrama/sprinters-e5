@@ -18,9 +18,13 @@
     "build": "npm run build --workspaces",
     "check": "npm run typecheck && npm test && npm run build",
     "start": "npm start --workspace @sprinters/api",
-    "test:e2e": "tsc --project tests/tsconfig.json && npm run build && playwright test"
+    "test:e2e": "tsc --project tests/tsconfig.json && npm run build && playwright test",
+    "test:cross-browser": "tsc --project tests/tsconfig.json && npm run build && playwright test --config playwright.cross-browser.config.ts",
+    "measure:media": "npm run build && node scripts/measure-media.cjs",
+    "test:zoom": "npm run build && node scripts/check-browser-zoom.cjs"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.14.0",
     "@playwright/test": "^1.64.1",
     "concurrently": "^10.0.6",
     "typescript": "^7.0.2"

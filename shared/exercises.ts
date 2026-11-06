@@ -15,7 +15,30 @@ export type Exercise = {
   imageUrl?: string;
   images?: ExerciseImages;
   tags?: string[];
+  demonstration?: { url: string; provider: string };
 };
+
+export function isExercise(value: unknown): value is Exercise {
+  if (typeof value !== "object" || value === null || Array.isArray(value)) return false;
+  const fields = value as Record<string, unknown>;
+  if (!["id", "name", "muscleGroup", "equipment", "description", "instructions"].every(
+    field => typeof fields[field] === "string" && fields[field].trim().length > 0,
+  )) return false;
+  if (fields.imageUrl !== undefined && typeof fields.imageUrl !== "string") return false;
+  if (fields.images !== undefined && !isExerciseImages(fields.images)) return false;
+  if (fields.demonstration !== undefined && !isDemonstration(fields.demonstration)) return false;
+  return fields.tags === undefined || (Array.isArray(fields.tags) && fields.tags.every(tag => typeof tag === "string" && !!tag.trim()));
+}
+
+export function isDemonstration(value: unknown): value is NonNullable<Exercise["demonstration"]> {
+  if (!value || typeof value !== "object") return false;
+  const fields = value as Record<string, unknown>;
+  if (typeof fields.url !== "string" || typeof fields.provider !== "string" || !fields.provider.trim()) return false;
+  try {
+    const url = new URL(fields.url);
+    return url.protocol === "https:" && !url.username && !url.password;
+  } catch { return false; }
+}
 
 export function isExerciseImages(value: unknown): value is ExerciseImages {
   if (!value || typeof value !== "object") return false;

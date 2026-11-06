@@ -29,23 +29,23 @@ export default function App() {
   }, [dirty, saving]);
   const routines = route.startsWith("#/rutinas");
   return <>
-    <a className="skip-link" href="#page-content" onClick={(event) => {
+    <a className="skip-link" href="#page-content" tabIndex={0} onClick={(event) => {
       event.preventDefault();
       document.getElementById("page-content")?.focus();
     }}>Saltar al contenido</a>
     <header className="topbar">
-      <a className="brand" href="#/catalogo" aria-label="Healthy Life, catálogo">
+      <a className="brand" href="#/catalogo" tabIndex={0} aria-label="Healthy Life, catálogo">
         <img src="/brand/urjc.webp" alt="Universidad Rey Juan Carlos" className="university-logo" />
         <span className="brand-title">Healthy Life<small>Entrenamiento · Equipo 5</small></span>
       </a>
       <nav className="primary-nav" aria-label="Navegación principal">
-        <a href="#/catalogo" aria-current={!routines ? "page" : undefined}>Catálogo</a>
-        <a href="#/rutinas" aria-current={routines ? "page" : undefined}>Mis rutinas</a>
+        <a href="#/catalogo" tabIndex={0} aria-current={!routines ? "page" : undefined}>Catálogo</a>
+        <a href="#/rutinas" tabIndex={0} aria-current={routines ? "page" : undefined}>Mis rutinas</a>
       </nav>
     </header>
     <div className="page-shell">
       {routines ? <Routines key={route} route={route} onDirty={setDirty} onSaving={setSaving} /> : <Catalog />}
     </div>
-    <footer>Universidad Rey Juan Carlos · Healthy Life · Sprinters E5</footer>
+    <footer>Universidad Rey Juan Carlos · Healthy Life · Sprinters E5 <a className="media-credits-link" href="/media-credits.html" tabIndex={0}>Créditos de imágenes</a></footer>
   </>;
 }

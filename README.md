@@ -8,18 +8,22 @@ Motor de planes y rutinas de entrenamiento de **Healthy Life**, desarrollado par
 
 La rama `main` incluye:
 
-- Catálogo de 14 ejercicios obtenido desde la API.
+- Catálogo de 22 ejercicios obtenido desde la API, con fotografías locales, créditos y variantes WebP.
 - Información de nombre, grupo muscular, equipamiento e imagen.
 - Apertura de una ficha desde cada tarjeta.
-- Descripción e instrucciones específicas para cada uno de los 14 ejercicios.
+- Descripción e instrucciones específicas para cada ejercicio.
+- Búsqueda, filtros combinados por grupo y etiqueta, contador y limpieza.
+- Creación, edición, ordenación y eliminación de rutinas con persistencia JSON.
+- Imágenes antes de añadir y junto a los ejercicios de la rutina.
+- Seis rutinas completas de demostración, con almacenamiento local independiente.
 - Estados de carga, catálogo vacío y error con reintento.
 - Comprobación de tipos, pruebas HTTP y compilación.
 
-### Pendientes conocidos
+### Alcance y límites
 
-- Mejorar la navegación mediante teclado y la accesibilidad del modal.
+- La navegación con teclado, los diálogos, el foco, la adaptación móvil y el zoom al 200 % cuentan con pruebas. Esto no equivale a una certificación de accesibilidad.
 
-Esta rama añade edición de rutinas ficticias con persistencia JSON. La creación (HU02), autenticación y consultas entre equipos siguen fuera de este cambio. Consultar el estado de las PRs antes de atribuir estas funciones a `main`.
+La creación y edición están integradas en `main`. Autenticación, programación de sesiones e intercambio entre equipos no forman parte de estas pantallas. El prototipo usa datos ficticios y no es un sistema multiusuario desplegado.
 
 El estado de una historia se determina mediante sus criterios de aceptación y la Definition of Done; la existencia de código en una rama no implica que esté entregada.
 
@@ -37,7 +41,7 @@ El estado de una historia se determina mediante sus criterios de aceptación y l
 
 - **Node.js 24.x**, con npm incluido.
 - Git.
-- Acceso al repositorio privado de GitHub.
+- Acceso al repositorio de GitHub.
 
 Comprobar las versiones:
 
@@ -107,8 +111,39 @@ Ejecutar desde la raíz del repositorio:
 | `npm run build` | Compilar la web y la API. |
 | `npm run check` | Comprobar tipos, ejecutar pruebas y compilar. |
 | `npm start` | Servir la aplicación compilada desde la API. |
+| `npm run demo` | Compilar y servir la demo con seis rutinas independientes. |
+| `npm run test:e2e` | Compilar y comprobar los recorridos en Chromium. |
+| `npm run test:cross-browser` | Comprobar los recorridos en Chromium y WebKit. |
+| `npm run test:zoom` | Comprobar catálogo, creación y edición con zoom real al 200 %. |
+| `npm run measure:media` | Medir imágenes con datos temporales aislados. |
 
 La web necesita la API para cargar el catálogo.
+
+### Demo con seis rutinas completas
+
+Desde la raíz del repositorio:
+
+```powershell
+npm.cmd run demo
+```
+
+Abrir **http://127.0.0.1:3108/#/rutinas**. Mantener la terminal abierta; **Ctrl+C** detiene el servidor.
+
+La demo incluye cuerpo completo (8 ejercicios), torso (6), piernas y glúteos (7), empuje (5), tracción (5) y una sesión sin material (5). Todas tienen series, repeticiones, descanso y RIR.
+
+En el primer arranque, `api/data/routines.demo.json` se copia a `api/data/routines.demo.local.json`, ignorado por Git. Las modificaciones sobreviven a recargas y reinicios; no se vuelve a aplicar la semilla si existe el archivo local. La demo no modifica las rutinas personales de `routines.local.json`. El arranque habitual sigue utilizando el puerto 3001 y sus datos habituales.
+
+### Pruebas de navegador
+
+Si faltan los ejecutables de pruebas:
+
+```powershell
+npx.cmd playwright install chromium webkit
+```
+
+Después, ejecutar `npm.cmd run check`, `npm.cmd run test:cross-browser` y `npm.cmd run test:zoom`. Las pruebas usan archivos temporales separados de los datos personales.
+
+Firefox es opcional mediante `HEALTHY_LIFE_TEST_FIREFOX=1`; no forma parte de la validación predeterminada porque su ejecutable local ha presentado fallos de arranque en Windows.
 
 ### Comprobar la versión compilada
 
@@ -127,7 +162,7 @@ Antes de abrir un pull request:
 
 1. Ejecutar `npm run check` y comprobar que termina sin errores.
 2. Arrancar la aplicación con `npm run dev`.
-3. Comprobar que aparecen los 14 ejercicios del catálogo.
+3. Comprobar que aparecen los 22 ejercicios del catálogo y que búsqueda, grupo y etiqueta se combinan correctamente.
 4. Abrir varias fichas, verificar su descripción e instrucciones específicas y comprobar que se puede volver al catálogo.
 5. Comprobar que `/health` devuelve `"status": "ok"`.
 6. Comprobar que `/exercises` devuelve una lista JSON.
@@ -170,13 +205,13 @@ Ejemplo de un ejercicio:
   "name": "Sentadilla",
   "muscleGroup": "Piernas",
   "equipment": "Peso corporal",
-  "imageUrl": "https://i.blogs.es/76cc7d/1366_2000/450_1000.jpeg",
+  "imageUrl": "/images/exercises/sentadilla-detail.webp",
   "description": "Ejercicio fundamental para desarrollar la fuerza y volumen del tren inferior.",
   "instructions": "Mantén la espalda recta, baja la cadera hacia atrás hasta romper el paralelo de las rodillas y empuja con fuerza desde los talones para subir."
 }
 ```
 
-La API comprueba que `id`, `name`, `muscleGroup`, `equipment`, `description` e `instructions` sean cadenas no vacías. Actualmente no valida `imageUrl`.
+La API comprueba los campos obligatorios, etiquetas opcionales, metadatos de imágenes y enlaces de demostración. Los tipos y validadores están en `shared/exercises.ts`. La interfaz muestra una alternativa local si falta una imagen o falla su carga. Procedencia, licencias, dimensiones y hashes están en `web/public/images/exercises/manifest.json`; los créditos se pueden abrir desde el pie de página o `/media-credits.html`.
 
 Si el archivo no se puede leer o los datos son inválidos, devuelve HTTP 500:
 
@@ -296,7 +331,13 @@ Consultar [CONTRIBUTING.md](CONTRIBUTING.md) para el procedimiento de colaboraci
 | No aparece la web en el puerto 3001 | Ejecutar `npm run build` antes de `npm start`. |
 | `npm ci` indica discrepancias | Revisar que el cambio incluya un `package-lock.json` actualizado. |
 
-Actualmente no hay un pipeline de integración continua configurado. Las comprobaciones se ejecutan localmente mediante `npm run check`.
+El workflow [CI](.github/workflows/ci.yml) ejecuta instalación reproducible, tipos, pruebas de API, compilación y regresión en Chromium y WebKit sobre Node 24 y Ubuntu 24.04. Se activa para PR hacia `main`, cambios integrados en `main` y ejecución manual. Los informes y trazas de fallos se conservan durante siete días en los artefactos de Actions. El zoom real y las mediciones comparativas siguen siendo comprobaciones locales explícitas.
+
+### Ramas y archivo histórico
+
+`main` contiene la versión integrada. Cada cambio nuevo usa una rama temporal y una PR revisada; GitHub elimina automáticamente la rama después del merge. Antes de aprobar, actualizar la rama si es necesario y esperar a que CI termine correctamente. Un cambio posterior puede invalidar la aprobación anterior.
+
+Las implementaciones antiguas de SCRUM-83 y SCRUM-89 se conservan en las etiquetas `archive/scrum-83-selector-2026-10-22` y `archive/scrum-89-editor-2026-10-22`. Permiten consultar el selector anterior con búsqueda/multiselección sin reintroducir en el formulario actual su política de ejercicios repetidos. Son referencias históricas, no versiones alternativas que deban integrarse a ciegas.
 
 ## Edición de rutinas · Sprint 2
 
@@ -304,9 +345,13 @@ Abrir **/#/rutinas** desde Mis rutinas. Las rutas con `#` funcionan en desarroll
 
 La API copia `api/data/routines.seed.json` al archivo ignorado `api/data/routines.local.json` solo cuando falta este último. Guardar escribe el JSON local; Cancelar conserva lo guardado. No hay base de datos. Usar únicamente datos ficticios. No ejecutar varios servidores escritores sobre el mismo archivo.
 
-API nueva: `GET /api/routines`, `GET /api/routines/:id`, `PUT /api/routines/:id`. El PUT recibe nombre, versión e items y devuelve la versión actualizada; responde 409 ante cambios simultáneos.
+API de rutinas: `GET /api/routines`, `GET /api/routines/:id`, `POST /api/routines`, `PUT /api/routines/:id` y `DELETE /api/routines/:id`. POST recibe nombre e items y devuelve 201; DELETE devuelve 204. PUT recibe nombre, versión e items y devuelve la versión incrementada; responde 409 ante una versión desactualizada. Las rutas tienen también alias sin `/api`.
 
-Contrato, continuidad de HU02/HU08, diagrama para Miro y pruebas: [docs/HU08.md](docs/HU08.md).
+Cada ejercicio puede aparecer una única vez en una rutina. Series y repeticiones son enteros positivos; los parámetros opcionales `restSeconds` y `rir` son números finitos no negativos. Cero se conserva como valor distinto de ausencia. POST y PUT comparten validación; POST, PUT y DELETE se serializan por archivo dentro de un proceso Node y guardan mediante sustitución atómica. La API admite listas vacías; la interfaz exige al menos un ejercicio al crear. Las rutinas antiguas con duplicados se pueden abrir para corregirlas.
+
+Crear y editar comparten `RoutineForm`. El select permite añadir un ejercicio cada vez con preview; no incorpora la búsqueda y selección múltiple del antiguo selector. Recargar vuelve al listado y requiere abrir de nuevo la rutina: no se ofrecen enlaces directos estables al editor.
+
+El contrato vigente es el descrito arriba y en `shared/routines.ts`. [docs/HU08.md](docs/HU08.md) conserva el diseño y las evidencias históricas del 22/10: sus referencias a ejercicios repetidos, 500 entradas, enlaces directos al editor y tareas pendientes no representan la implementación actual.
 
 ### Quitar ejercicios de una rutina guardada (SCRUM-84)
 
@@ -320,5 +365,4 @@ al menos un ejercicio, como en el formulario existente.
 **Cancelar** con cambios permite seguir editando o descartarlos para recuperar la
 versión guardada. Durante el guardado se bloquea el formulario; si falla, el borrador
 se mantiene para poder reintentar. Orden y parámetros de las entradas restantes
-se conservan. El código de esta tarea está preparado sobre `main` del 25/10/2026;
-su integración y aceptación dependen de la revisión del equipo.
+se conservan. La eliminación individual y las mejoras UX posteriores están integradas en `main`; su aceptación y estado Jira deben consultarse en las evidencias del equipo.

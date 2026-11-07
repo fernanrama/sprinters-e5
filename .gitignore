@@ -7,6 +7,8 @@ api/data/routines.demo.local.json.*.tmp
 dist/
 build/
 coverage/
+playwright-report/
+test-results/
 *.tsbuildinfo
 
 # Configuración local y secretos

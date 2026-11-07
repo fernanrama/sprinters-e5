@@ -9,7 +9,7 @@ const app = createApp({
   catalogFile: new URL("api/data/exercises.json", root),
   routinesFile: new URL("api/data/routines.local.json", root),
   routinesSeed: new URL("api/data/routines.seed.json", root),
-  scheduleFile: new URL("api/data/schedules.local.json", root), // NUEVO
+  scheduleFile: new URL("api/data/schedules.local.json", root), 
 });
 
 const server = app.listen(port, "127.0.0.1", () => {

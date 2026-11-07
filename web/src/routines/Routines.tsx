@@ -97,15 +97,15 @@ export function Routines({ route, onDirty, onSaving }: Props) {
     <RoutineForm initialRoutine={editing} exercises={data.exercises} onSave={saved} onCancel={leaveEditor} onDirty={onDirty} onSaving={onSaving} />
   </main>;
 
-
+  // Filtrar programaciones para el panel superior
   const upcomingSchedules = data.status === "ready" ? data.schedules
     .filter(s => s.date >= new Date().toISOString().split("T")[0])
     .sort((a, b) => a.date.localeCompare(b.date)) : [];
 
-
+  // NUEVO: Obtener los IDs de las rutinas que ya están programadas (en el futuro)
   const scheduledRoutineIds = new Set(upcomingSchedules.map(s => s.routineId));
 
-
+  // NUEVO: Filtrar la lista de rutinas para ocultar las que ya tienen fecha asignada
   const unscheduledRoutines = data.status === "ready" ? data.routines.filter(r => !scheduledRoutineIds.has(r.id)) : [];
 
   return <main id="page-content" className="page-content routines-workspace" tabIndex={-1}>
@@ -117,6 +117,7 @@ export function Routines({ route, onDirty, onSaving }: Props) {
 
     {notice && <p role="status" className="routine-feedback">{notice}</p>}
     
+    {/* Panel de Próximas Sesiones */}
     {data.status === "ready" && upcomingSchedules.length > 0 && (
       <section style={{ marginBottom: "40px", padding: "20px", background: "#f8f9fa", border: "1px solid #ddd", borderRadius: "8px" }}>
         <h2 style={{ marginTop: 0, color: "#cb0017", fontSize: "20px" }}>Próximas sesiones programadas</h2>
@@ -135,7 +136,7 @@ export function Routines({ route, onDirty, onSaving }: Props) {
       </section>
     )}
 
-  
+    {/* Lista de rutinas (filtrada para no mostrar las ya programadas) */}
     <section aria-label="Rutinas guardadas" aria-busy={data.status === "loading"}>
       {data.status === "loading" && <p className="routine-state" role="status">Cargando rutinas…</p>}
       {data.status === "error" && <div className="routine-state" role="alert">

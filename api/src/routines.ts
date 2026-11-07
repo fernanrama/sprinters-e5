@@ -4,19 +4,23 @@ import { constants } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { setTimeout as delay } from "node:timers/promises";
-import { isRoutine, isRoutineCreate, isRoutineUpdate, type Routine, type RoutineCreate, type RoutineUpdate } from "../../shared/routines.js";
-export { isRoutine, isRoutineCreate, isRoutineUpdate } from "../../shared/routines.js";
-export type { Routine, RoutineItem, RoutineCreate, RoutineUpdate } from "../../shared/routines.js";
+import { 
+  isRoutine, isRoutineCreate, isRoutineUpdate, isRoutineSchedule, 
+  type Routine, type RoutineCreate, type RoutineUpdate, type RoutineSchedule 
+} from "../../shared/routines.js";
+
+export { isRoutine, isRoutineCreate, isRoutineUpdate, isRoutineSchedule } from "../../shared/routines.js";
+export type { Routine, RoutineItem, RoutineCreate, RoutineUpdate, RoutineSchedule } from "../../shared/routines.js";
 
 export class RoutineError extends Error {
   constructor(public status: number, message: string) { super(message); }
 }
 
-// Every read/modify/write transaction shares a queue across store instances.
 const queues = new Map<string, Promise<unknown>>();
 
 export function createRoutineStore(file: string | URL, seed?: URL) {
   const path = resolve(typeof file === "string" ? file : fileURLToPath(file));
+  
   async function read(): Promise<Routine[]> {
     let raw: string;
     try { raw = await readFile(path, "utf8"); }
@@ -29,7 +33,7 @@ export function createRoutineStore(file: string | URL, seed?: URL) {
     }
     const routines: unknown = JSON.parse(raw);
     if (!Array.isArray(routines) || !routines.every(isRoutine) || new Set(routines.map(routine => routine.id)).size !== routines.length) {
-      throw new Error("Invalid routines file");
+      throw new Error("Archivo de rutinas inválido");
     }
     return routines;
   }
@@ -46,8 +50,6 @@ export function createRoutineStore(file: string | URL, seed?: URL) {
     const temporary = `${path}.${randomUUID()}.tmp`;
     try {
       await writeFile(temporary, JSON.stringify(routines, null, 2) + "\n", { flag: "wx" });
-      // Windows can briefly hold the destination open while a concurrent GET reads it.
-      // Keep atomic replacement; never delete the original as a fallback.
       for (let attempt = 0; ; attempt++) {
         try { await rename(temporary, path); break; }
         catch (error) {
@@ -92,5 +94,46 @@ export function createRoutineStore(file: string | URL, seed?: URL) {
         await persist(remaining);
       });
     },
+  };
+}
+
+// NUEVO: Almacén para las programaciones (HU05)
+export function createScheduleStore(file: string | URL) {
+  const path = resolve(typeof file === "string" ? file : fileURLToPath(file));
+
+  async function read(): Promise<RoutineSchedule[]> {
+    let raw: string;
+    try {
+      raw = await readFile(path, "utf8");
+    } catch (error) {
+      if ((error as NodeJS.ErrnoException).code === "ENOENT") return []; // Si no existe, empieza vacío
+      throw error;
+    }
+    const schedules: unknown = JSON.parse(raw);
+    if (!Array.isArray(schedules) || !schedules.every(isRoutineSchedule)) {
+      throw new Error("Archivo de programaciones inválido");
+    }
+    return schedules;
+  }
+
+  async function persist(schedules: RoutineSchedule[]) {
+    await mkdir(dirname(path), { recursive: true });
+    const temporary = `${path}.${randomUUID()}.tmp`;
+    try {
+      await writeFile(temporary, JSON.stringify(schedules, null, 2) + "\n", { flag: "wx" });
+      await rename(temporary, path);
+    } finally {
+      await unlink(temporary).catch((error: NodeJS.ErrnoException) => { if (error.code !== "ENOENT") throw error; });
+    }
+  }
+
+  return {
+    read,
+    async create(routineId: string, date: string): Promise<RoutineSchedule> {
+      const schedules = await read();
+      const newSchedule: RoutineSchedule = { id: `sched-${randomUUID()}`, routineId, date };
+      await persist([...schedules, newSchedule]);
+      return newSchedule;
+    }
   };
 }

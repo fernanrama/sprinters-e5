@@ -2,6 +2,8 @@
 node_modules/
 api/data/routines.local.json
 api/data/routines.local.json.*.tmp
+api/data/routines.demo.local.json
+api/data/routines.demo.local.json.*.tmp
 dist/
 build/
 coverage/

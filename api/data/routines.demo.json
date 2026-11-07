@@ -1,0 +1,404 @@
+[
+  {
+    "id": "demo-cuerpo-completo",
+    "name": "Cuerpo completo · fuerza y equilibrio",
+    "version": 1,
+    "items": [
+      {
+        "id": "demo-cuerpo-completo-1",
+        "exerciseId": "sentadilla",
+        "sets": 3,
+        "repetitions": 10,
+        "parameters": {
+          "restSeconds": 90,
+          "rir": 3
+        }
+      },
+      {
+        "id": "demo-cuerpo-completo-2",
+        "exerciseId": "press-banca",
+        "sets": 3,
+        "repetitions": 8,
+        "parameters": {
+          "restSeconds": 120,
+          "rir": 2
+        }
+      },
+      {
+        "id": "demo-cuerpo-completo-3",
+        "exerciseId": "remo-mancuerna",
+        "sets": 3,
+        "repetitions": 10,
+        "parameters": {
+          "restSeconds": 90,
+          "rir": 2
+        }
+      },
+      {
+        "id": "demo-cuerpo-completo-4",
+        "exerciseId": "peso-muerto-semirrigido-mancuernas",
+        "sets": 3,
+        "repetitions": 10,
+        "parameters": {
+          "restSeconds": 90,
+          "rir": 3
+        }
+      },
+      {
+        "id": "demo-cuerpo-completo-5",
+        "exerciseId": "press-militar",
+        "sets": 2,
+        "repetitions": 10,
+        "parameters": {
+          "restSeconds": 90,
+          "rir": 2
+        }
+      },
+      {
+        "id": "demo-cuerpo-completo-6",
+        "exerciseId": "elevacion-talones-maquina",
+        "sets": 3,
+        "repetitions": 15,
+        "parameters": {
+          "restSeconds": 60,
+          "rir": 2
+        }
+      },
+      {
+        "id": "demo-cuerpo-completo-7",
+        "exerciseId": "extension-triceps",
+        "sets": 2,
+        "repetitions": 12,
+        "parameters": {
+          "restSeconds": 60,
+          "rir": 2
+        }
+      },
+      {
+        "id": "demo-cuerpo-completo-8",
+        "exerciseId": "crunch-abdominal",
+        "sets": 3,
+        "repetitions": 15,
+        "parameters": {
+          "restSeconds": 60,
+          "rir": 3
+        }
+      }
+    ]
+  },
+  {
+    "id": "demo-torso",
+    "name": "Torso · empuje y tracción",
+    "version": 1,
+    "items": [
+      {
+        "id": "demo-torso-1",
+        "exerciseId": "press-banca",
+        "sets": 3,
+        "repetitions": 8,
+        "parameters": {
+          "restSeconds": 120,
+          "rir": 2
+        }
+      },
+      {
+        "id": "demo-torso-2",
+        "exerciseId": "remo-polea-sentado",
+        "sets": 3,
+        "repetitions": 10,
+        "parameters": {
+          "restSeconds": 90,
+          "rir": 2
+        }
+      },
+      {
+        "id": "demo-torso-3",
+        "exerciseId": "press-militar",
+        "sets": 3,
+        "repetitions": 10,
+        "parameters": {
+          "restSeconds": 90,
+          "rir": 2
+        }
+      },
+      {
+        "id": "demo-torso-4",
+        "exerciseId": "jalon-pecho",
+        "sets": 3,
+        "repetitions": 12,
+        "parameters": {
+          "restSeconds": 90,
+          "rir": 2
+        }
+      },
+      {
+        "id": "demo-torso-5",
+        "exerciseId": "elevaciones-laterales",
+        "sets": 2,
+        "repetitions": 15,
+        "parameters": {
+          "restSeconds": 60,
+          "rir": 2
+        }
+      },
+      {
+        "id": "demo-torso-6",
+        "exerciseId": "curl-biceps",
+        "sets": 2,
+        "repetitions": 12,
+        "parameters": {
+          "restSeconds": 60,
+          "rir": 2
+        }
+      }
+    ]
+  },
+  {
+    "id": "demo-piernas",
+    "name": "Piernas y glúteos · sesión completa",
+    "version": 1,
+    "items": [
+      {
+        "id": "demo-piernas-1",
+        "exerciseId": "sentadilla-goblet-kettlebell",
+        "sets": 3,
+        "repetitions": 10,
+        "parameters": {
+          "restSeconds": 90,
+          "rir": 3
+        }
+      },
+      {
+        "id": "demo-piernas-2",
+        "exerciseId": "peso-muerto-semirrigido-mancuernas",
+        "sets": 3,
+        "repetitions": 10,
+        "parameters": {
+          "restSeconds": 90,
+          "rir": 3
+        }
+      },
+      {
+        "id": "demo-piernas-3",
+        "exerciseId": "hip-thrust",
+        "sets": 3,
+        "repetitions": 12,
+        "parameters": {
+          "restSeconds": 90,
+          "rir": 2
+        }
+      },
+      {
+        "id": "demo-piernas-4",
+        "exerciseId": "step-up-mancuernas",
+        "sets": 2,
+        "repetitions": 10,
+        "parameters": {
+          "restSeconds": 90,
+          "rir": 3
+        }
+      },
+      {
+        "id": "demo-piernas-5",
+        "exerciseId": "zancadas",
+        "sets": 2,
+        "repetitions": 10,
+        "parameters": {
+          "restSeconds": 90,
+          "rir": 3
+        }
+      },
+      {
+        "id": "demo-piernas-6",
+        "exerciseId": "elevacion-talones-maquina",
+        "sets": 3,
+        "repetitions": 15,
+        "parameters": {
+          "restSeconds": 60,
+          "rir": 2
+        }
+      },
+      {
+        "id": "demo-piernas-7",
+        "exerciseId": "crunch-abdominal",
+        "sets": 2,
+        "repetitions": 15,
+        "parameters": {
+          "restSeconds": 60,
+          "rir": 3
+        }
+      }
+    ]
+  },
+  {
+    "id": "demo-empuje",
+    "name": "Empuje · pecho, hombros y tríceps",
+    "version": 1,
+    "items": [
+      {
+        "id": "demo-empuje-1",
+        "exerciseId": "press-banca",
+        "sets": 3,
+        "repetitions": 8,
+        "parameters": {
+          "restSeconds": 120,
+          "rir": 2
+        }
+      },
+      {
+        "id": "demo-empuje-2",
+        "exerciseId": "press-militar",
+        "sets": 3,
+        "repetitions": 10,
+        "parameters": {
+          "restSeconds": 90,
+          "rir": 2
+        }
+      },
+      {
+        "id": "demo-empuje-3",
+        "exerciseId": "fondos-paralelas",
+        "sets": 2,
+        "repetitions": 8,
+        "parameters": {
+          "restSeconds": 120,
+          "rir": 3
+        }
+      },
+      {
+        "id": "demo-empuje-4",
+        "exerciseId": "elevaciones-laterales",
+        "sets": 3,
+        "repetitions": 12,
+        "parameters": {
+          "restSeconds": 60,
+          "rir": 2
+        }
+      },
+      {
+        "id": "demo-empuje-5",
+        "exerciseId": "extension-triceps",
+        "sets": 3,
+        "repetitions": 12,
+        "parameters": {
+          "restSeconds": 60,
+          "rir": 2
+        }
+      }
+    ]
+  },
+  {
+    "id": "demo-traccion",
+    "name": "Tracción · espalda, bíceps y abdomen",
+    "version": 1,
+    "items": [
+      {
+        "id": "demo-traccion-1",
+        "exerciseId": "peso-muerto",
+        "sets": 3,
+        "repetitions": 6,
+        "parameters": {
+          "restSeconds": 150,
+          "rir": 3
+        }
+      },
+      {
+        "id": "demo-traccion-2",
+        "exerciseId": "dominadas",
+        "sets": 3,
+        "repetitions": 6,
+        "parameters": {
+          "restSeconds": 120,
+          "rir": 3
+        }
+      },
+      {
+        "id": "demo-traccion-3",
+        "exerciseId": "remo-polea-sentado",
+        "sets": 3,
+        "repetitions": 10,
+        "parameters": {
+          "restSeconds": 90,
+          "rir": 2
+        }
+      },
+      {
+        "id": "demo-traccion-4",
+        "exerciseId": "curl-biceps",
+        "sets": 3,
+        "repetitions": 12,
+        "parameters": {
+          "restSeconds": 60,
+          "rir": 2
+        }
+      },
+      {
+        "id": "demo-traccion-5",
+        "exerciseId": "crunch-abdominal",
+        "sets": 3,
+        "repetitions": 15,
+        "parameters": {
+          "restSeconds": 60,
+          "rir": 3
+        }
+      }
+    ]
+  },
+  {
+    "id": "demo-sin-material",
+    "name": "Sin material · movimiento en casa",
+    "version": 1,
+    "items": [
+      {
+        "id": "demo-sin-material-1",
+        "exerciseId": "sentadilla",
+        "sets": 3,
+        "repetitions": 12,
+        "parameters": {
+          "restSeconds": 60,
+          "rir": 3
+        }
+      },
+      {
+        "id": "demo-sin-material-2",
+        "exerciseId": "flexiones",
+        "sets": 3,
+        "repetitions": 8,
+        "parameters": {
+          "restSeconds": 90,
+          "rir": 3
+        }
+      },
+      {
+        "id": "demo-sin-material-3",
+        "exerciseId": "zancadas",
+        "sets": 2,
+        "repetitions": 10,
+        "parameters": {
+          "restSeconds": 60,
+          "rir": 3
+        }
+      },
+      {
+        "id": "demo-sin-material-4",
+        "exerciseId": "puente-gluteos-suelo",
+        "sets": 3,
+        "repetitions": 15,
+        "parameters": {
+          "restSeconds": 60,
+          "rir": 3
+        }
+      },
+      {
+        "id": "demo-sin-material-5",
+        "exerciseId": "crunch-abdominal",
+        "sets": 2,
+        "repetitions": 15,
+        "parameters": {
+          "restSeconds": 60,
+          "rir": 3
+        }
+      }
+    ]
+  }
+]

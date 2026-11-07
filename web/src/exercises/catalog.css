@@ -30,9 +30,10 @@
 .catalog-page .btn-clear-filters {
   min-height: 46px; padding: 10px 16px; background: white; color: var(--color-brand);
   border: 1px solid var(--color-brand); border-radius: var(--radius-control); font-size: 14px;
+  transition: border-color .2s, background-color .2s;
 }
 .catalog-page .btn-clear-filters:hover:not(:disabled) { background: #fff0f2; color: var(--color-brand-hover); }
-.catalog-page .btn-clear-filters:disabled { opacity: 1; color: #727986; border-color: var(--color-border); background: transparent; cursor: not-allowed; }
+.catalog-page .btn-clear-filters:disabled { opacity: 1; color: var(--color-muted); border-color: var(--color-border); background: transparent; cursor: not-allowed; }
 .catalog-group-field { margin-top: 20px; }
 .catalog-page .filter-pills { gap: 8px; }
 .catalog-page .pill-btn {

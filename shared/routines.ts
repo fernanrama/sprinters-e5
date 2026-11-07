@@ -20,8 +20,25 @@ export type Routine = {
 export type RoutineUpdate = Omit<Routine, "id">;
 export type RoutineCreate = Pick<Routine, "name" | "items">;
 
+// NUEVO: Modelado de la relación rutina-fecha
+export type RoutineSchedule = {
+  id: string;
+  routineId: string;
+  date: string; // Formato YYYY-MM-DD
+};
+
 function record(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+// NUEVO: Validación de la programación
+export function isRoutineSchedule(value: unknown): value is RoutineSchedule {
+  if (!record(value)) return false;
+  return (
+    typeof value.id === "string" && !!value.id.trim() &&
+    typeof value.routineId === "string" && !!value.routineId.trim() &&
+    typeof value.date === "string" && /^\d{4}-\d{2}-\d{2}$/.test(value.date)
+  );
 }
 
 function isItem(value: unknown): value is RoutineItem {
@@ -45,8 +62,6 @@ export function isRoutineCreate(value: unknown): value is RoutineCreate {
 }
 
 export function isRoutine(value: unknown): value is Routine {
-  // Legacy files may contain a repeated exercise from the old POST contract.
-  // Keep them readable so the user can remove the extra entry before saving.
   return record(value) && typeof value.id === "string" && !!value.id.trim() && typeof value.name === "string" &&
     Number.isSafeInteger(value.version) && (value.version as number) >= 1 && validItems(value.items);
 }

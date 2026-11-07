@@ -102,10 +102,10 @@ export function Routines({ route, onDirty, onSaving }: Props) {
     .filter(s => s.date >= new Date().toISOString().split("T")[0])
     .sort((a, b) => a.date.localeCompare(b.date)) : [];
 
-  // NUEVO: Obtener los IDs de las rutinas que ya están programadas (en el futuro)
+  // Obtener los IDs de las rutinas que ya están programadas
   const scheduledRoutineIds = new Set(upcomingSchedules.map(s => s.routineId));
 
-  // NUEVO: Filtrar la lista de rutinas para ocultar las que ya tienen fecha asignada
+  // Filtrar la lista de rutinas para ocultar las que ya tienen fecha asignada
   const unscheduledRoutines = data.status === "ready" ? data.routines.filter(r => !scheduledRoutineIds.has(r.id)) : [];
 
   return <main id="page-content" className="page-content routines-workspace" tabIndex={-1}>
@@ -136,7 +136,7 @@ export function Routines({ route, onDirty, onSaving }: Props) {
       </section>
     )}
 
-    {/* Lista de rutinas (filtrada para no mostrar las ya programadas) */}
+    {/* Lista de rutinas (con la estructura corregida para los tests) */}
     <section aria-label="Rutinas guardadas" aria-busy={data.status === "loading"}>
       {data.status === "loading" && <p className="routine-state" role="status">Cargando rutinas…</p>}
       {data.status === "error" && <div className="routine-state" role="alert">
@@ -146,14 +146,20 @@ export function Routines({ route, onDirty, onSaving }: Props) {
       </div>}
       
       {data.status === "ready" && (
-        unscheduledRoutines.length === 0 ? (
+        data.routines.length === 0 ? (
+          /* 1. Estado original para cuando no hay rutinas creadas (arregla el test) */
+          <div className="routine-state">
+            <h2>Tu primera rutina empieza aquí</h2>
+            <p>No tienes rutinas creadas. Pulsa Crear Nueva Rutina para elegir ejercicios y organizar su orden.</p>
+          </div>
+        ) : unscheduledRoutines.length === 0 ? (
+          /* 2. Estado nuevo para cuando hay rutinas, pero ya están todas programadas */
           <div className="routine-state">
             <h2>No hay rutinas pendientes</h2>
-            <p>{data.routines.length === 0 
-              ? "No tienes rutinas creadas. Pulsa Crear Nueva Rutina para elegir ejercicios y organizar su orden." 
-              : "Todas tus rutinas ya tienen una fecha asignada. Puedes verlas en el panel superior."}</p>
+            <p>Todas tus rutinas ya tienen una fecha asignada. Puedes verlas en el panel superior.</p>
           </div>
         ) : (
+          /* 3. Lista normal con las rutinas no programadas */
           <ul className="routine-saved-list" aria-label="Mis rutinas guardadas">
             {unscheduledRoutines.map(routine => <li key={routine.id} className="routine-saved-row" style={{ flexDirection: "column", alignItems: "stretch" }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>

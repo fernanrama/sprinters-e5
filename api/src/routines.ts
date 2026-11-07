@@ -97,7 +97,7 @@ export function createRoutineStore(file: string | URL, seed?: URL) {
   };
 }
 
-
+// NUEVO: Almacén para las programaciones (HU05)
 export function createScheduleStore(file: string | URL) {
   const path = resolve(typeof file === "string" ? file : fileURLToPath(file));
 
@@ -106,7 +106,7 @@ export function createScheduleStore(file: string | URL) {
     try {
       raw = await readFile(path, "utf8");
     } catch (error) {
-      if ((error as NodeJS.ErrnoException).code === "ENOENT") return []; 
+      if ((error as NodeJS.ErrnoException).code === "ENOENT") return []; // Si no existe, empieza vacío
       throw error;
     }
     const schedules: unknown = JSON.parse(raw);

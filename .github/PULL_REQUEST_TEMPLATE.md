@@ -1,16 +1,17 @@
 ## Qué cambia y por qué
 
-Tarjeta de Jira:
+Tarjeta de Jira (o «No aplica: mantenimiento/demo sin Jira»):
 
 ## Cómo comprobarlo
 
 ## Antes de integrar
 
 - [ ] He ejecutado `npm run check`.
+- [ ] He comprobado el resultado de CI; para cambios funcionales, he ejecutado la regresión de navegador pertinente.
 - [ ] He actualizado el README o la documentación de API si corresponde.
 - [ ] Otro Developer ha revisado el PR.
 - [ ] Para una historia de usuario: Ignacio (PO del Sprint 2) ha comprobado sus criterios de aceptación.
-- [ ] El estado y el enlace del PR están registrados en Jira.
+- [ ] Si existe tarjeta asociada, el estado y el enlace del PR están registrados en Jira.
 
 ## Tras integrar una historia de usuario
 

@@ -48,7 +48,7 @@ export async function loadCatalog(signal: AbortSignal): Promise<Exercise[]> {
   return result;
 }
 
-
+// NUEVO: Funciones de API para la programación (HU05)
 export async function loadSchedules(signal: AbortSignal): Promise<RoutineSchedule[]> {
   const result = await request("/schedules", { signal });
   if (!Array.isArray(result) || !result.every(isRoutineSchedule)) throw new Error("Las programaciones no son válidas.");

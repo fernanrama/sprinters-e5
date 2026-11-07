@@ -97,7 +97,7 @@ export function createApp(options: {
     response.status(204).send();
   });
 
-  
+  // ENDPOINTS HU05
   router.get("/schedules", async (_request, response) => {
     response.set("Cache-Control", "no-store").json(await scheduleStore.read());
   });
@@ -121,7 +121,7 @@ export function createApp(options: {
     response.status(404).json({ error: "Recurso no encontrado." });
   });
   
-  
+  // CORRECCIÓN DEL HANDLE ERROR: Diferencia entre catálogo y rutinas
   const handleError: ErrorRequestHandler = (error, _request, response, _next) => {
     if (error instanceof RoutineError) {
       response.status(error.status).json({ error: error.message });

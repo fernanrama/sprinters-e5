@@ -1,6 +1,5 @@
 import { isRoutine, isRoutineSchedule, type Routine, type RoutineUpdate, type RoutineSchedule } from "../../../shared/routines";
 import { isExercise, type Exercise } from "../../../shared/exercises";
-export type { Exercise, Routine, RoutineSchedule } from "../../../shared/exercises";
 
 export class ApiError extends Error {
   constructor(public status: number, message: string) { super(message); }

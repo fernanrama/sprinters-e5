@@ -4,6 +4,8 @@ api/data/routines.local.json
 api/data/routines.local.json.*.tmp
 api/data/routines.demo.local.json
 api/data/routines.demo.local.json.*.tmp
+api/data/schedules.demo.local.json
+api/data/schedules.demo.local.json.*.tmp
 dist/
 build/
 coverage/

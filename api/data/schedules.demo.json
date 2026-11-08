@@ -1,0 +1,32 @@
+[
+  {
+    "id": "sched-demo-cuerpo-completo",
+    "routineId": "demo-cuerpo-completo",
+    "date": "2026-11-09"
+  },
+  {
+    "id": "sched-demo-torso",
+    "routineId": "demo-torso",
+    "date": "2026-11-10"
+  },
+  {
+    "id": "sched-demo-piernas",
+    "routineId": "demo-piernas",
+    "date": "2026-11-11"
+  },
+  {
+    "id": "sched-demo-empuje",
+    "routineId": "demo-empuje",
+    "date": "2026-11-12"
+  },
+  {
+    "id": "sched-demo-traccion",
+    "routineId": "demo-traccion",
+    "date": "2026-11-13"
+  },
+  {
+    "id": "sched-demo-sin-material",
+    "routineId": "demo-sin-material",
+    "date": "2026-11-14"
+  }
+]

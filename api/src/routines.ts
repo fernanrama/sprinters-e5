@@ -65,7 +65,7 @@ export function createRoutineStore(file: string | URL, seed?: URL) {
   return {
     read,
     create(input: RoutineCreate): Promise<Routine> {
-      if (!isRoutineCreate(input)) return Promise.reject(new RoutineError(400, "Datos de rutina inválidos. Usa una única entrada por ejercicio."));
+      if (!isRoutineCreate(input)) return Promise.reject(new RoutineError(400, "Datos de rutina inválidos."));
       return transaction(async () => {
         const routines = await read();
         const routine: Routine = { id: `rutina-${randomUUID()}`, name: input.name.trim(), version: 1, items: input.items };
@@ -97,7 +97,7 @@ export function createRoutineStore(file: string | URL, seed?: URL) {
   };
 }
 
-// NUEVO: Almacén para las programaciones (HU05)
+// Almacén para las programaciones (HU05 y HU06)
 export function createScheduleStore(file: string | URL) {
   const path = resolve(typeof file === "string" ? file : fileURLToPath(file));
 
@@ -106,7 +106,7 @@ export function createScheduleStore(file: string | URL) {
     try {
       raw = await readFile(path, "utf8");
     } catch (error) {
-      if ((error as NodeJS.ErrnoException).code === "ENOENT") return []; // Si no existe, empieza vacío
+      if ((error as NodeJS.ErrnoException).code === "ENOENT") return [];
       throw error;
     }
     const schedules: unknown = JSON.parse(raw);
@@ -134,6 +134,22 @@ export function createScheduleStore(file: string | URL) {
       const newSchedule: RoutineSchedule = { id: `sched-${randomUUID()}`, routineId, date };
       await persist([...schedules, newSchedule]);
       return newSchedule;
+    },
+    async update(id: string, newDate: string): Promise<RoutineSchedule> {
+      const schedules = await read();
+      const index = schedules.findIndex(s => s.id === id);
+      if (index < 0) throw new RoutineError(404, "Programación no encontrada.");
+      
+      const updated = { ...schedules[index], date: newDate };
+      schedules[index] = updated;
+      await persist(schedules);
+      return updated;
+    },
+    async remove(id: string): Promise<void> {
+      const schedules = await read();
+      const filtered = schedules.filter(s => s.id !== id);
+      if (schedules.length === filtered.length) throw new RoutineError(404, "Programación no encontrada.");
+      await persist(filtered);
     }
   };
 }

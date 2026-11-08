@@ -106,6 +106,28 @@ export function createApp(options: {
     await scheduleStore.remove(request.params.id);
     response.status(204).send();
   });
+  // HU10 - SCRUM-98: Recuperar sesiones futuras
+  // Sergio Alejandro
+  router.get("/sessions", async (_request, response) => {
+    const routines = await store.read();
+    const schedules = await scheduleStore.read();
+    
+    // Obtenemos la fecha actual
+    const today = new Date().toISOString().split("T")[0];
+
+    // Filtramos las programaciones futuras (fecha >= hoy) y añadimos la rutina completa
+    const futureSessions = schedules
+      .filter((schedule) => schedule.date >= today)
+      .map((schedule) => ({
+        id: schedule.id,
+        date: schedule.date,
+        routineId: schedule.routineId,
+        routine: routines.find((r) => r.id === schedule.routineId) || null
+      }));
+
+    response.set("Cache-Control", "no-store").json(futureSessions);
+  });
+  // ==========================================
 
   app.use("/api", router);
   app.use(router);

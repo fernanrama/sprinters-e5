@@ -48,7 +48,7 @@ export async function loadCatalog(signal: AbortSignal): Promise<Exercise[]> {
   return result;
 }
 
-// NUEVO: Funciones de API para la programación (HU05)
+// HU05: Programar
 export async function loadSchedules(signal: AbortSignal): Promise<RoutineSchedule[]> {
   const result = await request("/schedules", { signal });
   if (!Array.isArray(result) || !result.every(isRoutineSchedule)) throw new Error("Las programaciones no son válidas.");
@@ -63,4 +63,19 @@ export async function scheduleRoutine(routineId: string, date: string): Promise<
   });
   if (!isRoutineSchedule(result)) throw new Error("No se pudo confirmar la programación.");
   return result;
+}
+
+// HU06: Reprogramar y Cancelar
+export async function updateSchedule(id: string, date: string): Promise<RoutineSchedule> {
+  const result = await request(`/schedules/${encodeURIComponent(id)}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ date }),
+  });
+  if (!isRoutineSchedule(result)) throw new Error("No se pudo confirmar la reprogramación.");
+  return result;
+}
+
+export async function deleteSchedule(id: string): Promise<void> {
+  await request(`/schedules/${encodeURIComponent(id)}`, { method: "DELETE" });
 }

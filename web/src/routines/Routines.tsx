@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import type { Routine, RoutineSchedule } from "../../../shared/routines";
 import type { Exercise } from "../../../shared/exercises";
-import { listRoutines, loadCatalog, request, loadSchedules, scheduleRoutine } from "./api";
+import { listRoutines, loadCatalog, request, loadSchedules, scheduleRoutine, updateSchedule, deleteSchedule } from "./api";
 import { RoutineForm } from "./RoutineForm";
 import { RoutineDialog } from "./RoutineDialog";
 import "./routine-workspace.css";
@@ -24,9 +24,11 @@ export function Routines({ route, onDirty, onSaving }: Props) {
   const editRefs = useRef(new Map<string, HTMLButtonElement>());
   const returnTo = useRef<string | null>(null);
 
-  // Estados para la programación (HU05)
+  // Estados para la programación (HU05 y HU06)
   const [schedulingId, setSchedulingId] = useState<string | null>(null);
   const [scheduleDate, setScheduleDate] = useState("");
+  const [reschedulingId, setReschedulingId] = useState<string | null>(null);
+  const [newDate, setNewDate] = useState("");
   // Sergio Alejandro - H10
   const [scheduleToDelete, setScheduleToDelete] = useState<RoutineSchedule | null>(null); // <-- AÑADE ESTA LÍNEA AQUÍ
 
@@ -53,6 +55,7 @@ export function Routines({ route, onDirty, onSaving }: Props) {
   }, [creating, editing, data]);
 
   const leaveEditor = () => { setEditing(null); setCreating(false); onDirty(false); };
+
   const saved = () => {
     setNotice(editing ? "Cambios guardados en la rutina." : "Rutina creada correctamente.");
     leaveEditor();
@@ -80,18 +83,41 @@ export function Routines({ route, onDirty, onSaving }: Props) {
   };
 
   const handleSchedule = async (routineId: string) => {
-    if (!scheduleDate) {
-      setNotice("Por favor, selecciona una fecha válida.");
-      return;
-    }
+    if (!scheduleDate) { setNotice("Por favor, selecciona una fecha válida."); return; }
     try {
       const newSchedule = await scheduleRoutine(routineId, scheduleDate);
       setNotice("Rutina programada con éxito.");
       setData(current => current.status === "ready" ? { ...current, schedules: [...current.schedules, newSchedule] } : current);
-      setSchedulingId(null);
-      setScheduleDate("");
+      setSchedulingId(null); setScheduleDate("");
     } catch (error) {
       setNotice(error instanceof Error ? error.message : "Error al programar la rutina.");
+    }
+  };
+
+  const handleReschedule = async (scheduleId: string) => {
+    if (!newDate) { setNotice("Por favor, selecciona una fecha válida."); return; }
+    try {
+      const updated = await updateSchedule(scheduleId, newDate);
+      setNotice("Sesión reprogramada con éxito.");
+      setData(current => current.status === "ready" ? { 
+        ...current, schedules: current.schedules.map(s => s.id === scheduleId ? updated : s) 
+      } : current);
+      setReschedulingId(null); setNewDate("");
+    } catch (error) {
+      setNotice(error instanceof Error ? error.message : "Error al reprogramar.");
+    }
+  };
+
+  const handleCancelSchedule = async (scheduleId: string) => {
+    if (!window.confirm("¿Seguro que quieres cancelar esta sesión programada? La rutina volverá a estar disponible en la lista.")) return;
+    try {
+      await deleteSchedule(scheduleId);
+      setNotice("Sesión cancelada. La rutina vuelve a estar en tu lista principal.");
+      setData(current => current.status === "ready" ? { 
+        ...current, schedules: current.schedules.filter(s => s.id !== scheduleId) 
+      } : current);
+    } catch (error) {
+      setNotice(error instanceof Error ? error.message : "Error al cancelar la sesión.");
     }
   };
 
@@ -99,15 +125,11 @@ export function Routines({ route, onDirty, onSaving }: Props) {
     <RoutineForm initialRoutine={editing} exercises={data.exercises} onSave={saved} onCancel={leaveEditor} onDirty={onDirty} onSaving={onSaving} />
   </main>;
 
-  // Filtrar programaciones para el panel superior
   const upcomingSchedules = data.status === "ready" ? data.schedules
     .filter(s => s.date >= new Date().toISOString().split("T")[0])
     .sort((a, b) => a.date.localeCompare(b.date)) : [];
 
-  // Obtener los IDs de las rutinas que ya están programadas
   const scheduledRoutineIds = new Set(upcomingSchedules.map(s => s.routineId));
-
-  // Filtrar la lista de rutinas para ocultar las que ya tienen fecha asignada
   const unscheduledRoutines = data.status === "ready" ? data.routines.filter(r => !scheduledRoutineIds.has(r.id)) : [];
 
   return <main id="page-content" className="page-content routines-workspace" tabIndex={-1}>
@@ -259,44 +281,48 @@ export function Routines({ route, onDirty, onSaving }: Props) {
       
       {data.status === "ready" && (
         data.routines.length === 0 ? (
-          /* 1. Estado original para cuando no hay rutinas creadas (arregla el test) */
           <div className="routine-state">
             <h2>Tu primera rutina empieza aquí</h2>
             <p>No tienes rutinas creadas. Pulsa Crear Nueva Rutina para elegir ejercicios y organizar su orden.</p>
           </div>
         ) : unscheduledRoutines.length === 0 ? (
-          /* 2. Estado nuevo para cuando hay rutinas, pero ya están todas programadas */
           <div className="routine-state">
             <h2>No hay rutinas pendientes</h2>
             <p>Todas tus rutinas ya tienen una fecha asignada. Puedes verlas en el panel superior.</p>
           </div>
         ) : (
-          /* 3. Lista normal con las rutinas no programadas */
           <ul className="routine-saved-list" aria-label="Mis rutinas guardadas">
-            {unscheduledRoutines.map(routine => <li key={routine.id} className="routine-saved-row" style={{ flexDirection: "column", alignItems: "stretch" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <div className="routine-saved-description"><h2>{routine.name}</h2><p>{routine.items.length} {routine.items.length === 1 ? "ejercicio" : "ejercicios"} <span>Versión {routine.version}</span></p></div>
-                <div className="routine-saved-actions">
-                  <button type="button" className="routine-secondary" style={{ borderColor: "#cb0017", color: "#cb0017" }} onClick={() => setSchedulingId(schedulingId === routine.id ? null : routine.id)}>
-                    Programar
-                  </button>
-                  <button type="button" className="routine-secondary" aria-label={`Editar ${routine.name}`}
-                    ref={element => { if (element) editRefs.current.set(routine.id, element); else editRefs.current.delete(routine.id); }}
-                    onClick={() => { returnTo.current = routine.id; setNotice(""); setEditing(routine); }}>Editar</button>
-                  <button type="button" className="routine-danger" aria-label={`Borrar ${routine.name}`}
-                    onClick={event => { event.currentTarget.focus(); setDeleteError(null); setRoutineToDelete(routine); }}>Borrar</button>
+            {unscheduledRoutines.map(routine => (
+              <li key={routine.id} className="routine-saved-row" style={{ flexDirection: "column", alignItems: "stretch" }}>
+                
+                {/* ARREGLO: Usamos la clase routine-saved-main */}
+                <div className="routine-saved-main">
+                  <div className="routine-saved-description">
+                    <h2>{routine.name}</h2>
+                    <p>{routine.items.length} {routine.items.length === 1 ? "ejercicio" : "ejercicios"} <span>Versión {routine.version}</span></p>
+                  </div>
+                  <div className="routine-saved-actions">
+                    <button type="button" className="routine-secondary" style={{ borderColor: "#cb0017", color: "#cb0017" }} onClick={() => setSchedulingId(schedulingId === routine.id ? null : routine.id)}>
+                      Programar
+                    </button>
+                    <button type="button" className="routine-secondary" aria-label={`Editar ${routine.name}`}
+                      ref={element => { if (element) editRefs.current.set(routine.id, element); else editRefs.current.delete(routine.id); }}
+                      onClick={() => { returnTo.current = routine.id; setNotice(""); setEditing(routine); }}>Editar</button>
+                    <button type="button" className="routine-danger" aria-label={`Borrar ${routine.name}`}
+                      onClick={event => { event.currentTarget.focus(); setDeleteError(null); setRoutineToDelete(routine); }}>Borrar</button>
+                  </div>
                 </div>
-              </div>
-              
-              {schedulingId === routine.id && (
-                <div style={{ marginTop: "16px", padding: "16px", background: "#fdfdfd", border: "1px dashed #ccc", borderRadius: "4px", display: "flex", alignItems: "center", gap: "12px" }}>
-                  <label htmlFor={`date-${routine.id}`} style={{ fontWeight: "bold" }}>Selecciona la fecha:</label>
-                  <input id={`date-${routine.id}`} type="date" value={scheduleDate} onChange={e => setScheduleDate(e.target.value)} style={{ padding: "6px", border: "1px solid #ccc", borderRadius: "4px" }} />
-                  <button type="button" className="routine-primary" onClick={() => handleSchedule(routine.id)} style={{ padding: "6px 12px" }}>Guardar fecha</button>
-                  <button type="button" className="routine-secondary" onClick={() => setSchedulingId(null)} style={{ padding: "6px 12px" }}>Cancelar</button>
-                </div>
-              )}
-            </li>)}
+                
+                {schedulingId === routine.id && (
+                  <div style={{ marginTop: "16px", padding: "16px", background: "#fdfdfd", border: "1px dashed #ccc", borderRadius: "4px", display: "flex", alignItems: "center", gap: "12px", flexWrap: "wrap" }}>
+                    <label htmlFor={`date-${routine.id}`} style={{ fontWeight: "bold" }}>Selecciona la fecha:</label>
+                    <input id={`date-${routine.id}`} type="date" value={scheduleDate} onChange={e => setScheduleDate(e.target.value)} style={{ padding: "6px", border: "1px solid #ccc", borderRadius: "4px" }} />
+                    <button type="button" className="routine-primary" onClick={() => handleSchedule(routine.id)} style={{ padding: "6px 12px" }}>Guardar fecha</button>
+                    <button type="button" className="routine-secondary" onClick={() => setSchedulingId(null)} style={{ padding: "6px 12px" }}>Cancelar</button>
+                  </div>
+                )}
+              </li>
+            ))}
           </ul>
         )
       )}

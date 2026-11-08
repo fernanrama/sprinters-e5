@@ -106,3 +106,33 @@
   .routine-editor-actions > button { flex: 1 1 130px; }
 }
 @media (prefers-reduced-motion: reduce) { .routines-workspace *, .routine-dialog * { transition: none; animation: none; } }
+
+
+.routine-saved-main {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  flex-wrap: wrap;
+}
+
+
+.routine-saved-description {
+  min-width: 0;
+  word-break: break-word;
+}
+
+
+@media (max-width: 650px) {
+  .routine-saved-main {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+  .routine-saved-actions {
+    width: 100%;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+  }
+}

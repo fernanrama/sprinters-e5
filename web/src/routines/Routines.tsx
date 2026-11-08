@@ -27,6 +27,8 @@ export function Routines({ route, onDirty, onSaving }: Props) {
   // Estados para la programación (HU05)
   const [schedulingId, setSchedulingId] = useState<string | null>(null);
   const [scheduleDate, setScheduleDate] = useState("");
+  // Sergio Alejandro - H10
+  const [scheduleToDelete, setScheduleToDelete] = useState<RoutineSchedule | null>(null); // <-- AÑADE ESTA LÍNEA AQUÍ
 
   useEffect(() => {
     const controller = new AbortController();
@@ -117,23 +119,133 @@ export function Routines({ route, onDirty, onSaving }: Props) {
 
     {notice && <p role="status" className="routine-feedback">{notice}</p>}
     
-    {/* Panel de Próximas Sesiones */}
-    {data.status === "ready" && upcomingSchedules.length > 0 && (
-      <section style={{ marginBottom: "40px", padding: "20px", background: "#f8f9fa", border: "1px solid #ddd", borderRadius: "8px" }}>
-        <h2 style={{ marginTop: 0, color: "#cb0017", fontSize: "20px" }}>Próximas sesiones programadas</h2>
-        <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
-          {upcomingSchedules.map(sched => {
-            const routine = data.routines.find(r => r.id === sched.routineId);
-            if (!routine) return null; 
-            return (
-              <li key={sched.id} style={{ padding: "10px 0", borderBottom: "1px solid #eee", display: "flex", justifyContent: "space-between" }}>
-                <span><strong>{sched.date}</strong> — {routine.name}</span>
-                <span style={{ color: "#666", fontSize: "14px" }}>{routine.items.length} ejercicios</span>
-              </li>
-            );
-          })}
-        </ul>
+    {/* Panel de Próximas Sesiones Mejorado (HU10) 
+      Sergio Alejandro
+    */}
+    {data.status === "ready" && (
+      <section style={{ marginBottom: "40px", padding: "24px", background: "#ffffff", border: "1px solid var(--color-border)", borderRadius: "8px", borderTop: "4px solid var(--color-brand)", boxShadow: "0 2px 4px rgba(0,0,0,0.04)" }}>
+        <h2 style={{ marginTop: 0, color: "var(--color-text)", fontSize: "20px", marginBottom: "16px" }}>Próximas sesiones programadas</h2>
+        {upcomingSchedules.length > 0 ? (
+          <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
+            {upcomingSchedules.map(sched => {
+              const routine = data.routines.find(r => r.id === sched.routineId);
+              const isEditingDate = schedulingId === `edit-${sched.id}`;
+
+              return (
+                <li key={sched.id} style={{ padding: "16px 0", borderBottom: "1px solid var(--color-border)", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "12px" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: "16px", flexWrap: "wrap" }}>
+                    <span style={{ display: "inline-block", background: "#fde8e9", color: "var(--color-brand)", padding: "6px 12px", borderRadius: "6px", fontSize: "13px", fontWeight: "700" }}>
+                      {sched.date}
+                    </span>
+                    <div>
+                      <strong style={{ fontSize: "16px", display: "block", color: "var(--color-text)" }}>
+                        {routine ? routine.name : "Rutina no encontrada"}
+                      </strong>
+                      <span style={{ color: "var(--color-muted)", fontSize: "13px" }}>
+                        {routine ? `${routine.items.length} ejercicios · Versión ${routine.version}` : "Sin detalles"}
+                      </span>
+                    </div>
+                  </div>
+                  
+                  {/* Acciones */}
+                  <div style={{ display: "flex", gap: "8px", alignItems: "center", flexWrap: "wrap" }}>
+                    {isEditingDate ? (
+                      <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+                        <input 
+                          type="date" 
+                          defaultValue={sched.date}
+                          id={`edit-date-${sched.id}`}
+                          style={{ padding: "6px", border: "1px solid #ccc", borderRadius: "4px" }} 
+                        />
+                        <button 
+                          type="button" 
+                          className="routine-primary" 
+                          style={{ fontSize: "13px", padding: "6px 12px" }}
+                          onClick={() => {
+                            const inputEl = document.getElementById(`edit-date-${sched.id}`) as HTMLInputElement;
+                            const newDate = inputEl?.value;
+                            if (!newDate || newDate === sched.date) {
+                              setSchedulingId(null);
+                              return;
+                            }
+                            setNotice("Fecha de sesión actualizada.");
+                            setSchedulingId(null);
+                            setData(current => current.status === "ready" ? {
+                              ...current,
+                              schedules: current.schedules.map(s => s.id === sched.id ? { ...s, date: newDate } : s)
+                            } : current);
+                          }}>
+                          Guardar
+                        </button>
+                        <button 
+                          type="button" 
+                          className="routine-secondary" 
+                          style={{ fontSize: "13px", padding: "6px 12px" }}
+                          onClick={() => setSchedulingId(null)}>
+                          Cancelar
+                        </button>
+                      </div>
+                    ) : (
+                      <>
+                        <button 
+                          type="button" 
+                          className="routine-secondary" 
+                          style={{ fontSize: "13px", padding: "6px 12px" }}
+                          onClick={() => setSchedulingId(`edit-${sched.id}`)}>
+                          Cambiar fecha
+                        </button>
+                        {routine && (
+                          <button 
+                            type="button" 
+                            className="routine-secondary" 
+                            style={{ fontSize: "13px", padding: "6px 12px" }}
+                            onClick={() => {
+                              setNotice(""); 
+                              setEditing(routine);
+                            }}>
+                            Editar rutina
+                          </button>
+                        )}
+                        {/* Botón que abre el modal corporativo en pantalla */}
+                        <button 
+                          type="button" 
+                          className="routine-danger" 
+                          style={{ fontSize: "13px", padding: "6px 12px" }}
+                          onClick={() => setScheduleToDelete(sched)}>
+                          Eliminar
+                        </button>
+                      </>
+                    )}
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
+        ) : (
+          <p style={{ color: "var(--color-muted)", margin: 0, lineHeight: "1.6" }}>
+            No tienes sesiones programadas próximamente. Selecciona una rutina de tu lista y pulsa <strong>Programar</strong> para añadirla a tu agenda.
+          </p>
+        )}
       </section>
+    )}
+
+    {/* Cuadro de diálogo corporativo flotante en pantalla para confirmar el borrado */}
+    {scheduleToDelete && (
+      <RoutineDialog 
+        title="¿Eliminar sesión programada?" 
+        cancelLabel="Cancelar"
+        confirmLabel="Eliminar" 
+        description={`¿Estás seguro de que quieres eliminar la sesión programada para el ${scheduleToDelete.date}? Volverá a estar disponible en tu lista de rutinas.`}
+        onClose={() => setScheduleToDelete(null)} 
+        onConfirm={() => {
+          setNotice("Sesión eliminada de la agenda.");
+          setData(current => current.status === "ready" ? {
+            ...current,
+            schedules: current.schedules.filter(s => s.id !== scheduleToDelete.id)
+          } : current);
+          setScheduleToDelete(null);
+        }} 
+      />
     )}
 
     {/* Lista de rutinas (con la estructura corregida para los tests) */}

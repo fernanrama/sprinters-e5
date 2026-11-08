@@ -6,17 +6,22 @@ import { join } from "node:path";
 import { pathToFileURL } from "node:url";
 import { test } from "node:test";
 import { createApp } from "./app.js";
-import { createRoutineStore, isRoutine, isRoutineCreate, type Routine } from "./routines.js";
+import { createRoutineStore, isRoutine, isRoutineCreate, isRoutineSchedule, type Routine, type RoutineSchedule } from "./routines.js";
 
 const seed = new URL("../data/routines.demo.json", import.meta.url);
+const scheduleSeed = new URL("../data/schedules.demo.json", import.meta.url);
 
 test("demo: seis rutinas completas con ejercicios del catálogo y parámetros editables", async () => {
   const routines: Routine[] = JSON.parse(await readFile(seed, "utf8"));
+  const schedules: RoutineSchedule[] = JSON.parse(await readFile(scheduleSeed, "utf8"));
   const catalog: { id: string }[] = JSON.parse(await readFile(new URL("../data/exercises.json", import.meta.url), "utf8"));
   const ids = new Set(catalog.map(exercise => exercise.id));
   assert.equal(routines.length, 6);
   assert.equal(new Set(routines.map(routine => routine.id)).size, 6);
   assert.equal(new Set(routines.map(routine => routine.name)).size, 6);
+  assert.equal(schedules.length, routines.length);
+  assert(schedules.every(isRoutineSchedule));
+  assert.deepEqual(new Set(schedules.map(schedule => schedule.routineId)), new Set(routines.map(routine => routine.id)));
   for (const routine of routines) {
     assert(isRoutine(routine) && isRoutineCreate(routine), routine.name);
     assert(routine.items.length >= 5 && routine.items.length <= 8, routine.name);

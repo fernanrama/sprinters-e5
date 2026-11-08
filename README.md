@@ -131,7 +131,7 @@ Abrir **http://127.0.0.1:3108/#/rutinas**. Mantener la terminal abierta; **Ctrl+
 
 La demo incluye cuerpo completo (8 ejercicios), torso (6), piernas y glúteos (7), empuje (5), tracción (5) y una sesión sin material (5). Todas tienen series, repeticiones, descanso y RIR.
 
-En el primer arranque, `api/data/routines.demo.json` se copia a `api/data/routines.demo.local.json`, ignorado por Git. Las modificaciones sobreviven a recargas y reinicios; no se vuelve a aplicar la semilla si existe el archivo local. La demo no modifica las rutinas personales de `routines.local.json`. El arranque habitual sigue utilizando el puerto 3001 y sus datos habituales.
+En el primer arranque, `api/data/routines.demo.json` y `api/data/schedules.demo.json` se copian a sus respectivos archivos locales, ignorados por Git. Las modificaciones sobreviven a recargas y reinicios; no se vuelve a aplicar la semilla si existe el archivo local. Las programaciones de demostración apuntan a rutinas disponibles en la demo. La demo no modifica los archivos personales `routines.local.json` ni `schedules.local.json`. El arranque habitual sigue utilizando el puerto 3001 y sus datos habituales.
 
 ### Pruebas de navegador
 

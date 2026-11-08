@@ -1,0 +1,22 @@
+[
+  {
+    "id": "sched-f5b33512-0a27-4d70-aa93-16074529942a",
+    "routineId": "rutina-demo-fuerza",
+    "date": "2026-11-21"
+  },
+  {
+    "id": "sched-8e4e5812-6b12-4ab9-8123-f56f90086d7c",
+    "routineId": "rutina-955617ae-5754-4761-9ca7-6cfb12ef4efb",
+    "date": "2026-11-20"
+  },
+  {
+    "id": "sched-7a5cf469-4256-404e-a7c8-42981cd5355a",
+    "routineId": "rutina-955617ae-5754-4761-9ca7-6cfb12ef4efb",
+    "date": "2026-11-20"
+  },
+  {
+    "id": "sched-072b3469-ee20-4d4d-9f7e-4261098867af",
+    "routineId": "rutina-955617ae-5754-4761-9ca7-6cfb12ef4efb",
+    "date": "2026-11-10"
+  }
+]
